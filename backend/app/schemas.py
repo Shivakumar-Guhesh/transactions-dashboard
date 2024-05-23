@@ -16,12 +16,12 @@ class FilterPayload(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: int
+    user_account_id: int
     email: EmailStr
-    created_at: datetime
+    insrt_ts: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserCreate(BaseModel):

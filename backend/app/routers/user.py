@@ -27,7 +27,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
 
-    new_user = models.User(**user.dict())
+    # new_user = models.User(**user.dict())
+    new_user = models.User(user.email, hashed_password, None, "fast_api")
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -37,10 +38,14 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/id", response_model=schemas.UserOut)
 def get_user(
-    id: int,
+    user_account_id: int,
     db: Session = Depends(get_db),
 ):
-    user = db.query(models.User).filter(models.User.id == id).first()
+    user = (
+        db.query(models.User)
+        .filter(models.User.user_account_id == user_account_id)
+        .first()
+    )
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

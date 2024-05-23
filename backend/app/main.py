@@ -10,7 +10,7 @@ from .database import engine, Base
 
 from .routers import transactions, user, auth
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -39,5 +39,10 @@ if __name__ == "__main__":
     local_host = s.getsockname()[0]
 
     uvicorn.run(
-        "app.main:app", host=local_host, port=5000, log_level="info", reload=True
+        "app.main:app",
+        host=local_host,
+        port=5000,
+        # log_level="info",
+        reload=True,
+        use_colors=True,
     )

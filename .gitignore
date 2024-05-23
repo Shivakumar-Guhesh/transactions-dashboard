@@ -1,3 +1,6 @@
 *.db
 *.env
 *__pycache__/
+*.log
+dt_ctrl.txt
+*.vscode

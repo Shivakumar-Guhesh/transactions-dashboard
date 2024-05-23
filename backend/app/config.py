@@ -12,10 +12,10 @@ class Settings(BaseSettings):
     database_password: str
     database_name: str
     database_username: str
+    sqlite_database_path: str
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
-    sqllite_database_path: str
 
     # class Config:
     #     env_file = ".env"

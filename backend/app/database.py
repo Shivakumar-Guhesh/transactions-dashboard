@@ -15,7 +15,7 @@ SQLALCHEMY_DATABASE_URL: str
 if settings.database_type == "sqlite":
     # "sqlite:////home/stephen/db1.db"
     SQLALCHEMY_DATABASE_URL = (
-        f"{settings.database_type}:///{settings.sqllite_database_path}/transactions.db"
+        f"{settings.database_type}:///{settings.sqlite_database_path}/transactions.db"
     )
 else:
     SQLALCHEMY_DATABASE_URL = f"{settings.database_type}://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
