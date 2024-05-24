@@ -1,31 +1,47 @@
 # /d/transactions_dashboard: >python -m data.etl.tran_fact_load
 import datetime
 import logging
+import logging.handlers
 import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 from sqlalchemy import create_engine
 
-from data.constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
-
 from ..config import Settings
+from ..constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
 
 settings = Settings()
 
+# ============================================================================ #
+#                                   CONSTANTS                                  #
+# ============================================================================ #
+CURRENT_DIR = os.path.dirname(__file__)
 CURRENT_DATE = datetime.datetime.now().strftime(DATE_FORMATTER)
-DATE_CONTROL_FILE_PATH = os.path.join(os.path.dirname(__file__), "dt_ctrl.txt")
+DATE_CONTROL_FILE_PATH = os.path.join(CURRENT_DIR, "dt_ctrl.txt")
+LOG_FILE_DIR = os.path.join(CURRENT_DIR, "logs")
 
 # ============================================================================ #
 #                                    LOGGING                                   #
 # ============================================================================ #
 logger = logging.getLogger(__name__)
-fileHandler = logging.FileHandler(
-    f"{__file__}_logs_{datetime.datetime.now().strftime(TIMESTAMP_FORMATTER)}.log"
-)
+Path(LOG_FILE_DIR).mkdir(parents=True, exist_ok=True)
+# fileHandler = logging.handlers.TimedRotatingFileHandler(LOG_FILE_PATH)
+LOG_FILE_PATH = f"{LOG_FILE_DIR}/{os.path.basename(__file__)}_logs_{datetime.datetime.now().strftime(TIMESTAMP_FORMATTER)}.log"
+print(CURRENT_DIR)
+print(LOG_FILE_DIR)
+print(LOG_FILE_PATH)
+fileHandler = logging.FileHandler(LOG_FILE_PATH)
+# fmt = logging.Formatter(
+#     "[%(name)-45s]: %(asctime)-10s | >%(levelname)-10s> |  >>> %(message)s"
+# )
 fmt = logging.Formatter(
-    "%(name)s: %(asctime)s | %(levelname)s | %(filename)s:%(lineno)s  >>> %(message)s"
+    "[%(asctime)s] [%(levelname)8s] --- %(message)s",
+    "%Y-%m-%d %H:%M:%S",
 )
+
+
 fileHandler.setFormatter(fmt)
 logger.addHandler(fileHandler)
 logger.setLevel(logging.INFO)
