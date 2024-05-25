@@ -1,4 +1,8 @@
 # /d/transactions_dashboard: >python -m data.etl.tran_fact_load
+"""
+This script reads all records  between (LAST_PROCESSED_DATE and CURRENT_DATE) and loads into TRANSACTION_FACT table
+"""
+
 import datetime
 import logging
 import logging.handlers
@@ -12,26 +16,30 @@ from sqlalchemy import create_engine
 from ..config import Settings
 from ..constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
 
-settings = Settings()
+settings = Settings.model_validate({})
 
 # ============================================================================ #
 #                                   CONSTANTS                                  #
 # ============================================================================ #
+INPUT_FILE = settings.input_file
+TABLE_NAME = "TRANSACTION_FACT"
 CURRENT_DIR = os.path.dirname(__file__)
 CURRENT_DATE = datetime.datetime.now().strftime(DATE_FORMATTER)
+YESTER_DATE = (datetime.datetime.now() - datetime.timedelta(1)).strftime(DATE_FORMATTER)
 DATE_CONTROL_FILE_PATH = os.path.join(CURRENT_DIR, "dt_ctrl.txt")
 LOG_FILE_DIR = os.path.join(CURRENT_DIR, "logs")
+SQLALCHEMY_DATABASE_URL: str = (
+    f"{settings.database_type}:///{settings.sqlite_database_path}"
+)
+
 
 # ============================================================================ #
 #                                    LOGGING                                   #
 # ============================================================================ #
 logger = logging.getLogger(__name__)
 Path(LOG_FILE_DIR).mkdir(parents=True, exist_ok=True)
-# fileHandler = logging.handlers.TimedRotatingFileHandler(LOG_FILE_PATH)
+
 LOG_FILE_PATH = f"{LOG_FILE_DIR}/{os.path.basename(__file__)}_logs_{datetime.datetime.now().strftime(TIMESTAMP_FORMATTER)}.log"
-print(CURRENT_DIR)
-print(LOG_FILE_DIR)
-print(LOG_FILE_PATH)
 fileHandler = logging.FileHandler(LOG_FILE_PATH)
 # fmt = logging.Formatter(
 #     "[%(name)-45s]: %(asctime)-10s | >%(levelname)-10s> |  >>> %(message)s"
@@ -49,6 +57,15 @@ logger.info(f"Started processing for {CURRENT_DATE}")
 
 
 def handle_unhandled_exception(exc_type, exc_value, exc_traceback):
+    """
+    Description of handle_unhandled_exception
+
+    Args:
+        exc_type (undefined):
+        exc_value (undefined):
+        exc_traceback (undefined):
+
+    """
     if issubclass(exc_type, KeyboardInterrupt):
         # Will call default excepthook
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -65,27 +82,25 @@ sys.excepthook = handle_unhandled_exception
 
 # ============================ LAST PROCESSED DATE =========================== #
 if not (os.path.isfile(DATE_CONTROL_FILE_PATH)):
-    last_processed_date = datetime.datetime.strptime("19000101", DATE_FORMATTER)
+    LAST_PROCESSED_DATE = datetime.datetime.strptime("19000101", DATE_FORMATTER)
 else:
     f = open(DATE_CONTROL_FILE_PATH, "r")
-    last_processed_date = datetime.datetime.strptime(f.read(), DATE_FORMATTER)
+    LAST_PROCESSED_DATE = datetime.datetime.strptime(f.read(), DATE_FORMATTER)
     f.close()
-logger.info(f"Reading records later than {last_processed_date}")
+logger.info(f"Reading records later than {LAST_PROCESSED_DATE}")
 
 
-INPUT_FILE = settings.input_file
-TABLE_NAME = "TRANSACTION_FACT"
-SQLALCHEMY_DATABASE_URL: str = (
-    f"{settings.database_type}:///{settings.sqlite_database_path}"
-)
-if settings.database_type != "sqlite":
-    SQLALCHEMY_DATABASE_URL = f"{settings.database_type}://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-input_df = pd.read_excel(INPUT_FILE, index_col=None)
-# tran_dtl_df = pd.to_datetime(tran_dtl_df["Date"],format='%Y%m%d')
-tran_fact_df = input_df.loc[input_df["Date"] > last_processed_date]
+print(SQLALCHEMY_DATABASE_URL)
+input()
+input()
 
+input_df = pd.read_excel(INPUT_FILE, index_col=None)
+
+tran_fact_df = input_df[
+    (input_df["Date"] > LAST_PROCESSED_DATE) & (input_df["Date"] < CURRENT_DATE)
+]
 
 # ============== Adding USER_ID_COLUMN with value 1 for all rows ============= #
 tran_fact_df.insert(
@@ -109,11 +124,6 @@ tran_fact_df = tran_fact_df.rename(
     }
 )
 
-# query = """
-# SELECT * FROM USER_ACCOUNT
-# """
-# print(pd.read_sql(query, con=engine))
-
 # ============================================================================ #
 #                                  TABLE LOAD                                  #
 # ============================================================================ #
@@ -124,4 +134,4 @@ f = open(DATE_CONTROL_FILE_PATH, "w")
 f.write(f"{CURRENT_DATE}")
 f.close()
 
-logger.info(f"Completed processing for {CURRENT_DATE}")
+logger.info(f"Completed processing for {YESTER_DATE}")

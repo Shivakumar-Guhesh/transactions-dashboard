@@ -1,17 +1,16 @@
 from typing import Dict
-import pandas as pd
-from fastapi import APIRouter, FastAPI, HTTPException, Response, status
 
+import pandas as pd
+from app import utils
+from fastapi import APIRouter, FastAPI, HTTPException, Response, status
 
 from .. import schemas
 from ..constants import INPUT_FILE
 
-from app import utils
-
 router = APIRouter(
     # prefix="/",
     # tags=[],
-)  # TODO: Add predix url path and use it for naming the file as well
+)  # TODO: Add prefix url path and use it for naming the file as well
 
 data = pd.read_excel(INPUT_FILE)
 
@@ -22,11 +21,11 @@ data["Date"] = pd.to_datetime(data["Date"])
 
 filters: Dict[str, list[str]] = dict()
 
-filters["categories_to_skip_all_transacations"] = []
+filters["categories_to_skip_all_transactions"] = []
 filters["categories_to_skip_expense"] = []
 filters["categories_to_skip_income"] = []
 
-# categories_to_skip_all_transacations = ["Lending"]
+# categories_to_skip_all_transactions = ["Lending"]
 # categories_to_skip_expense = []
 # categories_to_skip_expense = ["Security Deposit"]
 
@@ -43,10 +42,10 @@ cat_expense_sum = utils.group_wise_aggregation(
 @router.get("/cat_expense_sum")
 def get_cat_expense_sum():
     """GET endpoint for cat_expense_sum.
-    Returns cateogry-wise summarized data
+    Returns category-wise summarized data
 
     Returns:
-        result: cateogry-wise summarized data
+        result: category-wise summarized data
     """
     # result = cat_expense_sum.to_dict("records")
     # result = cat_expense_sum.to_dict()
@@ -75,7 +74,7 @@ def post_create_filters(payload: schemas.FilterPayload):
     """POST endpoint for adding filters
     Sample request:
         {
-            "filter": "categories_to_skip_all_transacations",
+            "filter": "categories_to_skip_all_transactions",
             "categories": [
                 "Lending"
             ]

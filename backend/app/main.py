@@ -1,14 +1,17 @@
-from typing import Dict
-from fastapi import FastAPI
-import pandas as pd
-from app.schemas import *
-import uvicorn
+# ============================================================================ #
+#                                     TODO                                     #
+# ============================================================================ #
+# TODO: Create class for tran_fact in models file
+# TODO: Read from table instead of file in transactions.py
+
+# ============================================================================ #
 import socket
 
-from . import models
-from .database import engine, Base
+import uvicorn
+from app.schemas import *
+from fastapi import FastAPI
 
-from .routers import transactions, user, auth
+from .routers import auth, transactions, user
 
 # Base.metadata.create_all(bind=engine)
 
@@ -31,8 +34,6 @@ if __name__ == "__main__":
     # )
 
     hostname = socket.getfqdn()
-    # local_host = socket.gethostbyname_ex(hostname)[2][1]
-    # local_host = socket.gethostbyname_ex(hostname)[-1][-1]
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))

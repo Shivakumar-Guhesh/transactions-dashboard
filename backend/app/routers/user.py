@@ -1,10 +1,11 @@
 import os
-from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
+
+from dotenv import load_dotenv
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
-from ..database import get_db
 from .. import models, schemas, utils
-from dotenv import load_dotenv
+from ..database import get_db
 
 # from ..database import get_db
 
