@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DOTENV = ".env"
+DOTENV = "./.env"
 
 
 class Settings(BaseSettings):

@@ -1,6 +1,9 @@
+import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 
 from .. import database, models, oauth2, schemas, utils
 
@@ -13,17 +16,23 @@ def login(
     db: Session = Depends(database.get_db),
 ):
 
-    user = (
-        db.query(models.User)
-        .filter(models.User.email == user_credentials.username)
-        .first()
-    )
+    # user = (
+    #     db.query(models.User)
+    #     .filter(models.User.email == user_credentials.username)
+    #     .first()
+    # )
 
-    if not user:
+    # user = db.execute(select(models.User).filter_by(email=user_credentials.username))
+    try:
+        user = (
+            db.execute(select(models.User).filter_by(email=user_credentials.username))
+            .scalars()
+            .one()
+        )
+    except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"
         )
-
     if not utils.verify(user_credentials.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"

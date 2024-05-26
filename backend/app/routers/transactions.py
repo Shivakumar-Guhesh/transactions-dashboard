@@ -2,10 +2,14 @@ from typing import Dict
 
 import pandas as pd
 from app import utils
-from fastapi import APIRouter, FastAPI, HTTPException, Response, status
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Response, status
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 
-from .. import schemas
+from .. import models, schemas, utils
 from ..constants import INPUT_FILE
+from ..database import get_db
 
 router = APIRouter(
     # prefix="/",
@@ -29,18 +33,44 @@ filters["categories_to_skip_income"] = []
 # categories_to_skip_expense = []
 # categories_to_skip_expense = ["Security Deposit"]
 
-cat_expense_sum = utils.group_wise_aggregation(
-    data=data,
-    groupby_col="Category",
-    aggregate_col="Amount",
-    filter_col="Income/Expense",
-    filter_val="Expense",
-    sort=True,
-)
+# cat_expense_sum = utils.group_wise_aggregation(
+#     data=data,
+#     groupby_col="Category",
+#     aggregate_col="Amount",
+#     filter_col="Income/Expense",
+#     filter_val="Expense",
+#     sort=True,
+# )
+
+
+@router.get("/data")
+def get_data(
+    limit: int = 100,
+    page=1,
+    db: Session = Depends(get_db),
+):
+
+    data = db.execute(select(models.TransactionFact).limit(limit)).scalars().all()
+
+    return data
+
+
+# @router.get("/data")
+# def get_data(limit: int = 100, page=1):
+#     # return data.to_dict("records")
+#     if data.empty:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Not found")
+#     # return JSONResponse(content=result)
+#     paged_data = data.tail(limit)
+#     return Response(paged_data.to_json(orient="records"), media_type="application/json")
 
 
 @router.get("/cat_expense_sum")
-def get_cat_expense_sum():
+def get_cat_expense_sum(
+    exclude_categories: list = [],
+    exclude_incomes: list = [],
+    db: Session = Depends(get_db),
+):
     """GET endpoint for cat_expense_sum.
     Returns category-wise summarized data
 
@@ -50,23 +80,31 @@ def get_cat_expense_sum():
     # result = cat_expense_sum.to_dict("records")
     # result = cat_expense_sum.to_dict()
 
+    # SELECT aggregate_func(aggregate_col) FROM data GROUP BY groupby_col
     # print(json.dumps(result))
-    if cat_expense_sum.empty:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Not found")
-    # return JSONResponse(content=result)
-    return Response(
-        cat_expense_sum.to_json(orient="records"), media_type="application/json"
-    )
+    # if cat_expense_sum.empty:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Not found")
+    # # return JSONResponse(content=result)
+    # return Response(
+    #     cat_expense_sum.to_json(orient="records"), media_type="application/json"
+    # )
 
-
-@router.get("/data")
-def get_data(limit: int = 100, page=1):
-    # return data.to_dict("records")
-    if data.empty:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Not found")
-    # return JSONResponse(content=result)
-    paged_data = data.tail(limit)
-    return Response(paged_data.to_json(orient="records"), media_type="application/json")
+    try:
+        cat_expense_sum = (
+            db.execute(
+                select(
+                    models.TransactionFact.category,
+                    func.sum(models.TransactionFact.amount),
+                ).group_by(models.TransactionFact.category)
+            ).all()
+            # .scalars()
+            # .all()
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return cat_expense_sum
 
 
 @router.post("/filters", status_code=status.HTTP_201_CREATED)

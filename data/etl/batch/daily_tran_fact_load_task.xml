@@ -43,7 +43,7 @@
     <Exec>
     <!-- Change python path -->
           <Command>C:\Users\Shivakumar\AppData\Local\Programs\Python\Python310\python.exe</Command>
-      <Arguments>-m data.etl.tran_fact_load.py</Arguments>
+      <Arguments>-m etl.tran_fact_load</Arguments>
     <!-- Change working directory path -->
       <WorkingDirectory>D:\transactions_dashboard</WorkingDirectory>
     </Exec>

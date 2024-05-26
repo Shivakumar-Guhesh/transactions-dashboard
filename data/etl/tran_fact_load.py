@@ -13,8 +13,8 @@ from pathlib import Path
 import pandas as pd
 from sqlalchemy import create_engine
 
-from ..config import Settings
-from ..constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
+from .config import Settings
+from .constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
 
 settings = Settings.model_validate({})
 
@@ -87,14 +87,12 @@ else:
     f = open(DATE_CONTROL_FILE_PATH, "r")
     LAST_PROCESSED_DATE = datetime.datetime.strptime(f.read(), DATE_FORMATTER)
     f.close()
-logger.info(f"Reading records later than {LAST_PROCESSED_DATE}")
+logger.info(
+    f"Reading records later than {LAST_PROCESSED_DATE} and less than {CURRENT_DATE}"
+)
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-
-print(SQLALCHEMY_DATABASE_URL)
-input()
-input()
 
 input_df = pd.read_excel(INPUT_FILE, index_col=None)
 
@@ -131,7 +129,7 @@ tran_fact_df.to_sql(TABLE_NAME, con=engine, if_exists="append", index=False)
 logger.info(f"Inserted {tran_fact_df.shape[0]} records into {TABLE_NAME}")
 
 f = open(DATE_CONTROL_FILE_PATH, "w")
-f.write(f"{CURRENT_DATE}")
+f.write(f"{YESTER_DATE}")
 f.close()
 
-logger.info(f"Completed processing for {YESTER_DATE}")
+logger.info(f"Completed processing for {CURRENT_DATE}")
