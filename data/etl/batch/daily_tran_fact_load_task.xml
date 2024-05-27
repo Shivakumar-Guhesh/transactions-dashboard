@@ -45,7 +45,7 @@
           <Command>C:\Users\Shivakumar\AppData\Local\Programs\Python\Python310\python.exe</Command>
       <Arguments>-m etl.tran_fact_load</Arguments>
     <!-- Change working directory path -->
-      <WorkingDirectory>D:\transactions_dashboard</WorkingDirectory>
+      <WorkingDirectory>D:\transactions_dashboard\data</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>

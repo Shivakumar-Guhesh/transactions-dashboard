@@ -42,3 +42,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
+
+class CatSumIn(BaseModel):
+    exclude_expenses: list[str] = []
+    exclude_incomes: list[str] = []

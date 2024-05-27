@@ -1,18 +1,16 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 
 from .. import models, schemas, utils
 from ..database import get_db
 
-# from ..database import get_db
-
 router = APIRouter(prefix="/users", tags=["Users"])
 
-# /users/
-# /users
 
 env_filename = ".env"
 
@@ -42,12 +40,13 @@ def get_user(
     user_account_id: int,
     db: Session = Depends(get_db),
 ):
-    user = (
-        db.query(models.User)
-        .filter(models.User.user_account_id == user_account_id)
-        .first()
-    )
-    if not user:
+    try:
+        user = (
+            db.execute(select(models.User).filter_by(user_account_id=user_account_id))
+            .scalars()
+            .one()
+        )
+    except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id: {id} does not exist",
