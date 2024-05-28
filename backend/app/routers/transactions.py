@@ -10,6 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from .. import models, schemas
 from ..constants import INPUT_FILE
 from ..database import get_db
+from ..db_utils import summarized_transactions
 
 router = APIRouter(tags=["Transaction Data"])
 
@@ -51,20 +52,17 @@ def get_cat_expense_sum(
         result: category-wise summarized expenses
     """
     exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
     try:
-        cat_expense_sum = db.execute(
-            select(
-                models.TransactionFact.category,
-                func.sum(models.TransactionFact.amount),
-            )
-            .where(
-                and_(
-                    models.TransactionFact.category.notin_(exclude_expenses),
-                    models.TransactionFact.transaction_type == "Expense",
-                )
-            )
-            .group_by(models.TransactionFact.category)
-        ).all()
+        cat_expense_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"

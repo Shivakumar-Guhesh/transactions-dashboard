@@ -1,10 +1,11 @@
+import difflib
+import json
+import typing
+
 import numpy as np
 import pandas as pd
-from tabulate import tabulate
-import difflib
-import typing
-import json
 from passlib.context import CryptContext
+from tabulate import tabulate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -44,7 +45,7 @@ def print_divider():
 
 
 def wait_for_input():
-    """Pauses the exection of the program until any key is pressed"""
+    """Pauses the execution of the program until any key is pressed"""
 
     input("Press Enter to continue.")
 
@@ -74,7 +75,7 @@ def delete_data(
 
     Parameters:
         data: Pandas Dataframe
-        categories: List of categories to be deleted based on folowing flags.
+        categories: List of categories to be deleted based on following flags.
         delete_income: If this flag is true, income transactions of the chosen categories will be deleted
         delete_expense: If this flag is true, expense transactions of the chosen categories will be deleted
 
@@ -316,7 +317,7 @@ def dump_json(json_file: str, data: dict, mode="w"):
 
     Parameters:
         json_file: Path of the target json file
-        data: Python dictionary which is to be writted
+        data: Python dictionary which is to be written
         mode: Mode of file writing
 
     """
