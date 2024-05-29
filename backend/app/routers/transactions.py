@@ -4,6 +4,7 @@ import pandas as pd
 from app import utils
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import and_, func, select
+from sqlalchemy.engine.row import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -42,11 +43,10 @@ def get_data(
 
 @router.get("/cat_expense_sum")
 def get_cat_expense_sum(
-    body: schemas.CatSumIn,
+    body: schemas.TransactionsSum,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for cat_expense_sum.
-    Returns category-wise summarized expenses
+    """GET endpoint category-wise summarized expenses
 
     Returns:
         result: category-wise summarized expenses
@@ -68,6 +68,224 @@ def get_cat_expense_sum(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
     return cat_expense_sum
+
+
+@router.get("/cat_income_sum")
+def get_cat_income_sum(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for category-wise summarized incomes
+
+    Returns:
+        result: category-wise summarized incomes
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        cat_income_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return cat_income_sum
+
+
+@router.get("/month_expense_sum")
+def get_month_expense_sum(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for month-wise summarized expenses
+
+    Returns:
+        result: month-wise summarized expenses
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        month_expense_sum = summarized_transactions(
+            db=db,
+            groupby_column=func.strftime(
+                "%Y-%m", models.TransactionFact.transaction_date
+            ).label("Month"),
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return month_expense_sum
+
+
+@router.get("/month_income_sum")
+def get_month_income_sum(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for month-wise summarized incomes
+
+    Returns:
+        result: month-wise summarized incomes
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        month_income_sum = summarized_transactions(
+            db=db,
+            groupby_column=func.strftime(
+                "%Y-%m", models.TransactionFact.transaction_date
+            ).label("Month"),
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return month_income_sum
+
+
+@router.get("/mode_expense_sum")
+def get_mode_expense_sum(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint mode-wise summarized expenses
+
+    Returns:
+        result: mode-wise summarized expenses
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        mode_expense_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.transaction_mode,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return mode_expense_sum
+
+
+@router.get("/mode_income_sum")
+def get_mode_income_sum(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for mode-wise summarized incomes
+
+    Returns:
+        result: mode-wise summarized incomes
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        mode_income_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.transaction_mode,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return mode_income_sum
+
+
+@router.get("/monthly_balance")
+def get_monthly_balance(
+    body: schemas.TransactionsSum,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for balance at the end of each month
+
+    Returns:
+        result: Balance at the end of each month
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        month_income_sum = summarized_transactions(
+            db=db,
+            groupby_column=func.strftime(
+                "%Y-%m", models.TransactionFact.transaction_date
+            ).label("Month"),
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+        month_expense_sum = summarized_transactions(
+            db=db,
+            groupby_column=func.strftime(
+                "%Y-%m", models.TransactionFact.transaction_date
+            ).label("Month"),
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
+        len1 = len(month_expense_sum)
+        len2 = len(month_income_sum)
+        month_expenses = [elem[1] for elem in month_expense_sum]
+        month_incomes = [elem[1] for elem in month_income_sum]
+        max_len: int
+        months: list[str]
+        balances: list[int]
+        if len1 > len2:
+            max_len = len1
+            months = [elem[0] for elem in month_expense_sum]
+        else:
+            max_len = len2
+            months = [elem[0] for elem in month_income_sum]
+        balances = [0] * len(months)
+        if len1 < max_len:
+            month_expenses += [0] * (max_len - len1)
+        elif len2 < max_len:
+            month_incomes += [0] * (max_len - len2)
+        balances[0] = month_incomes[0] - month_expenses[0]
+        for i in range(1, len(months)):
+            balances[i] = balances[i - 1] + month_incomes[i] - month_expenses[i]
+        result = [
+            {"Month": month, "Balance": balance}
+            for month, balance in zip(months, balances)
+        ]
+        return result
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+
+    return month_income_sum
 
 
 @router.post("/filters", status_code=status.HTTP_201_CREATED)
