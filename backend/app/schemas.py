@@ -44,6 +44,6 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 
-class TransactionsSum(BaseModel):
+class TransactionsFiltersIn(BaseModel):
     exclude_expenses: list[str] = []
     exclude_incomes: list[str] = []

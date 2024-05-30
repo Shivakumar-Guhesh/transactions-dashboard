@@ -33,3 +33,22 @@ def summarized_transactions(
             )
         ).group_by(groupby_column)
     ).all()
+
+
+def total_amount(
+    db: Session,
+    aggregate_column: InstrumentedAttribute,
+    exclude_expenses: list[str],
+    exclude_incomes: list[str],
+    filter_value: str,
+    filter_column: InstrumentedAttribute,
+):
+    return db.execute(
+        select(func.sum(aggregate_column)).where(
+            and_(
+                models.TransactionFact.category.notin_(exclude_expenses),
+                models.TransactionFact.category.notin_(exclude_incomes),
+                filter_column == filter_value,
+            )
+        )
+    ).scalar_one()

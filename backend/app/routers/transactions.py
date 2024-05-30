@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from .. import models, schemas
 from ..constants import INPUT_FILE
 from ..database import get_db
-from ..db_utils import summarized_transactions
+from ..db_utils import summarized_transactions, total_amount
 
 router = APIRouter(tags=["Transaction Data"])
 
@@ -41,9 +41,66 @@ def get_data(
     return data
 
 
+@router.get("/total_expense")
+def get_total_expense(
+    body: schemas.TransactionsFiltersIn,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for total expense
+
+    Returns:
+        result: sum of all expenses
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        total_expense = total_amount(
+            db=db,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+
+    return total_expense
+
+
+@router.get("/total_income")
+def get_total_income(
+    body: schemas.TransactionsFiltersIn,
+    db: Session = Depends(get_db),
+):
+    """GET endpoint for total income
+
+    Returns:
+        result: sum of all incomes
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        total_income = total_amount(
+            db=db,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
+        )
+    return total_income
+
+
 @router.get("/cat_expense_sum")
 def get_cat_expense_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint category-wise summarized expenses
@@ -72,7 +129,7 @@ def get_cat_expense_sum(
 
 @router.get("/cat_income_sum")
 def get_cat_income_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint for category-wise summarized incomes
@@ -101,7 +158,7 @@ def get_cat_income_sum(
 
 @router.get("/month_expense_sum")
 def get_month_expense_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint for month-wise summarized expenses
@@ -132,7 +189,7 @@ def get_month_expense_sum(
 
 @router.get("/month_income_sum")
 def get_month_income_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint for month-wise summarized incomes
@@ -163,7 +220,7 @@ def get_month_income_sum(
 
 @router.get("/mode_expense_sum")
 def get_mode_expense_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint mode-wise summarized expenses
@@ -192,7 +249,7 @@ def get_mode_expense_sum(
 
 @router.get("/mode_income_sum")
 def get_mode_income_sum(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint for mode-wise summarized incomes
@@ -221,7 +278,7 @@ def get_mode_income_sum(
 
 @router.get("/monthly_balance")
 def get_monthly_balance(
-    body: schemas.TransactionsSum,
+    body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
     """GET endpoint for balance at the end of each month
