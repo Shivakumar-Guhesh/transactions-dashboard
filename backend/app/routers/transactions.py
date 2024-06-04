@@ -1,26 +1,28 @@
 from typing import Dict
 
-import pandas as pd
+# import pandas as pd
 from app import utils
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import and_, func, select
+from sqlalchemy import and_, func, select, text
 from sqlalchemy.engine.row import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
 from .. import models, schemas
-from ..constants import INPUT_FILE
+from ..constants import *
+
+# from ..constants import INPUT_FILE
 from ..database import get_db
 from ..db_utils import summarized_transactions, total_amount
 
 router = APIRouter(tags=["Transaction Data"])
 
-data = pd.read_excel(INPUT_FILE)
+# data = pd.read_excel(INPUT_FILE)
 
 
-data["Month"] = utils.add_period(data=data, col="Date")
+# data["Month"] = utils.add_period(data=data, col="Date")
 
-data["Date"] = pd.to_datetime(data["Date"])
+# data["Date"] = pd.to_datetime(data["Date"])
 
 filters: Dict[str, list[str]] = dict()
 
@@ -96,6 +98,54 @@ def get_total_income(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
     return total_income
+
+
+@router.get("/net_worth")
+def get_net_worth(
+    body: schemas.TransactionsFiltersIn,
+    db: Session = Depends(get_db),
+):
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    try:
+        bought_assets = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            include_categories=assets_categories,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+        )
+        sold_assets = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            include_categories=assets_categories,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+        )
+
+        results_dict = {}
+        for asset in bought_assets:
+            print("asset[0]: ", asset[0], "asset[1]: ", asset[1])
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+        for asset in sold_assets:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] - asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+
+        return results_dict
+    except NoResultFound:
+        pass
+    pass
 
 
 @router.get("/cat_expense_sum")
@@ -341,8 +391,6 @@ def get_monthly_balance(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-
-    return month_income_sum
 
 
 @router.post("/filters", status_code=status.HTTP_201_CREATED)

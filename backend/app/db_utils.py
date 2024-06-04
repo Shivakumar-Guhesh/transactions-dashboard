@@ -14,6 +14,7 @@ def summarized_transactions(
     aggregate_column: InstrumentedAttribute,
     exclude_expenses: list[str],
     exclude_incomes: list[str],
+    include_categories: list[str] | None = None,
     filter_value: str | None = None,
     filter_column: InstrumentedAttribute | None = None,
 ) -> list[Row]:
@@ -25,6 +26,8 @@ def summarized_transactions(
     ]
     if filter_value is not None:
         filters.append(filter_column == filter_value)
+    if include_categories is not None:
+        filters.append(models.TransactionFact.category.in_(include_categories))
 
     return db.execute(
         select_query.where(

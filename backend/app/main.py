@@ -1,10 +1,3 @@
-# ============================================================================ #
-#                                     TODO                                     #
-# ============================================================================ #
-# TODO: Create class for tran_fact in models file
-# TODO: Read from table instead of file in transactions.py
-
-# ============================================================================ #
 import socket
 
 import uvicorn
