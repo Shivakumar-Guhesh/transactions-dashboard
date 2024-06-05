@@ -1,3 +1,4 @@
+import datetime
 from typing import Dict
 
 # import pandas as pd
@@ -10,19 +11,10 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from .. import models, schemas
 from ..constants import *
-
-# from ..constants import INPUT_FILE
 from ..database import get_db
 from ..db_utils import summarized_transactions, total_amount
 
 router = APIRouter(tags=["Transaction Data"])
-
-# data = pd.read_excel(INPUT_FILE)
-
-
-# data["Month"] = utils.add_period(data=data, col="Date")
-
-# data["Date"] = pd.to_datetime(data["Date"])
 
 filters: Dict[str, list[str]] = dict()
 
@@ -31,30 +23,64 @@ filters["categories_to_skip_expense"] = []
 filters["categories_to_skip_income"] = []
 
 
-@router.get("/data")
+@router.post("/data")
 def get_data(
+    body: schemas.TransactionsFiltersIn,
+    db: Session = Depends(get_db),
     limit: int = 100,
     page=1,
-    db: Session = Depends(get_db),
 ):
+    """POST endpoint for getting all transactions
 
-    data = db.execute(select(models.TransactionFact).limit(limit)).scalars().all()
+    Returns:
+        result: Transactions
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
+    filters = [
+        models.TransactionFact.category.notin_(exclude_expenses),
+        models.TransactionFact.category.notin_(exclude_incomes),
+    ]
+
+    if start_date is not None:
+        filters.append(models.TransactionFact.transaction_date >= start_date)
+    if end_date is not None:
+        filters.append(models.TransactionFact.transaction_date <= end_date)
+
+    data = (
+        db.execute(
+            select(models.TransactionFact)
+            .where(
+                and_(
+                    *filters,
+                )
+            )
+            .limit(limit),
+        )
+        .scalars()
+        .all()
+    )
 
     return data
 
 
-@router.get("/total_expense")
+@router.post("/total_expense")
 def get_total_expense(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for total expense
+    """POST endpoint for getting total expense
 
     Returns:
         result: sum of all expenses
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         total_expense = total_amount(
             db=db,
@@ -63,6 +89,8 @@ def get_total_expense(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -72,18 +100,20 @@ def get_total_expense(
     return total_expense
 
 
-@router.get("/total_income")
+@router.post("/total_income")
 def get_total_income(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for total income
+    """POST endpoint for getting total income
 
     Returns:
         result: sum of all incomes
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         total_income = total_amount(
             db=db,
@@ -92,6 +122,8 @@ def get_total_income(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -100,13 +132,20 @@ def get_total_income(
     return total_income
 
 
-@router.get("/net_worth")
+@router.post("/net_worth")
 def get_net_worth(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
+    """POST endpoint for getting net worth
+
+    Returns:
+        result: Net worth by category
+    """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         bought_assets = summarized_transactions(
             db=db,
@@ -117,6 +156,8 @@ def get_net_worth(
             include_categories=assets_categories,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
         sold_assets = summarized_transactions(
             db=db,
@@ -127,6 +168,8 @@ def get_net_worth(
             include_categories=assets_categories,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
 
         results_dict = {}
@@ -148,18 +191,20 @@ def get_net_worth(
     pass
 
 
-@router.get("/cat_expense_sum")
+@router.post("/cat_expense_sum")
 def get_cat_expense_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint category-wise summarized expenses
+    """POST endpoint category-wise summarized expenses
 
     Returns:
         result: category-wise summarized expenses
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         cat_expense_sum = summarized_transactions(
             db=db,
@@ -169,6 +214,8 @@ def get_cat_expense_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -177,18 +224,20 @@ def get_cat_expense_sum(
     return cat_expense_sum
 
 
-@router.get("/cat_income_sum")
+@router.post("/cat_income_sum")
 def get_cat_income_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for category-wise summarized incomes
+    """POST endpoint for getting category-wise summarized incomes
 
     Returns:
         result: category-wise summarized incomes
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         cat_income_sum = summarized_transactions(
             db=db,
@@ -198,6 +247,8 @@ def get_cat_income_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -206,18 +257,20 @@ def get_cat_income_sum(
     return cat_income_sum
 
 
-@router.get("/month_expense_sum")
+@router.post("/month_expense_sum")
 def get_month_expense_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for month-wise summarized expenses
+    """POST endpoint for getting month-wise summarized expenses
 
     Returns:
         result: month-wise summarized expenses
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         month_expense_sum = summarized_transactions(
             db=db,
@@ -229,6 +282,8 @@ def get_month_expense_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -237,18 +292,20 @@ def get_month_expense_sum(
     return month_expense_sum
 
 
-@router.get("/month_income_sum")
+@router.post("/month_income_sum")
 def get_month_income_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for month-wise summarized incomes
+    """POST endpoint for getting month-wise summarized incomes
 
     Returns:
         result: month-wise summarized incomes
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         month_income_sum = summarized_transactions(
             db=db,
@@ -260,6 +317,8 @@ def get_month_income_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -268,18 +327,20 @@ def get_month_income_sum(
     return month_income_sum
 
 
-@router.get("/mode_expense_sum")
+@router.post("/mode_expense_sum")
 def get_mode_expense_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint mode-wise summarized expenses
+    """POST endpoint mode-wise summarized expenses
 
     Returns:
         result: mode-wise summarized expenses
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         mode_expense_sum = summarized_transactions(
             db=db,
@@ -289,6 +350,8 @@ def get_mode_expense_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -297,18 +360,20 @@ def get_mode_expense_sum(
     return mode_expense_sum
 
 
-@router.get("/mode_income_sum")
+@router.post("/mode_income_sum")
 def get_mode_income_sum(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for mode-wise summarized incomes
+    """POST endpoint for getting mode-wise summarized incomes
 
     Returns:
         result: mode-wise summarized incomes
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         mode_income_sum = summarized_transactions(
             db=db,
@@ -318,6 +383,8 @@ def get_mode_income_sum(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
     except NoResultFound:
         raise HTTPException(
@@ -326,18 +393,20 @@ def get_mode_income_sum(
     return mode_income_sum
 
 
-@router.get("/monthly_balance")
+@router.post("/monthly_balance")
 def get_monthly_balance(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """GET endpoint for balance at the end of each month
+    """POST endpoint for getting balance at the end of each month
 
     Returns:
         result: Balance at the end of each month
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
     try:
         month_income_sum = summarized_transactions(
             db=db,
@@ -349,6 +418,8 @@ def get_monthly_balance(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
         )
         month_expense_sum = summarized_transactions(
             db=db,
@@ -360,6 +431,8 @@ def get_monthly_balance(
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
         )
         len1 = len(month_expense_sum)
         len2 = len(month_income_sum)

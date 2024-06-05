@@ -26,15 +26,32 @@ if __name__ == "__main__":
     #     "fastapi_app:app", host="192.168.1.12", port=5000, log_level="info", reload=True
     # )
 
-    hostname = socket.getfqdn()
+    # ============================================================================ #
+    #                       This part serves on ipv4 address                       #
+    # ============================================================================ #
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    local_host = s.getsockname()[0]
+    # hostname = socket.getfqdn()
+
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.connect(("8.8.8.8", 80))
+    # local_host = s.getsockname()[0]
+
+    # uvicorn.run(
+    #     "app.main:app",
+    #     host=local_host,
+    #     port=5000,
+    #     # log_level="info",
+    #     reload=True,
+    #     use_colors=True,
+    # )
+
+    # ============================================================================ #
+    #                         This part serves on localhost                        #
+    # ============================================================================ #
 
     uvicorn.run(
         "app.main:app",
-        host=local_host,
+        host="localhost",
         port=5000,
         # log_level="info",
         reload=True,
