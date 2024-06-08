@@ -5,3 +5,4 @@
 dt_ctrl.txt
 *.vscode
 *.idea
+.dart_tool/
