@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/side_bar.dart';
-// import 'package:frontend/theme/theme.dart';
 import 'package:frontend/widgets/top_bar.dart';
 
 class MainScreen extends StatelessWidget {
@@ -20,6 +19,7 @@ class MainScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Expanded(
+                    flex: 1,
                     child: SideBar(),
                   ),
                   Expanded(

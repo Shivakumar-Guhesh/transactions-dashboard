@@ -1,9 +1,10 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/providers/selected_date_range_provider.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CalendarDateRangePicker extends HookConsumerWidget {
+class CalendarDateRangePicker extends ConsumerWidget {
   const CalendarDateRangePicker({super.key});
 
   @override
@@ -29,7 +30,7 @@ class CalendarDateRangePicker extends HookConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Range Date Picker (With default value)'),
+        // const Text('Range Date Picker (With default value)'),
         const SizedBox(height: 20),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -76,7 +77,7 @@ class CalendarDateRangePicker extends HookConsumerWidget {
             Flexible(
               fit: FlexFit.loose,
               child: Container(
-                width: 300,
+                width: 350,
                 decoration: BoxDecoration(color: Colors.grey[50]),
                 child: CalendarDatePicker2(
                     config: config,
