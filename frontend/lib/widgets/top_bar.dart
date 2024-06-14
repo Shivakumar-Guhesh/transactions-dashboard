@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/data/categories.dart';
-import 'package:frontend/widgets/drop_down_multi_checkbox.dart';
+
+import 'package:frontend/multi_check_box_drop_down.dart';
+import 'package:frontend/providers/selected_categories_provider.dart';
+
 import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +18,7 @@ class TopBar extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
+  ConsumerState<TopBar> createState() {
     return _TopBarState();
   }
 }
@@ -57,9 +59,10 @@ class _TopBarState extends ConsumerState<TopBar> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) {
-                      return const Dialog(
-                        // backgroundColor: Colors.white,
-                        child: Padding(
+                      return Dialog(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: CalendarDateRangePicker(),
                         ),
@@ -103,74 +106,27 @@ class _TopBarState extends ConsumerState<TopBar> {
         if (showFilters)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            // height: 100,
-            // width: 1000,
             width: double.infinity,
-            color: Colors.red,
+            color: Colors.red[200],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // // TextButton(
-                // //   style: TextButton.styleFrom(
-                // //     backgroundColor: Colors.grey[350],
-                // //     shape: RoundedRectangleBorder(
-                // //       borderRadius: BorderRadius.circular(8),
-                // //     ),
-                // //   ),
-                // //   onPressed: () => showDialog<String>(
-                // //     context: context,
-                // //     builder: (BuildContext context) {
-                // //       return Dialog(
-                // // child:
-                // DropDownMultiCheckbox(
-                //     selectedList: const [], listOFStrings: excludeExpenses),
-                // // );
-                // // },
-                // // ),
-                // // child: Text("Expenses"),
-                // // ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey[350],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () => showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        child: DropDownMultiCheckbox(
-                            selectedList: expenseCategories,
-                            listOFStrings: expenseCategories),
-                      );
-                    },
-                  ),
-                  child: Text("Expenses"),
+                const MultiCheckBoxDropDown(
+                  type: TransactionType.expense,
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.grey[350],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () => showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        child: DropDownMultiCheckbox(
-                            selectedList: const [],
-                            listOFStrings: expenseCategories),
-                      );
-                    },
-                  ),
-                  child: Text("Incomes"),
+                const MultiCheckBoxDropDown(
+                  type: TransactionType.income,
                 ),
-                Checkbox(value: true, onChanged: (value) {}),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Save"),
+                Row(
+                  children: [
+                    Checkbox(value: true, onChanged: (value) {}),
+                    const Text("Remember Preferences"),
+                  ],
+                ),
+                OutlinedButton.icon(
+                  label: const Text("Close"),
+                  icon: const Icon(Icons.close),
+                  onPressed: _toggleFilter,
                 ),
               ],
             ),

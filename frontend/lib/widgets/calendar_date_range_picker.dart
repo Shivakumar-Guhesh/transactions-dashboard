@@ -13,8 +13,8 @@ class CalendarDateRangePicker extends ConsumerWidget {
     final config = CalendarDatePicker2Config(
       calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: Colors.blue[800],
-      weekdayLabelTextStyle: const TextStyle(
-        color: Colors.black87,
+      weekdayLabelTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onPrimary,
         fontWeight: FontWeight.bold,
       ),
       controlsTextStyle: const TextStyle(
@@ -43,32 +43,88 @@ class CalendarDateRangePicker extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      decoration: const BoxDecoration(color: Colors.purple),
-                      child: const Text("Clear Selection"),
+                      decoration: BoxDecoration(color: Colors.purple[100]),
+                      child: TextButton(
+                        child: const Text("Clear Selection"),
+                        onPressed: () {
+                          selectedDateState.setSelectedDates([]);
+                        },
+                      ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(color: Colors.indigo),
-                      child: const Text("Last 7 days"),
+                      decoration: BoxDecoration(color: Colors.indigo[100]),
+                      child: TextButton(
+                        child: const Text("Last 7 days"),
+                        onPressed: () {
+                          DateTime endDate = DateTime.now();
+                          DateTime startDate =
+                              endDate.subtract(const Duration(days: 7));
+                          selectedDateState.setSelectedDates([
+                            startDate,
+                            endDate,
+                          ]);
+                        },
+                      ),
                     ),
                     Container(
                       decoration: const BoxDecoration(color: Colors.blue),
-                      child: const Text("Last 30 days"),
+                      child: TextButton(
+                        child: const Text("Last 30 days"),
+                        onPressed: () {
+                          DateTime endDate = DateTime.now();
+                          DateTime startDate =
+                              endDate.subtract(const Duration(days: 30));
+                          selectedDateState.setSelectedDates([
+                            startDate,
+                            endDate,
+                          ]);
+                        },
+                      ),
                     ),
                     Container(
                       decoration: const BoxDecoration(color: Colors.green),
-                      child: const Text("Last quarter"),
+                      child: TextButton(
+                        child: const Text("Last 3 months"),
+                        onPressed: () {
+                          DateTime endDate = DateTime.now();
+                          DateTime startDate = DateTime(
+                              endDate.year, endDate.month - 3, endDate.day);
+                          selectedDateState.setSelectedDates([
+                            startDate,
+                            endDate,
+                          ]);
+                        },
+                      ),
                     ),
                     Container(
                       decoration: const BoxDecoration(color: Colors.yellow),
-                      child: const Text("Last 6 months"),
-                    ),
-                    Container(
-                      decoration: const BoxDecoration(color: Colors.orange),
-                      child: const Text("Sample"),
+                      child: TextButton(
+                        child: const Text("Last 6 months"),
+                        onPressed: () {
+                          DateTime endDate = DateTime.now();
+                          DateTime startDate = DateTime(
+                              endDate.year, endDate.month - 6, endDate.day);
+                          selectedDateState.setSelectedDates([
+                            startDate,
+                            endDate,
+                          ]);
+                        },
+                      ),
                     ),
                     Container(
                       decoration: const BoxDecoration(color: Colors.red),
-                      child: const Text("Last year"),
+                      child: TextButton(
+                        child: const Text("Last year"),
+                        onPressed: () {
+                          DateTime endDate = DateTime.now();
+                          DateTime startDate = DateTime(
+                              endDate.year - 1, endDate.month, endDate.day);
+                          selectedDateState.setSelectedDates([
+                            startDate,
+                            endDate,
+                          ]);
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -76,9 +132,8 @@ class CalendarDateRangePicker extends ConsumerWidget {
             ),
             Flexible(
               fit: FlexFit.loose,
-              child: Container(
+              child: SizedBox(
                 width: 350,
-                decoration: BoxDecoration(color: Colors.grey[50]),
                 child: CalendarDatePicker2(
                     config: config,
                     // value: _rangeDatePickerValueWithDefaultValue,

@@ -8,12 +8,27 @@ final selectedDateStateNotifier =
 
 class SelectedDateRangeState extends ChangeNotifier {
   List<DateTime?> selectedDateRange = [
-    DateTime(2024, 5, 6),
-    DateTime(2024, 5, 21),
+    DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day),
+    DateTime.now(),
   ];
+
+  void setStartDate(DateTime startDate) {
+    selectedDateRange = [];
+    // selectedDateRange[0] = startDate;
+    selectedDateRange.add(startDate);
+    notifyListeners();
+  }
 
   void setSelectedDates(List<DateTime?> dates) {
     selectedDateRange = dates;
+    // var oldStartDate = selectedDateRange[0];
+    // var oldEndDate = selectedDateRange[1];
+
+    selectedDateRange = [];
+    for (var date in dates) {
+      selectedDateRange.add(date);
+    }
+    // selectedDateRange = dates;
     notifyListeners();
   }
 
