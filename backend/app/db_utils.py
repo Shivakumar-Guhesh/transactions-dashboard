@@ -1,4 +1,5 @@
 import datetime
+from operator import or_
 from pickle import NONE
 
 from sqlalchemy import and_, func, select
@@ -23,10 +24,24 @@ def summarized_transactions(
 ) -> list[Row]:
 
     select_query = select(groupby_column, func.sum(aggregate_column))
-    filters = [
-        models.TransactionFact.category.notin_(exclude_expenses),
-        models.TransactionFact.category.notin_(exclude_incomes),
-    ]
+    exclude_ids = (
+        select(models.TransactionFact.transaction_fact_id)
+        .where(
+            or_(
+                and_(
+                    models.TransactionFact.transaction_type == "Expense",
+                    models.TransactionFact.category.in_(exclude_expenses),
+                ),
+                and_(
+                    models.TransactionFact.transaction_type == "Income",
+                    models.TransactionFact.category.in_(exclude_incomes),
+                ),
+            )
+        )
+        .subquery()
+    )
+
+    filters = [and_(models.TransactionFact.transaction_fact_id.notin_(exclude_ids))]
 
     if filter_value is not None:
         filters.append(filter_column == filter_value)
@@ -47,6 +62,19 @@ def summarized_transactions(
     ).all()
 
 
+def distinct_values(
+    db: Session,
+    column: InstrumentedAttribute,
+    filter_value: str,
+    filter_column: InstrumentedAttribute,
+):
+    return (
+        db.execute(select(func.distinct(column)).where(filter_column == filter_value))
+        .scalars()
+        .all()
+    )
+
+
 def total_amount(
     db: Session,
     aggregate_column: InstrumentedAttribute,
@@ -58,10 +86,34 @@ def total_amount(
     end_date: datetime.datetime | None = None,
 ):
 
+    # filters = [
+    #     models.TransactionFact.category.notin_(exclude_expenses),
+    #     models.TransactionFact.category.notin_(exclude_incomes),
+    #     filter_column == filter_value,
+    # ]
+
+    exclude_ids = (
+        select(models.TransactionFact.transaction_fact_id)
+        .where(
+            or_(
+                and_(
+                    models.TransactionFact.transaction_type == "Expense",
+                    models.TransactionFact.category.in_(exclude_expenses),
+                ),
+                and_(
+                    models.TransactionFact.transaction_type == "Income",
+                    models.TransactionFact.category.in_(exclude_incomes),
+                ),
+            )
+        )
+        .subquery()
+    )
+
     filters = [
-        models.TransactionFact.category.notin_(exclude_expenses),
-        models.TransactionFact.category.notin_(exclude_incomes),
-        filter_column == filter_value,
+        and_(
+            models.TransactionFact.transaction_fact_id.notin_(exclude_ids),
+            filter_column == filter_value,
+        )
     ]
 
     if start_date is not None:

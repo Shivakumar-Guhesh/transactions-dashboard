@@ -1,18 +1,19 @@
 import datetime
 from typing import Dict
 
-# import pandas as pd
-from app import utils
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import and_, func, select, text
 from sqlalchemy.engine.row import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
+# import pandas as pd
+from app import utils
+
 from .. import models, schemas
 from ..constants import *
 from ..database import get_db
-from ..db_utils import summarized_transactions, total_amount
+from ..db_utils import distinct_values, summarized_transactions, total_amount
 
 router = APIRouter(tags=["Transaction Data"])
 
@@ -65,6 +66,60 @@ def get_data(
     )
 
     return data
+
+
+@router.get("/expense_categories")
+def get_expense_categories(
+    db: Session = Depends(get_db),
+):
+    """Get endpoint for getting all expense categories
+
+    Returns:
+        result: expense categories
+    """
+    # expense_categories = (
+    #     db.execute(
+    #         select(func.distinct(models.TransactionFact.category)).where(
+    #             models.TransactionFact.transaction_type == "Expense"
+    #         )
+    #     )
+    #     .scalars()
+    #     .all()
+    # )
+    expense_categories = distinct_values(
+        db=db,
+        column=models.TransactionFact.category,
+        filter_column=models.TransactionFact.transaction_type,
+        filter_value="Expense",
+    )
+    return expense_categories
+
+
+@router.get("/income_categories")
+def get_income_categories(
+    db: Session = Depends(get_db),
+):
+    """Get endpoint for getting all income categories
+
+    Returns:
+        result: income categories
+    """
+    # expense_categories = (
+    #     db.execute(
+    #         select(func.distinct(models.TransactionFact.category)).where(
+    #             models.TransactionFact.transaction_type == "Expense"
+    #         )
+    #     )
+    #     .scalars()
+    #     .all()
+    # )
+    expense_categories = distinct_values(
+        db=db,
+        column=models.TransactionFact.category,
+        filter_column=models.TransactionFact.transaction_type,
+        filter_value="Income",
+    )
+    return expense_categories
 
 
 @router.post("/total_expense")
@@ -174,7 +229,6 @@ def get_net_worth(
 
         results_dict = {}
         for asset in bought_assets:
-            print("asset[0]: ", asset[0], "asset[1]: ", asset[1])
             if asset[0] in results_dict:
                 results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
             else:
@@ -455,10 +509,11 @@ def get_monthly_balance(
         balances[0] = month_incomes[0] - month_expenses[0]
         for i in range(1, len(months)):
             balances[i] = balances[i - 1] + month_incomes[i] - month_expenses[i]
-        result = [
-            {"Month": month, "Balance": balance}
-            for month, balance in zip(months, balances)
-        ]
+        # result = [
+        #     {"Month": month, "Balance": balance}
+        #     for month, balance in zip(months, balances)
+        # ]
+        result = [{month: balance} for month, balance in zip(months, balances)]
         return result
     except NoResultFound:
         raise HTTPException(
