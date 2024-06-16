@@ -16,7 +16,7 @@ class _SideBarState extends State<SideBar> {
       // color: ThemeData().copyWith().colorScheme.background,
       decoration: BoxDecoration(
         border: Border.all(
-          color: ThemeData().copyWith().colorScheme.onPrimary,
+          color: Colors.green,
         ),
         // color: Theme.of(context).colorScheme.background,
       ),

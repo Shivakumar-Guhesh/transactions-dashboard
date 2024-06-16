@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/multi_check_box_drop_down.dart';
-import 'package:frontend/providers/selected_categories_provider.dart';
+import 'package:frontend/providers/transaction_data_provider.dart';
 
 import 'package:intl/intl.dart';
 

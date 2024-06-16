@@ -7,3 +7,5 @@ dt_ctrl.txt
 *.idea
 .dart_tool/
 frontend/lib/data/categories.dart
+frontend/lib/data/assets.dart
+frontend/lib/data/monthly_balance.dart

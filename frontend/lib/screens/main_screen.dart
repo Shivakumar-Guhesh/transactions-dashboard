@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:frontend/widgets/side_bar.dart';
 import 'package:frontend/widgets/top_bar.dart';
 
+import '../widgets/kpi_metrics_section.dart';
+
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -24,11 +26,16 @@ class MainScreen extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 6,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        //  Colors.blue
-                      ),
+                    child: Column(
+                      children: [
+                        KpiMetricsSection(),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.amber),
+                            //  Colors.blue
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
