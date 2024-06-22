@@ -10,7 +10,9 @@ settings = Settings.model_validate({})
 SQLALCHEMY_DATABASE_URL = f"{settings.database_type}:///{settings.sqlite_database_path}"
 
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

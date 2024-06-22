@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:frontend/multi_check_box_drop_down.dart';
+import 'package:frontend/widgets/multi_check_box_drop_down.dart';
 import 'package:frontend/providers/transaction_data_provider.dart';
 
 import 'package:intl/intl.dart';
@@ -25,6 +25,8 @@ class TopBar extends ConsumerStatefulWidget {
 
 class _TopBarState extends ConsumerState<TopBar> {
   bool showFilters = false;
+  var shouldSavePreference = false;
+
   _toggleFilter() {
     setState(() {
       showFilters = !showFilters;
@@ -34,35 +36,40 @@ class _TopBarState extends ConsumerState<TopBar> {
   @override
   Widget build(BuildContext context) {
     final selectedDateState = ref.watch(selectedDateStateNotifier);
+    final selectedCategoriesState = ref.read(selectedCategoriesStateNotifier);
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: const BoxDecoration(color: Colors.grey),
+          color: Theme.of(context).colorScheme.secondaryContainer,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 1,
                 child: Text(
                   "Transaction Dashboard",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    // color: Colors.red,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: TextButton(
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey[350],
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))),
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) {
-                      return Dialog(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primaryContainer,
-                        child: const Padding(
+                      return const Dialog(
+                        // backgroundColor: Theme.of(context).colorScheme.surface,
+                        child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: CalendarDateRangePicker(),
                         ),
@@ -78,8 +85,9 @@ class _TopBarState extends ConsumerState<TopBar> {
                       ),
                       Text(
                         selectedDateState.formattedDates,
-                        style: const TextStyle(
-                          color: Colors.red,
+                        style: TextStyle(
+                          // color: Colors.red,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                       const Icon(Icons.arrow_drop_down),
@@ -107,7 +115,8 @@ class _TopBarState extends ConsumerState<TopBar> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             width: double.infinity,
-            color: Colors.red[200],
+            // color: Colors.red[200],
+            color: Theme.of(context).colorScheme.tertiaryContainer,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -119,11 +128,24 @@ class _TopBarState extends ConsumerState<TopBar> {
                 ),
                 Row(
                   children: [
-                    Checkbox(value: true, onChanged: (value) {}),
+                    Checkbox(
+                        value: shouldSavePreference,
+                        onChanged: (value) async {
+                          if (value == true) {
+                            await selectedCategoriesState
+                                .savePreferencesToFile();
+                          } else {
+                            await selectedCategoriesState
+                                .clearPreferencesFromFile();
+                          }
+                          setState(() {
+                            shouldSavePreference = value!;
+                          });
+                        }),
                     const Text("Remember Preferences"),
                   ],
                 ),
-                OutlinedButton.icon(
+                ElevatedButton.icon(
                   label: const Text("Close"),
                   icon: const Icon(Icons.close),
                   onPressed: _toggleFilter,

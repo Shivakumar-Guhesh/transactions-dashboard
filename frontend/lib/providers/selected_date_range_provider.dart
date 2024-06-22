@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 final selectedDateStateNotifier =
     ChangeNotifierProvider((ref) => SelectedDateRangeState());
 
-class SelectedDateRangeState extends ChangeNotifier {
+class SelectedDateRangeState with ChangeNotifier {
   List<DateTime?> selectedDateRange = [
-    DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day),
+    DateTime.utc(1900, 01, 01),
     DateTime.now(),
   ];
 

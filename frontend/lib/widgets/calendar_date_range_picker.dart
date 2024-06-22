@@ -11,19 +11,22 @@ class CalendarDateRangePicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDateState = ref.watch(selectedDateStateNotifier);
     final config = CalendarDatePicker2Config(
+      firstDate: DateTime.utc(1900, 01, 01),
+      selectedRangeHighlightColor:
+          Theme.of(context).colorScheme.tertiaryContainer,
       calendarType: CalendarDatePicker2Type.range,
-      selectedDayHighlightColor: Colors.blue[800],
+      selectedDayHighlightColor: Theme.of(context).colorScheme.tertiary,
       weekdayLabelTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onPrimary,
+        color: Theme.of(context).colorScheme.onSurface,
         fontWeight: FontWeight.bold,
       ),
-      controlsTextStyle: const TextStyle(
-        color: Colors.black,
+      controlsTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
         fontSize: 15,
         fontWeight: FontWeight.bold,
       ),
-      dayTextStyle: const TextStyle(
-        color: Colors.black,
+      dayTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
         fontSize: 15,
       ),
     );
@@ -37,28 +40,40 @@ class CalendarDateRangePicker extends ConsumerWidget {
           children: [
             SizedBox(
               height: (config.controlsHeight ?? 52) + (42 * (6 + 1)),
+              width: 150,
               child: Container(
-                decoration: const BoxDecoration(color: Colors.brown),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Theme.of(context).colorScheme.secondary),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      decoration: BoxDecoration(color: Colors.purple[100]),
+                      width: 150,
+                      // decoration: BoxDecoration(color: Colors.purple[100]),
                       child: TextButton(
-                        child: const Text("Clear Selection"),
+                        child: Text(
+                          "Clear Selection",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onTertiary),
+                        ),
                         onPressed: () {
                           selectedDateState.setSelectedDates([]);
                         },
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(color: Colors.indigo[100]),
+                      width: 150,
+                      // decoration: BoxDecoration(color: Colors.indigo[100]),
                       child: TextButton(
-                        child: const Text("Last 7 days"),
+                        child: Text(
+                          "All Time",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
                         onPressed: () {
                           DateTime endDate = DateTime.now();
-                          DateTime startDate =
-                              endDate.subtract(const Duration(days: 7));
+                          DateTime startDate = DateTime.utc(1900, 01, 01);
                           selectedDateState.setSelectedDates([
                             startDate,
                             endDate,
@@ -67,9 +82,13 @@ class CalendarDateRangePicker extends ConsumerWidget {
                       ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(color: Colors.blue),
+                      width: 150,
                       child: TextButton(
-                        child: const Text("Last 30 days"),
+                        child: Text(
+                          "Last 30 days",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
                         onPressed: () {
                           DateTime endDate = DateTime.now();
                           DateTime startDate =
@@ -82,9 +101,13 @@ class CalendarDateRangePicker extends ConsumerWidget {
                       ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(color: Colors.green),
+                      width: 150,
                       child: TextButton(
-                        child: const Text("Last 3 months"),
+                        child: Text(
+                          "Last 3 months",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
                         onPressed: () {
                           DateTime endDate = DateTime.now();
                           DateTime startDate = DateTime(
@@ -97,9 +120,13 @@ class CalendarDateRangePicker extends ConsumerWidget {
                       ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(color: Colors.yellow),
+                      width: 150,
                       child: TextButton(
-                        child: const Text("Last 6 months"),
+                        child: Text(
+                          "Last 6 months",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
                         onPressed: () {
                           DateTime endDate = DateTime.now();
                           DateTime startDate = DateTime(
@@ -112,9 +139,13 @@ class CalendarDateRangePicker extends ConsumerWidget {
                       ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(color: Colors.red),
+                      width: 150,
                       child: TextButton(
-                        child: const Text("Last year"),
+                        child: Text(
+                          "Last year",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
                         onPressed: () {
                           DateTime endDate = DateTime.now();
                           DateTime startDate = DateTime(

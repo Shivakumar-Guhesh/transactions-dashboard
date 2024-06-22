@@ -9,6 +9,10 @@ class AppThemeState extends ChangeNotifier {
   static var brightness =
       SchedulerBinding.instance.platformDispatcher.platformBrightness;
 
+  bool getIsDarkModeEnabled() {
+    return isDarkModeEnabled;
+  }
+
   bool isDarkModeEnabled = brightness == Brightness.dark;
 
   void setLightTheme() {

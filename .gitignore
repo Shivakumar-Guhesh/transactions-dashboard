@@ -9,3 +9,5 @@ dt_ctrl.txt
 frontend/lib/data/categories.dart
 frontend/lib/data/assets.dart
 frontend/lib/data/monthly_balance.dart
+frontend/build/*
+frontend/windows/*

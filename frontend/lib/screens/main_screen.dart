@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/chart_sections.dart';
 import 'package:frontend/widgets/side_bar.dart';
 import 'package:frontend/widgets/top_bar.dart';
 
@@ -9,18 +10,18 @@ class MainScreen extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const TopBar(),
+            TopBar(),
             Expanded(
               flex: 12,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Expanded(
+                  Expanded(
                     flex: 1,
                     child: SideBar(),
                   ),
@@ -29,12 +30,13 @@ class MainScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         KpiMetricsSection(),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.amber),
-                            //  Colors.blue
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     border: Border.all(color: Colors.amber),
+                        //     //  Colors.blue
+                        //   ),
+                        // ),
+                        ChartsSection(),
                       ],
                     ),
                   ),

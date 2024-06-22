@@ -151,7 +151,6 @@ def get_total_expense(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-
     return total_expense
 
 
@@ -169,6 +168,7 @@ def get_total_income(
     exclude_incomes = body.exclude_incomes
     start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
     end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
+
     try:
         total_income = total_amount(
             db=db,
@@ -201,6 +201,7 @@ def get_net_worth(
     exclude_incomes = body.exclude_incomes
     start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
     end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
+
     try:
         bought_assets = summarized_transactions(
             db=db,
@@ -509,11 +510,11 @@ def get_monthly_balance(
         balances[0] = month_incomes[0] - month_expenses[0]
         for i in range(1, len(months)):
             balances[i] = balances[i - 1] + month_incomes[i] - month_expenses[i]
-        # result = [
-        #     {"Month": month, "Balance": balance}
-        #     for month, balance in zip(months, balances)
-        # ]
-        result = [{month: balance} for month, balance in zip(months, balances)]
+        result = [
+            {"Month": month, "Balance": balance}
+            for month, balance in zip(months, balances)
+        ]
+        # result = [{month: balance} for month, balance in zip(months, balances)]
         return result
     except NoResultFound:
         raise HTTPException(

@@ -24,25 +24,25 @@ def summarized_transactions(
 ) -> list[Row]:
 
     select_query = select(groupby_column, func.sum(aggregate_column))
-    exclude_ids = (
-        select(models.TransactionFact.transaction_fact_id)
-        .where(
-            or_(
-                and_(
-                    models.TransactionFact.transaction_type == "Expense",
-                    models.TransactionFact.category.in_(exclude_expenses),
-                ),
-                and_(
-                    models.TransactionFact.transaction_type == "Income",
-                    models.TransactionFact.category.in_(exclude_incomes),
-                ),
-            )
-        )
-        .subquery()
-    )
+    # exclude_ids = (
+    #     select(models.TransactionFact.transaction_fact_id)
+    #     .where(
+    #         or_(
+    #             and_(
+    #                 models.TransactionFact.transaction_type == "Expense",
+    #                 models.TransactionFact.category.in_(exclude_expenses),
+    #             ),
+    #             and_(
+    #                 models.TransactionFact.transaction_type == "Income",
+    #                 models.TransactionFact.category.in_(exclude_incomes),
+    #             ),
+    #         )
+    #     )
+    #     .subquery()
+    # )
 
-    filters = [and_(models.TransactionFact.transaction_fact_id.notin_(exclude_ids))]
-
+    # filters = [and_(models.TransactionFact.transaction_fact_id.notin_(exclude_ids))]
+    filters = []
     if filter_value is not None:
         filters.append(filter_column == filter_value)
     if include_categories is not None:
@@ -57,8 +57,24 @@ def summarized_transactions(
         select_query.where(
             and_(
                 *filters,
+                models.TransactionFact.transaction_fact_id.not_in(
+                    select(models.TransactionFact.transaction_fact_id).where(
+                        or_(
+                            and_(
+                                models.TransactionFact.transaction_type == "Expense",
+                                models.TransactionFact.category.in_(exclude_expenses),
+                            ),
+                            and_(
+                                models.TransactionFact.transaction_type == "Income",
+                                models.TransactionFact.category.in_(exclude_incomes),
+                            ),
+                        )
+                    )
+                ),
             )
-        ).group_by(groupby_column)
+        )
+        .group_by(groupby_column)
+        .order_by(groupby_column)
     ).all()
 
 
@@ -69,7 +85,11 @@ def distinct_values(
     filter_column: InstrumentedAttribute,
 ):
     return (
-        db.execute(select(func.distinct(column)).where(filter_column == filter_value))
+        db.execute(
+            select(func.distinct(column))
+            .where(filter_column == filter_value)
+            .order_by(column)
+        )
         .scalars()
         .all()
     )
@@ -92,30 +112,30 @@ def total_amount(
     #     filter_column == filter_value,
     # ]
 
-    exclude_ids = (
-        select(models.TransactionFact.transaction_fact_id)
-        .where(
-            or_(
-                and_(
-                    models.TransactionFact.transaction_type == "Expense",
-                    models.TransactionFact.category.in_(exclude_expenses),
-                ),
-                and_(
-                    models.TransactionFact.transaction_type == "Income",
-                    models.TransactionFact.category.in_(exclude_incomes),
-                ),
-            )
-        )
-        .subquery()
-    )
+    # exclude_ids = (
+    #     select(models.TransactionFact.transaction_fact_id)
+    #     .where(
+    #         or_(
+    #             and_(
+    #                 models.TransactionFact.transaction_type == "Expense",
+    #                 models.TransactionFact.category.in_(exclude_expenses),
+    #             ),
+    #             and_(
+    #                 models.TransactionFact.transaction_type == "Income",
+    #                 models.TransactionFact.category.in_(exclude_incomes),
+    #             ),
+    #         )
+    #     )
+    #     .subquery()
+    # )
 
-    filters = [
-        and_(
-            models.TransactionFact.transaction_fact_id.notin_(exclude_ids),
-            filter_column == filter_value,
-        )
-    ]
-
+    # filters = [
+    #     and_(
+    #         # models.TransactionFact.transaction_fact_id.notin_(exclude_ids),
+    #         filter_column == filter_value,
+    #     )
+    # ]
+    filters = []
     if start_date is not None:
         filters.append(models.TransactionFact.transaction_date >= start_date)
     if end_date is not None:
@@ -125,6 +145,21 @@ def total_amount(
         select(func.sum(aggregate_column)).where(
             and_(
                 *filters,
+                filter_column == filter_value,
+                models.TransactionFact.transaction_fact_id.not_in(
+                    select(models.TransactionFact.transaction_fact_id).where(
+                        or_(
+                            and_(
+                                models.TransactionFact.transaction_type == "Expense",
+                                models.TransactionFact.category.in_(exclude_expenses),
+                            ),
+                            and_(
+                                models.TransactionFact.transaction_type == "Income",
+                                models.TransactionFact.category.in_(exclude_incomes),
+                            ),
+                        )
+                    )
+                ),
             )
         )
     ).scalar_one()
