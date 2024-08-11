@@ -64,8 +64,9 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
     List<DateTime> dates = [];
     for (int i = 0;
         i <=
-            Jiffy.parseFromDateTime(lastDate)
-                .diff(Jiffy.parseFromDateTime(startDate), unit: Unit.month);
+            1 +
+                Jiffy.parseFromDateTime(lastDate)
+                    .diff(Jiffy.parseFromDateTime(startDate), unit: Unit.month);
         i++) {
       dates.add(DateTime(startDate.year, startDate.month + i));
     }
@@ -80,7 +81,6 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
         text = const Text('', style: style);
         break;
     }
-
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: text,

@@ -11,39 +11,39 @@ class MainScreen extends StatelessWidget {
   @override
   build(BuildContext context) {
     return const SafeArea(
-      child: Scaffold(
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TopBar(),
-            Expanded(
-              flex: 12,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: SideBar(),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      children: [
-                        KpiMetricsSection(),
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(color: Colors.amber),
-                        //     //  Colors.blue
-                        //   ),
-                        // ),
-                        ChartsSection(),
-                      ],
+      child: SelectionArea(
+        child: Scaffold(
+          body: Column(
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              TopBar(),
+              Expanded(
+                flex: 12,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: SideBar(),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 8,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KpiMetricsSection(),
+                            ChartsSection(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

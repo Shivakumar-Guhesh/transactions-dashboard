@@ -249,6 +249,7 @@ class MaterialTheme {
         ),
         scaffoldBackgroundColor: colorScheme.background,
         canvasColor: colorScheme.surface,
+        fontFamily: 'Courier Prime',
       );
 
   List<ExtendedColor> get extendedColors => [];

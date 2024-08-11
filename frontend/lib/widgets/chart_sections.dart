@@ -47,7 +47,7 @@ class ChartsSection extends ConsumerWidget {
         ref.watch(modeExpenseSumProvider(transactionsFiltersIn));
     final modeIncomeSumData =
         ref.watch(modeIncomeSumProvider(transactionsFiltersIn));
-    final monthlyBalanceDate = ref.watch(
+    final monthlyBalanceData = ref.watch(
       monthlyBalanceProvider(transactionsFiltersInWithoutDates),
     );
 
@@ -76,7 +76,7 @@ class ChartsSection extends ConsumerWidget {
       },
     );
 
-    var monthlyBalanceLineChart = monthlyBalanceDate.when(
+    var monthlyBalanceLineChart = monthlyBalanceData.when(
       data: (data) {
         // data.sort((a, b) => b["sum"].compareTo(a["sum"]));
         List<String> months = [];
@@ -98,7 +98,7 @@ class ChartsSection extends ConsumerWidget {
     );
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         monthlyBalanceLineChart,
         categoryDonutChart,

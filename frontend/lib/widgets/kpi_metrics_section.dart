@@ -6,6 +6,9 @@ import 'package:frontend/providers/transaction_data_provider.dart';
 
 import 'kpi_metric_card.dart';
 
+final DateTime oldestDate = DateTime.utc(1900, 01, 01);
+final DateTime currentDate = DateTime.now();
+
 class KpiMetricsSection extends ConsumerWidget {
   const KpiMetricsSection({
     super.key,
@@ -40,6 +43,13 @@ class KpiMetricsSection extends ConsumerWidget {
         excludeIncomes: income,
         startDate: startDate,
         endDate: endDate);
+
+    final transactionsFiltersInWithoutDates = TransactionsFiltersIn(
+        excludeExpenses: expense,
+        excludeIncomes: income,
+        startDate: oldestDate,
+        endDate: currentDate);
+
     Map<String, dynamic> netWorthUptoLastMonth = {};
     double totalExpenseUptoLastMonth = 0.0;
     double totalIncomeUptoLastMonth = 0.0;
@@ -47,12 +57,23 @@ class KpiMetricsSection extends ConsumerWidget {
     Map<String, dynamic> netWorthUptoLastYear = {};
     double totalExpenseUptoLastYear = 0.0;
     double totalIncomeUptoLastYear = 0.0;
+
+    double currentMonthBalance = 0.0;
+    double uptoLastMonthBalance = 0.0;
+    double uptoLastYearBalance = 0.0;
+
+    final monthlyBalanceData = ref.watch(
+      monthlyBalanceProvider(transactionsFiltersInWithoutDates),
+    );
     final netWorthData = ref.watch(netWorthProvider(transactionsFiltersIn));
     final totalExpenseData =
         ref.watch(totalExpenseProvider(transactionsFiltersIn));
     final totalIncomeData =
         ref.watch(totalIncomeProvider(transactionsFiltersIn));
 
+    final monthlyBalanceUptoLastMonthData = ref.watch(
+      monthlyBalanceProvider(uptoLastMonthFilter),
+    );
     final netWorthUptoLastMonthData =
         ref.watch(netWorthProvider(uptoLastMonthFilter));
     final totalExpenseUptoLastMonthData =
@@ -60,6 +81,9 @@ class KpiMetricsSection extends ConsumerWidget {
     final totalIncomeUptoLastMonthData =
         ref.watch(totalIncomeProvider(uptoLastMonthFilter));
 
+    final monthlyBalanceUptoLastYearData = ref.watch(
+      monthlyBalanceProvider(uptoLastYearFilter),
+    );
     final netWorthUptoLastYearData =
         ref.watch(netWorthProvider(uptoLastYearFilter));
     final totalExpenseUptoLastYearData =
@@ -69,6 +93,35 @@ class KpiMetricsSection extends ConsumerWidget {
     /* ========================================================================== */
     /*                  Initialize all dependent providers first                  */
     /* ========================================================================== */
+    var monthlyBalanceCard = monthlyBalanceData.when(data: (data) {
+      currentMonthBalance = data[data.length - 1]['Balance'];
+      return;
+    }, error: (error, stackTrace) {
+      return Text(error.toString());
+    }, loading: () {
+      return;
+    });
+
+    var monthlyBalanceUptoLastMonthCard =
+        monthlyBalanceUptoLastMonthData.when(data: (data) {
+      uptoLastMonthBalance = data[data.length - 1]['Balance'];
+      return;
+    }, error: (error, stackTrace) {
+      return Text(error.toString());
+    }, loading: () {
+      return;
+    });
+
+    var monthlyBalanceUptoLastYearCard =
+        monthlyBalanceUptoLastYearData.when(data: (data) {
+      uptoLastYearBalance = data[data.length - 1]['Balance'];
+      return;
+    }, error: (error, stackTrace) {
+      return Text(error.toString());
+    }, loading: () {
+      return;
+    });
+
     var netWorthUptoLastMonthCard = netWorthUptoLastMonthData.when(
       data: (data) {
         netWorthUptoLastMonth = data;
@@ -108,6 +161,7 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var netWorthUptoLastYearCard = netWorthUptoLastYearData.when(
       data: (data) {
+        // double totalWorth = currentMonthBalance;
         netWorthUptoLastYear = data;
         return;
       },
@@ -143,6 +197,9 @@ class KpiMetricsSection extends ConsumerWidget {
       },
     );
 
+    monthlyBalanceCard;
+    monthlyBalanceUptoLastMonthCard;
+    monthlyBalanceUptoLastYearCard;
     netWorthUptoLastMonthCard;
     totalExpenseUptoLastMonthCard;
     totalIncomeUptoLastMonthCard;
@@ -155,15 +212,15 @@ class KpiMetricsSection extends ConsumerWidget {
     /* ========================================================================== */
     var netWorthCard = netWorthData.when(
       data: (data) {
-        double totalWorth = 0.0;
+        double totalWorth = currentMonthBalance;
         for (var key in data.keys) {
           totalWorth += data[key];
         }
-        double totalWorthUptoLastMonth = 0.0;
+        double totalWorthUptoLastMonth = uptoLastMonthBalance;
         for (var key in netWorthUptoLastMonth.keys) {
           totalWorthUptoLastMonth += data[key];
         }
-        double totalWorthUptoLastYear = 0.0;
+        double totalWorthUptoLastYear = uptoLastYearBalance;
         for (var key in netWorthUptoLastYear.keys) {
           totalWorthUptoLastYear += data[key];
         }
@@ -215,7 +272,7 @@ class KpiMetricsSection extends ConsumerWidget {
           // height: 150,
           // height: 100,
           child: KpiMetricCard(
-            title: "Total Amount Earned",
+            title: "Total Earned Amount",
             totalValue: data,
             uptoLastMonthValue: totalIncomeUptoLastMonth,
             uptoLastYearValue: totalIncomeUptoLastYear,

@@ -48,13 +48,35 @@ class _TopBarState extends ConsumerState<TopBar> {
             children: [
               Expanded(
                 flex: 1,
-                child: Text(
-                  "Transaction Dashboard",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    // color: Colors.red,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
+                child: Stack(
+                  children: [
+                    Text(
+                      "Transaction Dashboard\u2122",
+                      style: TextStyle(
+                        fontFamily: 'Plain_Black',
+                        fontSize: 24,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 5
+                          // ..color = Theme.of(context).colorScheme.tertiary,
+                          ..color = Colors.black,
+
+                        // color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        // color: Theme.of(context).colorScheme.error,
+                        // decorationColor: Colors.blue,
+                      ),
+                    ),
+                    const Text(
+                      "Transaction Dashboard\u2122",
+                      style: TextStyle(
+                        fontFamily: 'Plain_Black',
+                        fontSize: 24,
+                        // color: Theme.of(context).colorScheme.onPrimary,
+                        color: Colors.grey,
+                        // color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(

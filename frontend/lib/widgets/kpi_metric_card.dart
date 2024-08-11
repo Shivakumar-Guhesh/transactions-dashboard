@@ -20,7 +20,13 @@ class KpiMetricCard extends StatelessWidget {
     return double.parse(result.toStringAsFixed(2));
   }
 
-  final indianRupeesFormat = NumberFormat.compactCurrency(
+  final indianRupeesCompactFormat = NumberFormat.compactCurrency(
+    name: "INR",
+    locale: 'en_IN',
+    decimalDigits: 2, // change it to get decimal places
+    symbol: '₹ ',
+  );
+  final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
     decimalDigits: 2, // change it to get decimal places
@@ -44,10 +50,10 @@ class KpiMetricCard extends StatelessWidget {
     } else {
       percentChangeSinceLastYearText = " + $percentChangeSinceLastYear %";
     }
-    return Container(
+    return SizedBox(
       // alignment: Alignment.center,
       width: 250,
-      height: 120,
+      height: 150,
       // padding: const EdgeInsets.all(8.0),
       child: Card(
         color: Theme.of(context).colorScheme.surface,
@@ -55,39 +61,73 @@ class KpiMetricCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: const TextStyle(fontSize: 10)),
-            Text(indianRupeesFormat.format(totalValue),
-                style: const TextStyle(fontSize: 36)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 10,
+                // fontFamily: 'Courier Prime',
+              ),
+            ),
+            Tooltip(
+              message: indianRupeesFormat.format(totalValue),
+              child: Text(
+                indianRupeesCompactFormat.format(totalValue),
+                style: const TextStyle(
+                  fontSize: 42,
+                  fontFamily: 'Calculator Script MT',
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      Text("Since last year", style: TextStyle(fontSize: 8)),
-                      Text(
-                        percentChangeSinceLastYearText,
-                        style: TextStyle(
+                  Tooltip(
+                    message: indianRupeesFormat.format(uptoLastYearValue),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Since last year",
+                          style: TextStyle(fontSize: 8),
+                        ),
+                        Text(
+                          percentChangeSinceLastYearText,
+                          style: TextStyle(
+                            fontSize: 12,
                             color: percentChangeSinceLastYear > 0
-                                ? Color.fromARGB(255, 2, 180, 8)
-                                : Colors.red),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
+                                ? const Color.fromARGB(255, 2, 180, 8)
+                                : Colors.red,
+                            fontFamily: 'Calculator Script MT',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Text("Since last month", style: TextStyle(fontSize: 8)),
-                      Text(
-                        percentChangeSinceLastMonthText,
-                        style: TextStyle(
+                  Tooltip(
+                    message: indianRupeesFormat.format(uptoLastMonthValue),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Since last month",
+                          style: TextStyle(fontSize: 8),
+                        ),
+                        Text(
+                          percentChangeSinceLastMonthText,
+                          style: TextStyle(
+                            fontSize: 12,
                             color: percentChangeSinceLastMonth > 0
-                                ? Color.fromARGB(255, 2, 180, 8)
-                                : Colors.red),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
+                                ? const Color.fromARGB(255, 2, 180, 8)
+                                : Colors.red,
+                            fontFamily: 'Calculator Script MT',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
