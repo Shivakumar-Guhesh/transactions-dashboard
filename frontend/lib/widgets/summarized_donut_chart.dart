@@ -57,13 +57,17 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
       colors = darkCategoricalPalette;
     }
     var sliceData = setData(widget.sliceData);
-    return SizedBox(
-      width: 650,
-      height: 350,
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 400,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 6,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: 18,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -97,9 +101,16 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
               ],
             ),
           ),
-          SizedBox(
-            height: 450,
-            width: 210,
+        ),
+        Expanded(
+          flex: 4,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: 18,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
             child: ListView.builder(
               itemCount: sliceData.length,
               itemBuilder: (context, index) {
@@ -160,10 +171,11 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                 );
               },
             ),
+            // ),
           ),
-          // ),
-        ],
-      ),
+        ),
+        // ),
+      ],
     );
   }
 

@@ -29,13 +29,22 @@ class MainScreen extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 8,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            KpiMetricsSection(),
-                            ChartsSection(),
-                          ],
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 12),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 12),
+                                child: KpiMetricsSection(),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 12),
+                                child: ChartsSection(),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/transaction_filters_in.dart';
 import 'package:frontend/providers/selected_date_range_provider.dart';
@@ -97,12 +98,15 @@ class ChartsSection extends ConsumerWidget {
       },
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        monthlyBalanceLineChart,
-        categoryDonutChart,
-      ],
+    return SizedBox(
+      height: 400,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(child: monthlyBalanceLineChart),
+          Expanded(child: categoryDonutChart),
+        ],
+      ),
     );
   }
 }

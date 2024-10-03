@@ -31,8 +31,8 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 650,
-      height: 350,
+      // width: 650,
+      // height: 350,
       // aspectRatio: 1.70,
       child: Padding(
         padding: const EdgeInsets.only(
@@ -64,14 +64,17 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
     List<DateTime> dates = [];
     for (int i = 0;
         i <=
-            1 +
+            // 1 +
+            5 + //FIXME: 1 doesnt work
                 Jiffy.parseFromDateTime(lastDate)
                     .diff(Jiffy.parseFromDateTime(startDate), unit: Unit.month);
         i++) {
       dates.add(DateTime(startDate.year, startDate.month + i));
     }
 
-    switch (dates[value.toInt()].month % 3) {
+    // switch (dates[value.toInt()].month % 3) {
+    switch (dates[value.toInt()].month % 4) {
+      //FIXME:3 doesnt work properly. Behaves like %6
       case 0:
         text =
             Text(DateFormat('yMMM').format(dates[value.toInt()]), style: style);
