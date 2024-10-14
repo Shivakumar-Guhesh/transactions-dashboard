@@ -179,14 +179,14 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: widget.amounts.length as double,
+      maxX: widget.amounts.length.toDouble(),
       minY: 0,
       maxY: (((widget.amounts.reduce(max) + 50000) ~/ 50000) * 50000),
       // amounts.reduce(max) + (amounts.reduce(max) / 10),
       lineBarsData: [
         LineChartBarData(
           spots: widget.amounts.map((e) {
-            return FlSpot(widget.amounts.indexOf(e) as double, e);
+            return FlSpot(widget.amounts.indexOf(e).toDouble(), e);
           }).toList(),
           // isCurved: true,
           isCurved: true,

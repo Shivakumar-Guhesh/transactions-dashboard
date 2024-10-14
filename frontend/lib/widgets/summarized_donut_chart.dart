@@ -36,7 +36,7 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
     for (var i = 9; i < data.length; i++) {
       if (otherCategories['sum'] != null) {
         otherCategories['sum'] =
-            (otherCategories['sum']! as double) + data[i]['sum'];
+            (otherCategories['sum']! as num) + data[i]['sum'];
       }
     }
 

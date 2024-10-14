@@ -61,7 +61,7 @@ class ChartsSection extends ConsumerWidget {
           categories.add(expense['category'] as String);
         }
         for (var expense in data) {
-          amounts.add(expense['sum'] as double);
+          amounts.add(expense['sum'].toDouble());
         }
 
         return SummarizedDonutChart(
@@ -86,7 +86,7 @@ class ChartsSection extends ConsumerWidget {
           months.add(expense['Month'] as String);
         }
         for (var expense in data) {
-          amounts.add(expense['Balance'] as double);
+          amounts.add(expense['Balance'].toDouble());
         }
         return MonthlyBalanceLineChart(months: months, amounts: amounts);
       },
