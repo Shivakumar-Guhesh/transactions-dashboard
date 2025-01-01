@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/models/transaction_filters_in.dart';
-import 'package:frontend/providers/selected_date_range_provider.dart';
-import 'package:frontend/providers/transaction_data_provider.dart';
 
-import 'kpi_metric_card.dart';
+import '../models/transaction_filters_in.dart';
+import '../providers/selected_categories_provider.dart';
+import '../providers/selected_date_range_provider.dart';
+import '../providers/transaction_data_provider.dart';
+import '../utils/responsive.dart';
+import './radial_gauge_chart.dart';
+import './kpi_metric_card.dart';
 
 final DateTime oldestDate = DateTime.utc(1900, 01, 01);
 final DateTime currentDate = DateTime.now();
@@ -62,6 +65,11 @@ class KpiMetricsSection extends ConsumerWidget {
     double uptoLastMonthBalance = 0.0;
     double uptoLastYearBalance = 0.0;
 
+    double totalIncomeValue = 0.0;
+    double totalExpenseValue = 0.0;
+    double netWorthValue = 0.0;
+    Map<String, dynamic> netWorthMap = {};
+
     final monthlyBalanceData = ref.watch(
       monthlyBalanceProvider(transactionsFiltersInWithoutDates),
     );
@@ -99,6 +107,7 @@ class KpiMetricsSection extends ConsumerWidget {
     }, error: (error, stackTrace) {
       return Text(error.toString());
     }, loading: () {
+      currentMonthBalance = 0;
       return;
     });
 
@@ -213,9 +222,11 @@ class KpiMetricsSection extends ConsumerWidget {
     var netWorthCard = netWorthData.when(
       data: (data) {
         double totalWorth = currentMonthBalance;
+        netWorthMap = data;
         for (var key in data.keys) {
           totalWorth += data[key];
         }
+        netWorthValue = totalWorth;
         double totalWorthUptoLastMonth = uptoLastMonthBalance;
         for (var key in netWorthUptoLastMonth.keys) {
           totalWorthUptoLastMonth += data[key];
@@ -232,6 +243,9 @@ class KpiMetricsSection extends ConsumerWidget {
             totalValue: totalWorth,
             uptoLastMonthValue: totalWorthUptoLastMonth,
             uptoLastYearValue: totalWorthUptoLastYear,
+            hoverChild: Text(
+              netWorthMap.toString(),
+            ),
           ),
         );
       },
@@ -245,7 +259,7 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var totalExpenseCard = totalExpenseData.when(
       data: (data) {
-        // totalExpenseUptoLastMonth = data;
+        totalExpenseValue = data;
         return SizedBox(
           // width: 200,
           // height: 100,
@@ -254,6 +268,9 @@ class KpiMetricsSection extends ConsumerWidget {
             totalValue: data,
             uptoLastMonthValue: totalExpenseUptoLastMonth,
             uptoLastYearValue: totalExpenseUptoLastYear,
+            hoverChild: Text(
+              data.toString(),
+            ),
           ),
         );
       },
@@ -267,6 +284,7 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var totalIncomeCard = totalIncomeData.when(
       data: (data) {
+        totalIncomeValue = data;
         return SizedBox(
           // width: 200,
           // height: 150,
@@ -276,6 +294,9 @@ class KpiMetricsSection extends ConsumerWidget {
             totalValue: data,
             uptoLastMonthValue: totalIncomeUptoLastMonth,
             uptoLastYearValue: totalIncomeUptoLastYear,
+            hoverChild: Text(
+              data.toString(),
+            ),
           ),
         );
       },
@@ -287,37 +308,54 @@ class KpiMetricsSection extends ConsumerWidget {
       },
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        netWorthCard,
-        totalExpenseCard,
-        // totalExpenseUptoLastMonthCard,
-        totalIncomeCard,
-      ],
-    );
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     border: Border.all(color: Colors.blue),
-    //     //  Colors.blue
-    //   ),
-    //   child: const Row(
-    //     children: [
-    //       Padding(
-    //         padding: EdgeInsets.all(8.0),
-    //         child: Card(
-    //             child: KpiMetricCard(
-    //                 title: "Current Net Worth", value: "₹ 1000000")),
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.all(8.0),
-    //         child: Card(
-    //             child: KpiMetricCard(
-    //                 title: "Change % since last month", value: "₹ 1000000")),
-    //       ),
-    //       // Text(getUser().toString())
-    //     ],
-    //   ),
-    // );
+    if (Responsive.isMediumScreen(context)) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Tooltip(
+                message: netWorthMap.toString(),
+                child: netWorthCard,
+              ),
+              totalExpenseCard,
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              totalIncomeCard,
+              RadialGaugeChart(
+                value: (netWorthValue == 0 || totalIncomeValue == 0)
+                    ? 0
+                    : (netWorthValue / totalIncomeValue) * 100,
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Flex(
+        direction:
+            Responsive.isSmallScreen(context) ? Axis.vertical : Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Tooltip(
+            message: netWorthMap.toString(),
+            child: netWorthCard,
+          ),
+          totalExpenseCard,
+          totalIncomeCard,
+          RadialGaugeChart(
+            value: (netWorthValue == 0 || totalIncomeValue == 0)
+                ? 0
+                : (netWorthValue / totalIncomeValue) * 100,
+          ),
+        ],
+      );
+    }
   }
 }

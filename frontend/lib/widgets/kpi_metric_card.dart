@@ -7,6 +7,7 @@ class KpiMetricCard extends StatelessWidget {
     required this.totalValue,
     required this.uptoLastMonthValue,
     required this.uptoLastYearValue,
+    required this.hoverChild,
     super.key,
   });
 
@@ -14,6 +15,7 @@ class KpiMetricCard extends StatelessWidget {
   final double totalValue;
   final double uptoLastMonthValue;
   final double uptoLastYearValue;
+  final Widget hoverChild;
 
   double getPercentChangeSinceLastMonth(double value_1, double value_2) {
     double result = ((value_2 - value_1) / value_1) * 100;
@@ -56,7 +58,9 @@ class KpiMetricCard extends StatelessWidget {
       height: 150,
       // padding: const EdgeInsets.all(8.0),
       child: Card(
-        color: Theme.of(context).colorScheme.surface,
+        // color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        shadowColor: Theme.of(context).colorScheme.shadow,
         elevation: 10,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,13 +72,32 @@ class KpiMetricCard extends StatelessWidget {
                 // fontFamily: 'Courier Prime',
               ),
             ),
-            Tooltip(
-              message: indianRupeesFormat.format(totalValue),
-              child: Text(
-                indianRupeesCompactFormat.format(totalValue),
-                style: const TextStyle(
-                  fontSize: 42,
-                  fontFamily: 'Calculator Script MT',
+            FittedBox(
+              alignment: Alignment.center,
+              fit: BoxFit.fill,
+              child: Tooltip(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).dialogBackgroundColor,
+                ),
+                richMessage: WidgetSpan(
+                  child: SelectionArea(
+                    child: Text(
+                      indianRupeesFormat.format(totalValue),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  indianRupeesCompactFormat.format(totalValue),
+                  style: const TextStyle(
+                    fontSize: 60,
+                    fontFamily: 'Calculator Script MT',
+                  ),
                 ),
               ),
             ),
@@ -107,7 +130,28 @@ class KpiMetricCard extends StatelessWidget {
                     ),
                   ),
                   Tooltip(
-                    message: indianRupeesFormat.format(uptoLastMonthValue),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).dialogBackgroundColor,
+                    ),
+                    richMessage: WidgetSpan(
+                      child: Column(
+                        children: [
+                          SelectionArea(
+                            child: Text(
+                              indianRupeesFormat.format(uptoLastMonthValue),
+                              style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    //  indianRupeesFormat.format(uptoLastMonthValue),
                     child: Column(
                       children: [
                         const Text(

@@ -42,9 +42,10 @@ dependencies:
   intl: ^0.19.0
   http: ^1.2.1
   equatable: ^2.0.5
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.4
   fl_chart: ^0.65.0
   jiffy: ^6.2.1
+  geekyants_flutter_gauges: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +70,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/images/2998117_heat_nature_shine_sun_sunny_icon.png
+    - assets/images/7984980_weather_cloud_rain_moon_night_icon.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -85,6 +88,30 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: Merriweather
+      fonts:
+        - asset: assets/fonts/Merriweather-Regular.ttf
+          weight: 700
+        - asset: assets/fonts/Merriweather-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/Merriweather-BoldItalic.ttf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/Merriweather-Italic.ttf
+          weight: 700
+          style: italic
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/Montserrat-BoldItalic.ttf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          weight: 700
+          style: italic
     - family: Calculator Script MT
       fonts:
         - asset: assets/fonts/calculator_script_mt.ttf
@@ -107,10 +134,11 @@ flutter:
         - asset: assets/fonts/Courier Prime Italic.ttf
           weight: 700
           style: italic
-    - family: Italianno
+    - family: Michroma
       fonts:
-        - asset: assets/fonts/Italianno-Regular-OTF.otf
+        - asset: assets/fonts/Michroma-Regular.ttf
           weight: 700
+        
 
   #         style: italic
   #   - family: Trajan Pro

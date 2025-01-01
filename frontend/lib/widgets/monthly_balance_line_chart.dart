@@ -30,21 +30,16 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
   );
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: 650,
-      // height: 350,
-      // aspectRatio: 1.70,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          right: 18,
-          left: 12,
-          top: 24,
-          bottom: 12,
-        ),
-        child: LineChart(
-          // showAvg ? avgData() : mainData(),
-          mainData(),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 18,
+        left: 12,
+        top: 24,
+        bottom: 12,
+      ),
+      child: LineChart(
+        // showAvg ? avgData() : mainData(),
+        mainData(),
       ),
     );
   }

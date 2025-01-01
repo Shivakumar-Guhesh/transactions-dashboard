@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/providers/theme_provider.dart';
+
+import '../providers/theme_provider.dart';
 
 class DarkModeSwitch extends ConsumerWidget {
   const DarkModeSwitch({super.key});
@@ -28,11 +29,15 @@ class DarkModeSwitch extends ConsumerWidget {
             }
           },
           inactiveThumbColor: Colors.yellow,
-          inactiveThumbImage: const NetworkImage(
-              'https://cdn4.iconfinder.com/data/icons/multimedia-flat-30px/30/sun_light_mode_day-512.png'),
-          activeColor: Colors.blueGrey,
-          activeThumbImage: const NetworkImage(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu2zqV1-PIytSBAy7sIElvZEhjMeuOcRkWRQ&s'),
+          // inactiveThumbImage: const NetworkImage(
+          //     'https://cdn4.iconfinder.com/data/icons/multimedia-flat-30px/30/sun_light_mode_day-512.png'),
+          inactiveThumbImage: const AssetImage(
+              '../../assets/images/2998117_heat_nature_shine_sun_sunny_icon.png'),
+          activeColor: Colors.indigo,
+          // activeThumbImage: const NetworkImage(
+          //     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu2zqV1-PIytSBAy7sIElvZEhjMeuOcRkWRQ&s'),
+          activeThumbImage: const AssetImage(
+              '../../assets/images/7984980_weather_cloud_rain_moon_night_icon.png'),
         ),
       ],
     );

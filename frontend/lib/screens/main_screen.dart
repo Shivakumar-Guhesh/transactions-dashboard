@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/chart_sections.dart';
-import 'package:frontend/widgets/side_bar.dart';
-import 'package:frontend/widgets/top_bar.dart';
 
+import '../utils/responsive.dart';
+import '../widgets/chart_sections.dart';
+import '../widgets/side_bar.dart';
+import '../widgets/top_bar.dart';
 import '../widgets/kpi_metrics_section.dart';
 
 class MainScreen extends StatelessWidget {
@@ -10,51 +11,140 @@ class MainScreen extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return const SafeArea(
-      child: SelectionArea(
-        child: Scaffold(
-          body: Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              TopBar(),
-              Expanded(
-                flex: 12,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      flex: 1,
+    return SelectionArea(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   elevation: 5,
+        //   title: const TopBar(),
+        // ),
+        // backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Column(
+          children: [
+            const TopBar(),
+            // const TestTextStyle(),
+            Expanded(
+              flex: 12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!Responsive.isSmallScreen(context))
+                    const Expanded(
                       child: SideBar(),
                     ),
-                    Expanded(
-                      flex: 8,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 12),
-                                child: KpiMetricsSection(),
+                  Expanded(
+                    flex: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 12),
+                              child: KpiMetricsSection(),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.pink,
+                                  ),
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
+                                ),
+                                child: const ChartsSection(),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 12),
-                                child: ChartsSection(),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class TestTextStyle extends StatelessWidget {
+  const TestTextStyle({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.displayMedium,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          "This is a text string.",
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+      ],
     );
   }
 }

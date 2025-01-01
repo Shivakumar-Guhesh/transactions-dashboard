@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/providers/transaction_data_provider.dart';
+
+import '../providers/selected_categories_provider.dart';
+import '../providers/transaction_data_provider.dart';
 
 class MultiCheckBoxDropDown extends ConsumerStatefulWidget {
   const MultiCheckBoxDropDown({required this.type, super.key});

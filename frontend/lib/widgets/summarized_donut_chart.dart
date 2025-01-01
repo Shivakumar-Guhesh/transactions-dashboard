@@ -3,18 +3,30 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/providers/theme_provider.dart';
-// import 'package:flutter/scheduler.dart';
-import 'package:frontend/utils/chart_colors.dart';
 import 'package:intl/intl.dart';
+
+import '../providers/theme_provider.dart';
+import '../utils/chart_colors.dart';
+import '../utils/responsive.dart';
 
 late List<Color> colors;
 
 class SummarizedDonutChart extends ConsumerStatefulWidget {
-  const SummarizedDonutChart(
-      {required this.sliceData, this.title = 'Pie Chart', super.key});
+  const SummarizedDonutChart({
+    required this.sliceData,
+    required this.baseRadius,
+    required this.selectedRadius,
+    required this.baseLabelFontSize,
+    required this.selectedLabelFontSize,
+    this.title = 'Pie Chart',
+    super.key,
+  });
   final List<Map<String, dynamic>> sliceData;
   final String title;
+  final double baseRadius;
+  final double selectedRadius;
+  final double baseLabelFontSize;
+  final double selectedLabelFontSize;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _SummarizedDonutChartState();
@@ -58,26 +70,27 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
     }
     var sliceData = setData(widget.sliceData);
     return Row(
+      // direction:
+      //     Responsive.isSmallScreen(context) ? Axis.vertical : Axis.horizontal,
       children: <Widget>[
         Expanded(
           flex: 6,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(widget.title),
-                PieChart(
-                  PieChartData(
-                    startDegreeOffset: 270,
-                    pieTouchData: PieTouchData(
-                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                widget.title,
+                style: TextStyle(
+                  fontSize: Responsive.isSmallScreen(context) ? 5 : 10,
+                ),
+              ),
+              PieChart(
+                PieChartData(
+                  startDegreeOffset: 270,
+                  pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      setState(
+                        () {
                           if (!event.isInterestedForInteractions ||
                               pieTouchResponse == null ||
                               pieTouchResponse.touchedSection == null) {
@@ -86,20 +99,21 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                           }
                           touchedCategoryIndex = pieTouchResponse
                               .touchedSection!.touchedSectionIndex;
-                        });
-                      },
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 0,
-                    // centerSpaceRadius: 40,
-                    centerSpaceRadius: 120,
-                    sections: slices(sliceData),
+                        },
+                      );
+                    },
                   ),
+                  borderData: FlBorderData(
+                    show: false,
+                  ),
+                  sectionsSpace: 0,
+                  // centerSpaceRadius: 40,
+                  centerSpaceRadius:
+                      Responsive.isSmallScreen(context) ? 50 : 120,
+                  sections: slices(sliceData),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -146,7 +160,6 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                                     ? Colors.white
                                     : Colors.black)
                                 : Theme.of(context).colorScheme.onBackground,
-                            // : Colors.red,
                             fontWeight: (touchedCategoryIndex == index)
                                 ? FontWeight.bold
                                 : FontWeight.normal),
@@ -171,10 +184,8 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                 );
               },
             ),
-            // ),
           ),
         ),
-        // ),
       ],
     );
   }
@@ -187,22 +198,26 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
     }
     for (var i = 0; i < data.length; i++) {
       final isTouched = i == touchedCategoryIndex;
-      final fontSize = isTouched ? 20.0 : 12.0;
-      final radius = isTouched ? 70.0 : 40.0;
-      pieChartSlices.add(PieChartSectionData(
-        color: colors[i],
-        value: data[i]['sum'],
-        // title: data[i]['category'],
-        title: "${((data[i]['sum'] / totalAmount) * 100).toStringAsFixed(2)} %",
-        radius: radius,
-        titleStyle: TextStyle(
-          color:
-              colors[i].computeLuminance() < 0.5 ? Colors.white : Colors.black,
-          fontSize: fontSize,
-          // fontWeight: FontWeight.bold,
-          // color: Colors.black,
+      final fontSize =
+          isTouched ? widget.selectedLabelFontSize : widget.baseLabelFontSize;
+      final radius = isTouched ? widget.selectedRadius : widget.baseRadius;
+      pieChartSlices.add(
+        PieChartSectionData(
+          color: colors[i],
+          value: data[i]['sum'],
+          title:
+              "${((data[i]['sum'] / totalAmount) * 100).toStringAsFixed(2)} %",
+          radius: radius,
+          titleStyle: TextStyle(
+            color: colors[i].computeLuminance() < 0.5
+                ? Colors.white
+                : Colors.black,
+            fontSize: fontSize,
+            // fontWeight: FontWeight.bold,
+            // color: Colors.black,
+          ),
         ),
-      ));
+      );
     }
 
     return pieChartSlices;

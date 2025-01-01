@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/models/transaction_filters_in.dart';
-import 'package:frontend/providers/selected_date_range_provider.dart';
-import 'package:frontend/providers/transaction_data_provider.dart';
-import 'package:frontend/widgets/monthly_balance_line_chart.dart';
-import 'package:frontend/widgets/summarized_donut_chart.dart';
+
+import '../models/transaction_filters_in.dart';
+import '../providers/selected_categories_provider.dart';
+import '../providers/selected_date_range_provider.dart';
+import '../providers/transaction_data_provider.dart';
+import '../utils/responsive.dart';
+import './monthly_balance_line_chart.dart';
+import './summarized_donut_chart.dart';
 
 final DateTime oldestDate = DateTime.utc(1900, 01, 01);
 final DateTime currentDate = DateTime.now();
@@ -67,6 +69,11 @@ class ChartsSection extends ConsumerWidget {
         return SummarizedDonutChart(
           sliceData: data,
           title: "Expense by category",
+          baseRadius: (Responsive.isSmallScreen(context) ? 30.0 : 40.0),
+          selectedRadius: (Responsive.isSmallScreen(context) ? 50.0 : 70.0),
+          selectedLabelFontSize:
+              (Responsive.isSmallScreen(context) ? 12.0 : 20.0),
+          baseLabelFontSize: (Responsive.isSmallScreen(context) ? 10.0 : 12.0),
         );
       },
       error: (error, stackTrace) {
@@ -99,12 +106,22 @@ class ChartsSection extends ConsumerWidget {
     );
 
     return SizedBox(
-      height: 400,
-      child: Row(
+      height: (Responsive.isLargeScreen(context)) ? 400 : 800,
+      child: Flex(
+        direction:
+            Responsive.isLargeScreen(context) ? Axis.horizontal : Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: monthlyBalanceLineChart),
-          Expanded(child: categoryDonutChart),
+          Expanded(
+            child: monthlyBalanceLineChart,
+          ),
+          if (!Responsive.isLargeScreen(context))
+            const SizedBox(
+              height: 100,
+            ),
+          Expanded(
+            child: categoryDonutChart,
+          ),
         ],
       ),
     );
