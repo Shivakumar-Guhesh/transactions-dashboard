@@ -60,7 +60,7 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
 
   @override
   Widget build(BuildContext context) {
-    final appThemeStateNotifierState = ref.read(appThemeStateNotifier);
+    final appThemeStateNotifierState = ref.watch(appThemeStateNotifier);
     var isDarkModeEnabled = appThemeStateNotifierState.getIsDarkModeEnabled();
 
     if (!isDarkModeEnabled) {
@@ -70,6 +70,7 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
     }
     var sliceData = setData(widget.sliceData);
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       // direction:
       //     Responsive.isSmallScreen(context) ? Axis.vertical : Axis.horizontal,
       children: <Widget>[
@@ -84,33 +85,41 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                   fontSize: Responsive.isSmallScreen(context) ? 5 : 10,
                 ),
               ),
-              PieChart(
-                PieChartData(
-                  startDegreeOffset: 270,
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(
-                        () {
-                          if (!event.isInterestedForInteractions ||
-                              pieTouchResponse == null ||
-                              pieTouchResponse.touchedSection == null) {
-                            touchedCategoryIndex = -1;
-                            return;
-                          }
-                          touchedCategoryIndex = pieTouchResponse
-                              .touchedSection!.touchedSectionIndex;
-                        },
-                      );
-                    },
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.indigo,
                   ),
-                  borderData: FlBorderData(
-                    show: false,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: PieChart(
+                  PieChartData(
+                    startDegreeOffset: 270,
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                        setState(
+                          () {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              touchedCategoryIndex = -1;
+                              return;
+                            }
+                            touchedCategoryIndex = pieTouchResponse
+                                .touchedSection!.touchedSectionIndex;
+                          },
+                        );
+                      },
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    sectionsSpace: 0,
+                    // centerSpaceRadius: 40,
+                    centerSpaceRadius:
+                        Responsive.isSmallScreen(context) ? 50 : 120,
+                    sections: slices(sliceData),
                   ),
-                  sectionsSpace: 0,
-                  // centerSpaceRadius: 40,
-                  centerSpaceRadius:
-                      Responsive.isSmallScreen(context) ? 50 : 120,
-                  sections: slices(sliceData),
                 ),
               ),
             ],
@@ -155,14 +164,15 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                       Text(
                         sliceData[index]['category'],
                         style: TextStyle(
-                            color: touchedCategoryIndex == index
-                                ? (colors[index].computeLuminance() < 0.5
-                                    ? Colors.white
-                                    : Colors.black)
-                                : Theme.of(context).colorScheme.onBackground,
-                            fontWeight: (touchedCategoryIndex == index)
-                                ? FontWeight.bold
-                                : FontWeight.normal),
+                          color: touchedCategoryIndex == index
+                              ? (colors[index].computeLuminance() < 0.5
+                                  ? Colors.white
+                                  : Colors.black)
+                              : null,
+                          fontWeight: (touchedCategoryIndex == index)
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                       if (touchedCategoryIndex == index)
                         const SizedBox(

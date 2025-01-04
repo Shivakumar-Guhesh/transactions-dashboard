@@ -13,9 +13,10 @@ class SelectedCategoriesState with ChangeNotifier {
   List<String> _deSelectedIncomeCategories = [];
 
   Future<void> fetchAndSetList() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    final incomes = sharedPrefs.getStringList("incomes") ?? [];
-    final expenses = sharedPrefs.getStringList("expenses") ?? [];
+    // final sharedPrefs = await SharedPreferences.getInstance();
+    final sharedPrefs = SharedPreferencesAsync();
+    final incomes = await sharedPrefs.getStringList("incomes") ?? [];
+    final expenses = await sharedPrefs.getStringList("expenses") ?? [];
 
     _deSelectedExpenseCategories = expenses;
     _deSelectedIncomeCategories = incomes;
@@ -38,9 +39,11 @@ class SelectedCategoriesState with ChangeNotifier {
   }
 
   savePreferencesToFile() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    sharedPrefs.setStringList("expenses", _deSelectedExpenseCategories);
-    sharedPrefs.setStringList("incomes", _deSelectedIncomeCategories);
+    // final sharedPrefs = await SharedPreferences.getInstance();
+    final sharedPrefs = await SharedPreferencesWithCache.create(
+        cacheOptions: const SharedPreferencesWithCacheOptions());
+    await sharedPrefs.setStringList("expenses", _deSelectedExpenseCategories);
+    await sharedPrefs.setStringList("incomes", _deSelectedIncomeCategories);
 
     print("\n\n");
     print(
@@ -56,9 +59,11 @@ class SelectedCategoriesState with ChangeNotifier {
   }
 
   clearPreferencesFromFile() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    sharedPrefs.remove("expenses");
-    sharedPrefs.remove("incomes");
+    // final sharedPrefs = await SharedPreferences.getInstance();
+    final sharedPrefs = await SharedPreferencesWithCache.create(
+        cacheOptions: const SharedPreferencesWithCacheOptions());
+    await sharedPrefs.remove("expenses");
+    await sharedPrefs.remove("incomes");
     print("\n\n");
     print(
         "/* ===================== clearPreferencesFromFile ===================== */");

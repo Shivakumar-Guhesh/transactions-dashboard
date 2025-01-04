@@ -23,7 +23,7 @@ class CalendarDateRangePicker extends ConsumerWidget {
       selectedDayHighlightColor: Theme.of(context).colorScheme.tertiary,
       weekdayLabelTextStyle: TextStyle(
         // color: Theme.of(context).colorScheme.onSurface,
-        color: Theme.of(context).colorScheme.onBackground,
+        color: Theme.of(context).colorScheme.onSurface,
         // color: Colors.indigo,
         fontSize: Responsive.isSmallScreen(context) ? 12 : 15,
         fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class CalendarDateRangePicker extends ConsumerWidget {
                   // value: _rangeDatePickerValueWithDefaultValue,
                   value: selectedDateState.selectedDateRange,
                   onValueChanged: (dates) {
-                    if (dates[0] != null && dates[dates.length - 1] != null) {
+                    if (dates[dates.length - 1] != null) {
                       selectedDateState.setSelectedDates(dates);
                     }
                     // selectedDateState.setSelectedDates(dates);
@@ -244,7 +244,7 @@ class CalendarDateRangePicker extends ConsumerWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Close"),
+          child: const Text("Close"),
         ),
         const SizedBox(height: 25),
       ],

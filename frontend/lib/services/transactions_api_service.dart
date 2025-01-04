@@ -32,7 +32,7 @@ class TransactionApiService {
     } else if (response.statusCode == 404) {
       throw NotFoundException();
     } else {
-      throw "from api.dart line 37";
+      throw UnknownException();
     }
   }
 
@@ -58,20 +58,59 @@ class TransactionApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getNetWorth(
+  Future<Map<String, dynamic>> getLiquidAssets(
       List<String> deselectedExpenses,
       List<String> deselectedIncomes,
       DateTime startDate,
       DateTime endDate) async {
     var response = await http.post(
-      getUrl("net_worth"),
+      getUrl("liquid_asset_worth"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
+    );
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 202) {
+      final body = response.body;
+
+      final Map<String, dynamic> result = json.decode(body);
+      return result;
+    } else if (response.statusCode == 400) {
+      throw BadRequestException();
+    } else if (response.statusCode == 401) {
+      throw UnauthorizedException();
+    } else if (response.statusCode == 403) {
+      throw ForbiddenException();
+    } else if (response.statusCode == 404) {
+      throw NotFoundException();
+    } else {
+      throw UnknownException();
+    }
+  }
+
+  Future<Map<String, dynamic>> getTotalAssets(
+      List<String> deselectedExpenses,
+      List<String> deselectedIncomes,
+      DateTime startDate,
+      DateTime endDate) async {
+    var response = await http.post(
+      getUrl("total_asset_worth"),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -102,12 +141,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("total_expense"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -141,12 +182,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("total_income"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -177,12 +220,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("cat_expense_sum"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -213,12 +258,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("cat_income_sum"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -248,12 +295,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("mode_expense_sum"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -283,12 +332,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("mode_income_sum"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
@@ -318,12 +369,14 @@ class TransactionApiService {
     var response = await http.post(
       getUrl("monthly_balance"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'exclude_expenses': deselectedExpenses,
-        'exclude_incomes': deselectedIncomes,
-        'start_date': DateFormat("yyyyMMdd").format(startDate),
-        'end_date': DateFormat("yyyyMMdd").format(endDate)
-      }),
+      body: jsonEncode(
+        {
+          'exclude_expenses': deselectedExpenses,
+          'exclude_incomes': deselectedIncomes,
+          'start_date': DateFormat("yyyyMMdd").format(startDate),
+          'end_date': DateFormat("yyyyMMdd").format(endDate)
+        },
+      ),
     );
 
     if (response.statusCode == 200 ||

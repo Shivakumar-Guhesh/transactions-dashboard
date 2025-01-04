@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../models/transaction_filters_in.dart';
 import '../providers/selected_categories_provider.dart';
@@ -11,6 +12,13 @@ import './kpi_metric_card.dart';
 
 final DateTime oldestDate = DateTime.utc(1900, 01, 01);
 final DateTime currentDate = DateTime.now();
+
+final indianRupeesFormat = NumberFormat.currency(
+  name: "INR",
+  locale: 'en_IN',
+  decimalDigits: 2, // change it to get decimal places
+  symbol: '₹ ',
+);
 
 class KpiMetricsSection extends ConsumerWidget {
   const KpiMetricsSection({
@@ -33,7 +41,11 @@ class KpiMetricsSection extends ConsumerWidget {
       excludeExpenses: expense,
       excludeIncomes: income,
       startDate: startDate,
-      endDate: DateTime(endDate.year, endDate.month - 1, endDate.day),
+      endDate: DateTime(
+        endDate.year,
+        endDate.month - 1,
+        endDate.day,
+      ),
     );
     var uptoLastYearFilter = TransactionsFiltersIn(
       excludeExpenses: expense,
@@ -42,22 +54,26 @@ class KpiMetricsSection extends ConsumerWidget {
       endDate: DateTime(endDate.year - 1, endDate.month, endDate.day),
     );
     var transactionsFiltersIn = TransactionsFiltersIn(
-        excludeExpenses: expense,
-        excludeIncomes: income,
-        startDate: startDate,
-        endDate: endDate);
+      excludeExpenses: expense,
+      excludeIncomes: income,
+      startDate: startDate,
+      endDate: endDate,
+    );
 
     final transactionsFiltersInWithoutDates = TransactionsFiltersIn(
-        excludeExpenses: expense,
-        excludeIncomes: income,
-        startDate: oldestDate,
-        endDate: currentDate);
+      excludeExpenses: expense,
+      excludeIncomes: income,
+      startDate: oldestDate,
+      endDate: currentDate,
+    );
 
     Map<String, dynamic> netWorthUptoLastMonth = {};
+    Map<String, dynamic> liquidWorthUptoLastMonth = {};
     double totalExpenseUptoLastMonth = 0.0;
     double totalIncomeUptoLastMonth = 0.0;
 
     Map<String, dynamic> netWorthUptoLastYear = {};
+    Map<String, dynamic> liquidWorthUptoLastYear = {};
     double totalExpenseUptoLastYear = 0.0;
     double totalIncomeUptoLastYear = 0.0;
 
@@ -68,12 +84,16 @@ class KpiMetricsSection extends ConsumerWidget {
     double totalIncomeValue = 0.0;
     double totalExpenseValue = 0.0;
     double netWorthValue = 0.0;
+    double liquidWorthValue = 0.0;
     Map<String, dynamic> netWorthMap = {};
+    Map<String, dynamic> liquidWorthMap = {};
 
     final monthlyBalanceData = ref.watch(
       monthlyBalanceProvider(transactionsFiltersInWithoutDates),
     );
-    final netWorthData = ref.watch(netWorthProvider(transactionsFiltersIn));
+    final netAssetsData = ref.watch(netAssetsProvider(transactionsFiltersIn));
+    final liquidAssetsData =
+        ref.watch(liquidAssetsProvider(transactionsFiltersIn));
     final totalExpenseData =
         ref.watch(totalExpenseProvider(transactionsFiltersIn));
     final totalIncomeData =
@@ -83,7 +103,9 @@ class KpiMetricsSection extends ConsumerWidget {
       monthlyBalanceProvider(uptoLastMonthFilter),
     );
     final netWorthUptoLastMonthData =
-        ref.watch(netWorthProvider(uptoLastMonthFilter));
+        ref.watch(netAssetsProvider(uptoLastMonthFilter));
+    final liquidWorthUptoLastMonthData =
+        ref.watch(liquidAssetsProvider(uptoLastMonthFilter));
     final totalExpenseUptoLastMonthData =
         ref.watch(totalExpenseProvider(uptoLastMonthFilter));
     final totalIncomeUptoLastMonthData =
@@ -93,7 +115,9 @@ class KpiMetricsSection extends ConsumerWidget {
       monthlyBalanceProvider(uptoLastYearFilter),
     );
     final netWorthUptoLastYearData =
-        ref.watch(netWorthProvider(uptoLastYearFilter));
+        ref.watch(netAssetsProvider(uptoLastYearFilter));
+    final liquidWorthUptoLastYearData =
+        ref.watch(liquidAssetsProvider(uptoLastYearFilter));
     final totalExpenseUptoLastYearData =
         ref.watch(totalExpenseProvider(uptoLastYearFilter));
     final totalIncomeUptoLastYearData =
@@ -143,6 +167,18 @@ class KpiMetricsSection extends ConsumerWidget {
         return;
       },
     );
+    var liquidWorthUptoLastMonthCard = liquidWorthUptoLastMonthData.when(
+      data: (data) {
+        liquidWorthUptoLastMonth = data;
+        return;
+      },
+      error: (error, stackTrace) {
+        return Text(error.toString());
+      },
+      loading: () {
+        return;
+      },
+    );
     var totalExpenseUptoLastMonthCard = totalExpenseUptoLastMonthData.when(
       data: (data) {
         totalExpenseUptoLastMonth = data;
@@ -181,6 +217,19 @@ class KpiMetricsSection extends ConsumerWidget {
         return;
       },
     );
+    var liquidWorthUptoLastYearCard = liquidWorthUptoLastYearData.when(
+      data: (data) {
+        // double totalWorth = currentMonthBalance;
+        liquidWorthUptoLastYear = data;
+        return;
+      },
+      error: (error, stackTrace) {
+        return Text(error.toString());
+      },
+      loading: () {
+        return;
+      },
+    );
     var totalExpenseUptoLastYearCard = totalExpenseUptoLastYearData.when(
       data: (data) {
         totalExpenseUptoLastYear = data;
@@ -210,30 +259,33 @@ class KpiMetricsSection extends ConsumerWidget {
     monthlyBalanceUptoLastMonthCard;
     monthlyBalanceUptoLastYearCard;
     netWorthUptoLastMonthCard;
+    liquidWorthUptoLastMonthCard;
     totalExpenseUptoLastMonthCard;
     totalIncomeUptoLastMonthCard;
 
     netWorthUptoLastYearCard;
+    liquidWorthUptoLastYearCard;
     totalExpenseUptoLastYearCard;
     totalIncomeUptoLastYearCard;
     /* ========================================================================== */
     /*                               Actual UI start                              */
     /* ========================================================================== */
-    var netWorthCard = netWorthData.when(
+    var netWorthCard = netAssetsData.when(
       data: (data) {
         double totalWorth = currentMonthBalance;
         netWorthMap = data;
+        netWorthMap['Cash'] = currentMonthBalance;
         for (var key in data.keys) {
           totalWorth += data[key];
         }
         netWorthValue = totalWorth;
-        double totalWorthUptoLastMonth = uptoLastMonthBalance;
+        double worthUptoLastMonth = uptoLastMonthBalance;
         for (var key in netWorthUptoLastMonth.keys) {
-          totalWorthUptoLastMonth += data[key];
+          worthUptoLastMonth += data[key];
         }
-        double totalWorthUptoLastYear = uptoLastYearBalance;
+        double worthUptoLastYear = uptoLastYearBalance;
         for (var key in netWorthUptoLastYear.keys) {
-          totalWorthUptoLastYear += data[key];
+          worthUptoLastYear += data[key];
         }
         return SizedBox(
           // width: 200,
@@ -241,11 +293,77 @@ class KpiMetricsSection extends ConsumerWidget {
           child: KpiMetricCard(
             title: "Current Net Worth",
             totalValue: totalWorth,
-            uptoLastMonthValue: totalWorthUptoLastMonth,
-            uptoLastYearValue: totalWorthUptoLastYear,
-            hoverChild: Text(
-              netWorthMap.toString(),
-            ),
+            uptoLastMonthValue: worthUptoLastMonth,
+            uptoLastYearValue: worthUptoLastYear,
+            hoverChild: Column(
+                children: netWorthMap.entries.map(
+              (entry) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(entry.key.toString()),
+                    const Text(" : "),
+                    Text(indianRupeesFormat.format(entry.value)),
+                  ],
+                );
+              },
+            ).toList()
+                // ],
+                ),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return Text(error.toString());
+      },
+      loading: () {
+        return const RefreshProgressIndicator();
+      },
+    );
+
+    var liquidWorthCard = liquidAssetsData.when(
+      data: (data) {
+        double liquidWorth = currentMonthBalance;
+        liquidWorthMap = data;
+        liquidWorthMap['Cash'] = currentMonthBalance;
+        for (var key in data.keys) {
+          liquidWorth += data[key];
+        }
+        liquidWorthValue = liquidWorth;
+        double worthUptoLastMonth = uptoLastMonthBalance;
+        for (var key in liquidWorthUptoLastMonth.keys) {
+          worthUptoLastMonth += data[key];
+        }
+        double worthUptoLastYear = uptoLastYearBalance;
+        for (var key in liquidWorthUptoLastYear.keys) {
+          worthUptoLastYear += data[key];
+        }
+        return SizedBox(
+          // width: 200,
+          // height: 100,
+          child: KpiMetricCard(
+            title: "Current Liquid Worth",
+            totalValue: liquidWorth,
+            uptoLastMonthValue: worthUptoLastMonth,
+            uptoLastYearValue: worthUptoLastYear,
+            hoverChild: Column(
+                children: liquidWorthMap.entries.map(
+              (entry) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(entry.key.toString()),
+                    const Text(" : "),
+                    // Text(entry.value.toString()),
+                    Text(indianRupeesFormat.format(entry.value)),
+                  ],
+                );
+              },
+            ).toList()
+                // ],
+                ),
           ),
         );
       },
@@ -268,9 +386,9 @@ class KpiMetricsSection extends ConsumerWidget {
             totalValue: data,
             uptoLastMonthValue: totalExpenseUptoLastMonth,
             uptoLastYearValue: totalExpenseUptoLastYear,
-            hoverChild: Text(
-              data.toString(),
-            ),
+            // hoverChild: Text(
+            //   data.toString(),
+            // ),
           ),
         );
       },
@@ -294,9 +412,9 @@ class KpiMetricsSection extends ConsumerWidget {
             totalValue: data,
             uptoLastMonthValue: totalIncomeUptoLastMonth,
             uptoLastYearValue: totalIncomeUptoLastYear,
-            hoverChild: Text(
-              data.toString(),
-            ),
+            // hoverChild: Text(
+            //   data.toString(),
+            // ),
           ),
         );
       },
@@ -343,17 +461,15 @@ class KpiMetricsSection extends ConsumerWidget {
             Responsive.isSmallScreen(context) ? Axis.vertical : Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Tooltip(
-            message: netWorthMap.toString(),
-            child: netWorthCard,
-          ),
+          liquidWorthCard,
+          netWorthCard,
           totalExpenseCard,
           totalIncomeCard,
-          RadialGaugeChart(
-            value: (netWorthValue == 0 || totalIncomeValue == 0)
-                ? 0
-                : (netWorthValue / totalIncomeValue) * 100,
-          ),
+          // RadialGaugeChart(
+          //   value: (netWorthValue == 0 || totalIncomeValue == 0)
+          //       ? 0
+          //       : (netWorthValue / totalIncomeValue) * 100,
+          // ),
         ],
       );
     }

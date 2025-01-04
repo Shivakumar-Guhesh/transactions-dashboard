@@ -7,7 +7,7 @@ class KpiMetricCard extends StatelessWidget {
     required this.totalValue,
     required this.uptoLastMonthValue,
     required this.uptoLastYearValue,
-    required this.hoverChild,
+    this.hoverChild,
     super.key,
   });
 
@@ -15,7 +15,7 @@ class KpiMetricCard extends StatelessWidget {
   final double totalValue;
   final double uptoLastMonthValue;
   final double uptoLastYearValue;
-  final Widget hoverChild;
+  final Widget? hoverChild;
 
   double getPercentChangeSinceLastMonth(double value_1, double value_2) {
     double result = ((value_2 - value_1) / value_1) * 100;
@@ -55,23 +55,42 @@ class KpiMetricCard extends StatelessWidget {
     return SizedBox(
       // alignment: Alignment.center,
       width: 250,
-      height: 150,
+      height: 160,
       // padding: const EdgeInsets.all(8.0),
       child: Card(
-        // color: Theme.of(context).colorScheme.surface,
-        color: Theme.of(context).scaffoldBackgroundColor,
+        // color: Theme.of(context).colorScheme.onSurface,
+        surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
         shadowColor: Theme.of(context).colorScheme.shadow,
         elevation: 10,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 10,
-                // fontFamily: 'Courier Prime',
+            if (hoverChild != null)
+              Tooltip(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).dialogBackgroundColor,
+                ),
+                richMessage: WidgetSpan(
+                  child: hoverChild!,
+                ),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    // fontFamily: 'Courier Prime',
+                  ),
+                ),
+              )
+            else
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 10,
+                  // fontFamily: 'Courier Prime',
+                ),
               ),
-            ),
             FittedBox(
               alignment: Alignment.center,
               fit: BoxFit.fill,
@@ -87,7 +106,7 @@ class KpiMetricCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -107,7 +126,25 @@ class KpiMetricCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Tooltip(
-                    message: indianRupeesFormat.format(uptoLastYearValue),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).dialogBackgroundColor,
+                    ),
+                    richMessage: WidgetSpan(
+                      child: Column(
+                        children: [
+                          SelectionArea(
+                            child: Text(
+                              indianRupeesFormat.format(uptoLastYearValue),
+                              style: TextStyle(
+                                // fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     child: Column(
                       children: [
                         const Text(
@@ -142,8 +179,7 @@ class KpiMetricCard extends StatelessWidget {
                               indianRupeesFormat.format(uptoLastMonthValue),
                               style: TextStyle(
                                 // fontWeight: FontWeight.bold,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ),

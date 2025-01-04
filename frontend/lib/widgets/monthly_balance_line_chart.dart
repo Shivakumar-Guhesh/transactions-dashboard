@@ -21,7 +21,6 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
     Colors.cyan[100] as Color,
   ];
 
-  bool showAvg = false;
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
@@ -30,23 +29,20 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
   );
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(
         right: 18,
         left: 12,
         top: 24,
         bottom: 12,
       ),
-      child: LineChart(
-        // showAvg ? avgData() : mainData(),
-        mainData(),
-      ),
+      child: LineChart(mainData()),
     );
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
-      fontWeight: FontWeight.bold,
+      // fontWeight: FontWeight.bold,
       fontSize: 12,
     );
     Widget text;
@@ -67,9 +63,7 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
       dates.add(DateTime(startDate.year, startDate.month + i));
     }
 
-    // switch (dates[value.toInt()].month % 3) {
-    switch (dates[value.toInt()].month % 4) {
-      //FIXME:3 doesnt work properly. Behaves like %6
+    switch (dates[value.toInt()].month % 3) {
       case 0:
         text =
             Text(DateFormat('yMMM').format(dates[value.toInt()]), style: style);
@@ -85,63 +79,29 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
     );
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-
-    String text;
-
-    switch (value.toInt()) {
-      case 50000:
-        text = '50K';
-        break;
-      case 100000:
-        text = '100K';
-        break;
-      case 150000:
-        text = '150K';
-        break;
-      case 200000:
-        text = '200K';
-        break;
-      case 250000:
-        text = '250K';
-        break;
-      case 300000:
-        text = '300K';
-        break;
-      case 350000:
-        text = '350K';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
   LineChartData mainData() {
     return LineChartData(
       lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-        // maxContentWidth: 100,
-        // fitInsideHorizontally: true,
-        // tooltipBgColor: Colors.white,
-        tooltipBgColor: Theme.of(context).colorScheme.primary,
-        getTooltipItems: (touchedSpots) {
-          return touchedSpots.map((barSpot) {
-            return LineTooltipItem(
-              // indianRupeesFormat.format(barSpot),
-              // barSpot.bar.lineChartStepData.toString(),
-
-              indianRupeesFormat.format(widget.amounts[barSpot.x.toInt()]),
-              TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            );
-          }).toList();
-        },
-      )),
+        touchTooltipData: LineTouchTooltipData(
+          // maxContentWidth: 100,
+          // fitInsideHorizontally: true,
+          // tooltipBgColor: Colors.white,
+          tooltipBgColor: Theme.of(context).colorScheme.primary,
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map(
+              (barSpot) {
+                return LineTooltipItem(
+                  indianRupeesFormat.format(widget.amounts[barSpot.x.toInt()]),
+                  TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
+            ).toList();
+          },
+        ),
+      ),
       gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
         show: true,
@@ -154,8 +114,6 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            // reservedSize: 30,
-            // interval: 10,
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),
@@ -163,15 +121,17 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
           sideTitles: SideTitles(
             showTitles: true,
             interval: 50000,
-            // getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 60,
           ),
         ),
       ),
       borderData: FlBorderData(
-        // show: true,
-        show: false,
-        border: Border.all(color: const Color(0xff37434d)),
+        show: true,
+        // show: false,
+        border: const Border(
+          bottom: BorderSide(color: Color(0xff37434d)),
+          left: BorderSide(color: Color(0xff37434d)),
+        ),
       ),
       minX: 0,
       maxX: widget.amounts.length.toDouble(),
@@ -180,20 +140,20 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
       // amounts.reduce(max) + (amounts.reduce(max) / 10),
       lineBarsData: [
         LineChartBarData(
-          spots: widget.amounts.map((e) {
-            return FlSpot(widget.amounts.indexOf(e).toDouble(), e);
-          }).toList(),
+          spots: widget.amounts.map(
+            (e) {
+              return FlSpot(widget.amounts.indexOf(e).toDouble(), e);
+            },
+          ).toList(),
           // isCurved: true,
-          isCurved: true,
-          // gradient: LinearGradient(
-          //   colors: gradientColors,
-          //   // begin: Alignment.topCenter,
-          //   // end: Alignment.bottomCenter,
-          // ),
           barWidth: 2,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            // show: false,
+            show: true,
+            checkToShowDot: (spot, barData) {
+              return (spot.x % 3 == 1);
+            },
           ),
           belowBarData: BarAreaData(
             show: true,
@@ -201,7 +161,7 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
               end: Alignment.bottomCenter,
               begin: Alignment.topCenter,
               colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
+                  .map((color) => color.withValues(alpha: 0.3))
                   .toList(),
             ),
           ),

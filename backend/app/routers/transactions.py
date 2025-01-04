@@ -1,14 +1,13 @@
 import datetime
 from typing import Dict
 
+# import pandas as pd
+from app import utils
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import and_, func, select, text
 from sqlalchemy.engine.row import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
-
-# import pandas as pd
-from app import utils
 
 from .. import models, schemas
 from ..constants import *
@@ -187,15 +186,74 @@ def get_total_income(
     return total_income
 
 
-@router.post("/net_worth")
-def get_net_worth(
+@router.post("/liquid_asset_worth")
+def get_liquid_asset_worth(
     body: schemas.TransactionsFiltersIn,
     db: Session = Depends(get_db),
 ):
-    """POST endpoint for getting net worth
+    """POST endpoint for getting Total asset worth
 
     Returns:
-        result: Net worth by category
+        result: Total asset by category
+    """
+    exclude_expenses = body.exclude_expenses
+    exclude_incomes = body.exclude_incomes
+    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
+    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
+
+    try:
+        bought_assets = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            include_categories=liquid_assets_categories,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
+        )
+        sold_assets = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            include_categories=liquid_assets_categories,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        results_dict = {}
+        for asset in bought_assets:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+        for asset in sold_assets:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] - asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+
+        return results_dict
+    except NoResultFound:
+        pass
+    pass
+
+
+@router.post("/total_asset_worth")
+def get_total_asset_worth(
+    body: schemas.TransactionsFiltersIn,
+    db: Session = Depends(get_db),
+):
+    """POST endpoint for getting Total asset worth
+
+    Returns:
+        result: Total asset by category
     """
     exclude_expenses = body.exclude_expenses
     exclude_incomes = body.exclude_incomes

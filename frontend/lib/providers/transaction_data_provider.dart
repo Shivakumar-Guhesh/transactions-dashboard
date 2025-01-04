@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/transactions_api_service.dart';
 import '../models/transaction_filters_in.dart';
@@ -18,9 +16,16 @@ final incomeCategoriesProvider =
 final expenseCategoriesProvider = FutureProvider(
     (ref) => ref.read(apiServiceProvider).getExpenseCategories());
 
-final netWorthProvider = FutureProvider.family(
+final netAssetsProvider = FutureProvider.family(
   (ref, TransactionsFiltersIn arg) {
-    return ref.read(apiServiceProvider).getNetWorth(
+    return ref.read(apiServiceProvider).getTotalAssets(
+        arg.excludeExpenses, arg.excludeIncomes, arg.startDate, arg.endDate);
+  },
+);
+
+final liquidAssetsProvider = FutureProvider.family(
+  (ref, TransactionsFiltersIn arg) {
+    return ref.read(apiServiceProvider).getLiquidAssets(
         arg.excludeExpenses, arg.excludeIncomes, arg.startDate, arg.endDate);
   },
 );

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/selected_categories_provider.dart';
 import '../utils/responsive.dart';
 import './multi_check_box_drop_down.dart';
-import '../providers/transaction_data_provider.dart';
+
 import '../providers/selected_date_range_provider.dart';
 import './dark_mode_switch.dart';
 import './calendar_date_range_picker.dart';
@@ -60,12 +60,7 @@ class _TopBarState extends ConsumerState<TopBar> {
                         foreground: Paint()
                           ..style = PaintingStyle.stroke
                           ..strokeWidth = 5
-                          // ..color = Theme.of(context).colorScheme.tertiary,
                           ..color = Colors.black,
-
-                        // color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        // color: Theme.of(context).colorScheme.error,
-                        // decorationColor: Colors.blue,
                       ),
                     ),
                     Text(
@@ -182,10 +177,10 @@ class _TopBarState extends ConsumerState<TopBar> {
                 ),
                 ElevatedButton.icon(
                   style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
-                        side: BorderSide(color: Colors.red),
+                        side: const BorderSide(color: Colors.red),
                       ),
                     ),
                   ),

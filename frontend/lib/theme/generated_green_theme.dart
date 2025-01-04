@@ -7,14 +7,8 @@ var background = const Color(0xFF191C1C);
 var onBackground = const Color(0xFFE0E3E3);
 
 class MaterialTheme {
-  final TextTheme textTheme;
-
-  const MaterialTheme(this.textTheme);
-
   static ColorScheme lightScheme() {
     return const ColorScheme(
-      background: Color(0xFFFAFDFC),
-      onBackground: Color(0xFF191C1C),
       brightness: Brightness.light,
       primary: Color(0xff006d3a),
       surfaceTint: Color(0xff006d3a),
@@ -51,8 +45,6 @@ class MaterialTheme {
 
   static ColorScheme lightMediumContrastScheme() {
     return const ColorScheme(
-      background: Color(0xFFFAFDFC),
-      onBackground: Color(0xFF191C1C),
       brightness: Brightness.light,
       primary: Color(0xff004e28),
       surfaceTint: Color(0xff006d3a),
@@ -89,8 +81,6 @@ class MaterialTheme {
 
   static ColorScheme lightHighContrastScheme() {
     return const ColorScheme(
-      background: Color(0xFFFAFDFC),
-      onBackground: Color(0xFF191C1C),
       brightness: Brightness.light,
       primary: Color(0xff002912),
       surfaceTint: Color(0xff006d3a),
@@ -127,8 +117,6 @@ class MaterialTheme {
 
   static ColorScheme darkScheme() {
     return const ColorScheme(
-      background: Color(0xFF191C1C),
-      onBackground: Color(0xFFE0E3E3),
       brightness: Brightness.dark,
       primary: Color(0xff57df8c),
       surfaceTint: Color(0xff57df8c),
@@ -165,8 +153,6 @@ class MaterialTheme {
 
   static ColorScheme darkMediumContrastScheme() {
     return const ColorScheme(
-      background: Color(0xFF191C1C),
-      onBackground: Color(0xFFE0E3E3),
       brightness: Brightness.dark,
       primary: Color(0xff5be390),
       surfaceTint: Color(0xff57df8c),
@@ -203,8 +189,6 @@ class MaterialTheme {
 
   static ColorScheme darkHighContrastScheme() {
     return const ColorScheme(
-      background: Color(0xFF191C1C),
-      onBackground: Color(0xFFE0E3E3),
       brightness: Brightness.dark,
       primary: Color(0xffefffef),
       surfaceTint: Color(0xff57df8c),
@@ -243,11 +227,7 @@ class MaterialTheme {
         useMaterial3: true,
         brightness: colorScheme.brightness,
         colorScheme: colorScheme,
-        textTheme: textTheme.apply(
-          bodyColor: colorScheme.onSurface,
-          displayColor: colorScheme.onSurface,
-        ),
-        scaffoldBackgroundColor: colorScheme.background,
+        scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
         fontFamily: 'Courier Prime',
       );

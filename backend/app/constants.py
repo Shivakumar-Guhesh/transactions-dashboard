@@ -1,5 +1,5 @@
 debt_asset_categories = [
-    # "Provident Fund",
+    "Provident Fund",
     "Fixed Deposit",
 ]
 gold_asset_categories = [
@@ -13,5 +13,10 @@ assets_categories = [
     *debt_asset_categories,
     *gold_asset_categories,
     *equity_assets,
+]
+
+liquid_assets_categories = [
+    "Fixed Deposit",
+    "Stocks",
 ]
 INPUT_FILE = "D:\\MEGA\\Mega_Data\\Mega_Documents\\Finance\\Transactions.xlsx"

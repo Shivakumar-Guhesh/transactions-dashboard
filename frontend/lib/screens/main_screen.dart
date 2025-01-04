@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../utils/responsive.dart';
 import '../widgets/chart_sections.dart';
@@ -6,11 +7,10 @@ import '../widgets/side_bar.dart';
 import '../widgets/top_bar.dart';
 import '../widgets/kpi_metrics_section.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
-
   @override
-  build(BuildContext context) {
+  build(BuildContext context, WidgetRef ref) {
     return SelectionArea(
       child: Scaffold(
         // appBar: AppBar(
