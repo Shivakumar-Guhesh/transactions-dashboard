@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -7,7 +8,7 @@ import '../providers/selected_categories_provider.dart';
 import '../providers/selected_date_range_provider.dart';
 import '../providers/transaction_data_provider.dart';
 import '../utils/responsive.dart';
-import './radial_gauge_chart.dart';
+// import './radial_gauge_chart.dart';
 import './kpi_metric_card.dart';
 
 final DateTime oldestDate = DateTime.utc(1900, 01, 01);
@@ -51,7 +52,11 @@ class KpiMetricsSection extends ConsumerWidget {
       excludeExpenses: expense,
       excludeIncomes: income,
       startDate: startDate,
-      endDate: DateTime(endDate.year - 1, endDate.month, endDate.day),
+      endDate: DateTime(
+        endDate.year - 1,
+        endDate.month,
+        endDate.day,
+      ),
     );
     var transactionsFiltersIn = TransactionsFiltersIn(
       excludeExpenses: expense,
@@ -81,10 +86,10 @@ class KpiMetricsSection extends ConsumerWidget {
     double uptoLastMonthBalance = 0.0;
     double uptoLastYearBalance = 0.0;
 
-    double totalIncomeValue = 0.0;
-    double totalExpenseValue = 0.0;
-    double netWorthValue = 0.0;
-    double liquidWorthValue = 0.0;
+    // double totalIncomeValue = 0.0;
+    // double totalExpenseValue = 0.0;
+    // double netWorthValue = 0.0;
+    // double liquidWorthValue = 0.0;
     Map<String, dynamic> netWorthMap = {};
     Map<String, dynamic> liquidWorthMap = {};
 
@@ -158,6 +163,7 @@ class KpiMetricsSection extends ConsumerWidget {
     var netWorthUptoLastMonthCard = netWorthUptoLastMonthData.when(
       data: (data) {
         netWorthUptoLastMonth = data;
+        netWorthUptoLastMonth['Cash'] = uptoLastMonthBalance;
         return;
       },
       error: (error, stackTrace) {
@@ -170,6 +176,7 @@ class KpiMetricsSection extends ConsumerWidget {
     var liquidWorthUptoLastMonthCard = liquidWorthUptoLastMonthData.when(
       data: (data) {
         liquidWorthUptoLastMonth = data;
+        liquidWorthUptoLastMonth['Cash'] = uptoLastMonthBalance;
         return;
       },
       error: (error, stackTrace) {
@@ -208,6 +215,7 @@ class KpiMetricsSection extends ConsumerWidget {
       data: (data) {
         // double totalWorth = currentMonthBalance;
         netWorthUptoLastYear = data;
+        netWorthUptoLastYear['Cash'] = uptoLastYearBalance;
         return;
       },
       error: (error, stackTrace) {
@@ -219,8 +227,11 @@ class KpiMetricsSection extends ConsumerWidget {
     );
     var liquidWorthUptoLastYearCard = liquidWorthUptoLastYearData.when(
       data: (data) {
+        // double liquidWorth = currentMonthBalance;
+
         // double totalWorth = currentMonthBalance;
         liquidWorthUptoLastYear = data;
+        liquidWorthUptoLastYear['Cash'] = uptoLastYearBalance;
         return;
       },
       error: (error, stackTrace) {
@@ -267,25 +278,29 @@ class KpiMetricsSection extends ConsumerWidget {
     liquidWorthUptoLastYearCard;
     totalExpenseUptoLastYearCard;
     totalIncomeUptoLastYearCard;
+
     /* ========================================================================== */
     /*                               Actual UI start                              */
     /* ========================================================================== */
     var netWorthCard = netAssetsData.when(
       data: (data) {
-        double totalWorth = currentMonthBalance;
+        // double totalWorth = currentMonthBalance;
+        double totalWorth = 0.0;
         netWorthMap = data;
         netWorthMap['Cash'] = currentMonthBalance;
-        for (var key in data.keys) {
-          totalWorth += data[key];
+        for (var key in netWorthMap.keys) {
+          totalWorth += netWorthMap[key];
         }
-        netWorthValue = totalWorth;
-        double worthUptoLastMonth = uptoLastMonthBalance;
+        // netWorthValue = totalWorth;
+        // double worthUptoLastMonth = uptoLastMonthBalance;
+        double worthUptoLastMonth = 0.0;
         for (var key in netWorthUptoLastMonth.keys) {
-          worthUptoLastMonth += data[key];
+          worthUptoLastMonth += netWorthUptoLastMonth[key];
         }
-        double worthUptoLastYear = uptoLastYearBalance;
+        // double worthUptoLastYear = uptoLastYearBalance;
+        double worthUptoLastYear = 0.0;
         for (var key in netWorthUptoLastYear.keys) {
-          worthUptoLastYear += data[key];
+          worthUptoLastYear += netWorthUptoLastYear[key];
         }
         return SizedBox(
           // width: 200,
@@ -324,20 +339,23 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var liquidWorthCard = liquidAssetsData.when(
       data: (data) {
-        double liquidWorth = currentMonthBalance;
+        // double liquidWorth = currentMonthBalance;
+        double liquidWorth = 0.0;
         liquidWorthMap = data;
         liquidWorthMap['Cash'] = currentMonthBalance;
-        for (var key in data.keys) {
-          liquidWorth += data[key];
+        for (var key in liquidWorthMap.keys) {
+          liquidWorth += liquidWorthMap[key];
         }
-        liquidWorthValue = liquidWorth;
-        double worthUptoLastMonth = uptoLastMonthBalance;
+        // liquidWorthValue = liquidWorth;
+        // double worthUptoLastMonth = uptoLastMonthBalance;
+        double worthUptoLastMonth = 0.0;
         for (var key in liquidWorthUptoLastMonth.keys) {
-          worthUptoLastMonth += data[key];
+          worthUptoLastMonth += liquidWorthUptoLastMonth[key];
         }
-        double worthUptoLastYear = uptoLastYearBalance;
+        // double worthUptoLastYear = uptoLastYearBalance;
+        double worthUptoLastYear = 0.0;
         for (var key in liquidWorthUptoLastYear.keys) {
-          worthUptoLastYear += data[key];
+          worthUptoLastYear += liquidWorthUptoLastYear[key];
         }
         return SizedBox(
           // width: 200,
@@ -377,7 +395,7 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var totalExpenseCard = totalExpenseData.when(
       data: (data) {
-        totalExpenseValue = data;
+        // totalExpenseValue = data;
         return SizedBox(
           // width: 200,
           // height: 100,
@@ -402,7 +420,7 @@ class KpiMetricsSection extends ConsumerWidget {
 
     var totalIncomeCard = totalIncomeData.when(
       data: (data) {
-        totalIncomeValue = data;
+        // totalIncomeValue = data;
         return SizedBox(
           // width: 200,
           // height: 150,
@@ -432,11 +450,8 @@ class KpiMetricsSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Tooltip(
-                message: netWorthMap.toString(),
-                child: netWorthCard,
-              ),
-              totalExpenseCard,
+              liquidWorthCard,
+              netWorthCard,
             ],
           ),
           const SizedBox(
@@ -445,12 +460,13 @@ class KpiMetricsSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              totalIncomeCard,
-              RadialGaugeChart(
-                value: (netWorthValue == 0 || totalIncomeValue == 0)
-                    ? 0
-                    : (netWorthValue / totalIncomeValue) * 100,
-              ),
+              totalExpenseCard,
+              totalIncomeCard
+              // RadialGaugeChart(
+              //   value: (netWorthValue == 0 || totalIncomeValue == 0)
+              //       ? 0
+              //       : (netWorthValue / totalIncomeValue) * 100,
+              // ),
             ],
           ),
         ],

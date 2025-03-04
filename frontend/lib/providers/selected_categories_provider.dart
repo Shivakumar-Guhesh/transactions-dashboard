@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,13 +21,6 @@ class SelectedCategoriesState with ChangeNotifier {
 
     _deSelectedExpenseCategories = expenses;
     _deSelectedIncomeCategories = incomes;
-    print(
-        "/* ========================================================================== */");
-    print(
-        "/*                           Fetch and Set                          */");
-    print("Fetch and Set");
-    print(
-        "/* ========================================================================== */");
     notifyListeners();
   }
 
@@ -45,16 +39,6 @@ class SelectedCategoriesState with ChangeNotifier {
     await sharedPrefs.setStringList("expenses", _deSelectedExpenseCategories);
     await sharedPrefs.setStringList("incomes", _deSelectedIncomeCategories);
 
-    print("\n\n");
-    print(
-        "/* ===================== savePreferencesToFile ===================== */");
-    print(
-        "/* ========================================================================== */");
-    print(sharedPrefs.getStringList("incomes"));
-    print(sharedPrefs.getStringList("expenses"));
-    print(
-        "/* ========================================================================== */");
-
     notifyListeners();
   }
 
@@ -64,15 +48,6 @@ class SelectedCategoriesState with ChangeNotifier {
         cacheOptions: const SharedPreferencesWithCacheOptions());
     await sharedPrefs.remove("expenses");
     await sharedPrefs.remove("incomes");
-    print("\n\n");
-    print(
-        "/* ===================== clearPreferencesFromFile ===================== */");
-    print(
-        "/* ========================================================================== */");
-    print(sharedPrefs.getStringList("incomes"));
-    print(sharedPrefs.getStringList("expenses"));
-    print(
-        "/* ========================================================================== */");
     notifyListeners();
   }
 
@@ -83,14 +58,6 @@ class SelectedCategoriesState with ChangeNotifier {
 
   void addDeSelectedIncomeCategory(String category) {
     _deSelectedIncomeCategories.add(category);
-    print("\n\n");
-    print(
-        "/* ===================== addDeSelectedIncomeCategory ===================== */");
-    print(
-        "/* ========================================================================== */");
-    print(_deSelectedIncomeCategories.toString());
-    print(
-        "/* ========================================================================== */");
 
     // incomes = sharedPrefs.getStringList("incomes") ?? [];
     // _selectedIncomeCategories = output;
@@ -105,14 +72,6 @@ class SelectedCategoriesState with ChangeNotifier {
 
   void removeDeSelectedIncomeCategory(String category) {
     _deSelectedIncomeCategories.remove(category);
-    print("\n\n");
-    print(
-        "/* ===================== removeDeSelectedIncomeCategory ===================== */");
-    print(
-        "/* ========================================================================== */");
-    print(_deSelectedIncomeCategories.toString());
-    print(
-        "/* ========================================================================== */");
 
     notifyListeners();
   }
