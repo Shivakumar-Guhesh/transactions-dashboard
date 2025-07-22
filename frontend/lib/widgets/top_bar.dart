@@ -46,36 +46,38 @@ class _TopBarState extends ConsumerState<TopBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: Stack(
-                  children: [
-                    Text(
-                      Responsive.isSmallScreen(context)
-                          ? "TD"
-                          : "Transaction Dashboard\u2122",
-                      style: TextStyle(
-                        fontFamily: 'Plain_Black',
-                        fontSize: 24,
-                        foreground: Paint()
-                          ..style = PaintingStyle.stroke
-                          ..strokeWidth = 5
-                          ..color = Colors.black,
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(border: Border.all()),
+                  child: Stack(
+                    children: [
+                      Text(
+                        Responsive.isSmallScreen(context)
+                            ? "TD"
+                            : "Transaction Dashboard\u2122",
+                        style: TextStyle(
+                          fontFamily: 'Plain_Black',
+                          fontSize: 24,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 5
+                            ..color = Colors.black,
+                        ),
                       ),
-                    ),
-                    Text(
-                      Responsive.isSmallScreen(context)
-                          ? "TD"
-                          : "Transaction Dashboard\u2122",
-                      style: const TextStyle(
-                        fontFamily: 'Plain_Black',
-                        fontSize: 24,
-                        // color: Theme.of(context).colorScheme.onPrimary,
-                        color: Colors.white,
-                        // color: Theme.of(context).colorScheme.error,
+                      Text(
+                        Responsive.isSmallScreen(context)
+                            ? "TD"
+                            : "Transaction Dashboard\u2122",
+                        style: const TextStyle(
+                          fontFamily: 'Plain_Black',
+                          fontSize: 24,
+                          // color: Theme.of(context).colorScheme.onPrimary,
+                          color: Colors.white,
+                          // color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Responsive.isSmallScreen(context)
