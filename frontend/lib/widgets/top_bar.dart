@@ -46,7 +46,7 @@ class _TopBarState extends ConsumerState<TopBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
+              Flexible(
                 child: Container(
                   decoration: BoxDecoration(border: Border.all()),
                   child: Stack(
