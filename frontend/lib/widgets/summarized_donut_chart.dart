@@ -44,15 +44,17 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
 
   List<Map<String, dynamic>> setData(List<Map<String, dynamic>> data) {
     var otherCategories = {'category': 'Others', 'sum': 0};
-    for (var i = 9; i < data.length; i++) {
-      if (otherCategories['sum'] != null) {
-        otherCategories['sum'] =
-            (otherCategories['sum']! as num) + data[i]['sum'];
+    if (data.length >= 11) {
+      //TODO: CHANGE LOGIC FROM TOP N TO TOP %
+      for (var i = 9; i < data.length; i++) {
+        if (otherCategories['sum'] != null) {
+          otherCategories['sum'] =
+              (otherCategories['sum']! as num) + data[i]['sum'];
+        }
       }
+      data = data.sublist(0, 9);
+      data.add(otherCategories);
     }
-
-    data = data.sublist(0, 9);
-    data.add(otherCategories);
 
     return data;
   }

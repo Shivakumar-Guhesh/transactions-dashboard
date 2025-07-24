@@ -1,0 +1,762 @@
+Shivakumar@DESKTOP-EQDBQP7 MINGW64 /d/transactions_dashboard/frontend (main)
+$ flutter test --update-goldens
+Waiting for another flutter command to release the startup lock...
+00:12 +0: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen displays MainScreen inside SafeArea
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#0f9e1 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +0 -1: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen displays MainScreen inside SafeArea [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen displays MainScreen inside SafeArea
+
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen displays MainScreen inside SafeArea"
+00:12 +1 -1: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp has correct title
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#b9460 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +1 -2: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp has correct title [E]
+  Test failed. See exception logs above.
+  The test description was: MaterialApp has correct title
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MaterialApp has correct title"
+00:13 +1 -2: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen uses correct theme mode
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#e3441 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +1 -3: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen uses correct theme mode [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen uses correct theme mode
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen uses correct theme mode"
+00:13 +2 -3: D:/transactions_dashboard/frontend/test/main_test.dart: SafeArea widget is present in HomeScreen
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#14a5f OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +2 -4: D:/transactions_dashboard/frontend/test/main_test.dart: SafeArea widget is present in HomeScreen [E]
+  Test failed. See exception logs above.
+  The test description was: SafeArea widget is present in HomeScreen
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "SafeArea widget is present in HomeScreen"
+00:13 +2 -4: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen is present when HomeScreen is launched
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#b9e44 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +2 -5: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen is present when HomeScreen is launched [E]
+  Test failed. See exception logs above.
+  The test description was: MainScreen is present when HomeScreen is launched
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MainScreen is present when HomeScreen is launched"
+00:13 +3 -5: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp does not show debug banner
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#f9da3 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +3 -6: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp does not show debug banner [E]
+  Test failed. See exception logs above.
+  The test description was: MaterialApp does not show debug banner
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MaterialApp does not show debug banner"
+00:14 +4 -6: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen builds without throwing
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 137 pixels on the right.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///D:/transactions_dashboard/frontend/test/main_test.dart:95:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/transactions_dashboard/frontend/test/main_test.dart line 95
+The test description was:
+  HomeScreen builds without throwing
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:14 +4 -7: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen builds without throwing [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen builds without throwing
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen builds without throwing"
+00:15 +4 -7: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen widget exists in widget tree
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#d0a2a OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +4 -8: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen widget exists in widget tree [E]
+  Test failed. See exception logs above.
+  The test description was: MainScreen widget exists in widget tree
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MainScreen widget exists in widget tree"
+00:15 +5 -8: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp uses light theme by default
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#47696 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +5 -9: D:/transactions_dashboard/frontend/test/main_test.dart: MaterialApp uses light theme by default [E]
+  Test failed. See exception logs above.
+  The test description was: MaterialApp uses light theme by default
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MaterialApp uses light theme by default"
+00:15 +5 -9: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Column widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#fa123 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +5 -10: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Column widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains a Column widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains a Column widget"
+00:15 +5 -10: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains at least one Container widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#62a44 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +5 -11: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains at least one Container widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains at least one Container widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains at least one Container widget"
+00:16 +6 -11: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Material widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#7d711 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +6 -12: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Material widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains a Material widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains a Material widget"
+00:16 +6 -12: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen is a descendant of SafeArea
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#f608d OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +6 -13: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen is a descendant of SafeArea [E]
+  Test failed. See exception logs above.
+  The test description was: MainScreen is a descendant of SafeArea
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MainScreen is a descendant of SafeArea"
+00:16 +6 -13: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Theme widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#6bb97 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +6 -14: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Theme widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains a Theme widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains a Theme widget"
+00:16 +7 -14: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Text widget with app title
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#86c55 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +7 -15: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Text widget with app title [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains a Text widget with app title
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains a Text widget with app title"
+00:16 +7 -15: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen builds MaterialApp with correct home widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#ba28a OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +7 -16: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen builds MaterialApp with correct home widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen builds MaterialApp with correct home widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen builds MaterialApp with correct home widget"
+00:17 +7 -16: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains at least one Stack widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#ce138 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +7 -17: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains at least one Stack widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains at least one Stack widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains at least one Stack widget"
+00:17 +8 -17: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Scaffold widget
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#6ab78 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +8 -18: D:/transactions_dashboard/frontend/test/main_test.dart: HomeScreen contains a Scaffold widget [E]
+  Test failed. See exception logs above.
+  The test description was: HomeScreen contains a Scaffold widget
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "HomeScreen contains a Scaffold widget"
+00:17 +8 -18: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen contains a Centered widget (if applicable)
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 137 pixels on the right.
+
+The relevant error-causing widget was:
+  DropdownButtonFormField<String?>
+  DropdownButtonFormField:file:///D:/transactions_dashboard/frontend/lib/widgets/chart_sections.dart:191:26
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#74c78 OVERFLOWING:
+  needs compositing
+  creator: Row ← Padding ← SizedBox ← DefaultTextStyle ← _Decorator ← InputDecorator ← Listener ←
+    _GestureSemantics ← RawGestureDetector ← GestureDetector ← MouseRegion ← Semantics ← ⋯
+  parentData: offset=Offset(0.0, 0.0) (can use size)
+  constraints: BoxConstraints(w=226.0, h=24.0)
+  size: Size(226.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: min
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +8 -19: D:/transactions_dashboard/frontend/test/main_test.dart: MainScreen contains a Centered widget (if applicable) [E]
+  Test failed. See exception logs above.
+  The test description was: MainScreen contains a Centered widget (if applicable)
+
+
+To run this test again: C:\Flutter\flutter\bin\cache\dart-sdk\bin\dart.exe test D:/transactions_dashboard/frontend/test/main_test.dart -p vm --plain-name "MainScreen contains a Centered widget (if applicable)"
+00:18 +11 -19: Some tests failed.
+
+Shivakumar@DESKTOP-EQDBQP7 MINGW64 /d/transactions_dashboard/frontend (main)
+$
+
+Shivakumar@DESKTOP-EQDBQP7 MINGW64 /d/transactions_dashboard/frontend (main)
+$

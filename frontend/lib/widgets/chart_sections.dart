@@ -13,13 +13,45 @@ import './summarized_donut_chart.dart';
 final DateTime oldestDate = DateTime.utc(1900, 01, 01);
 final DateTime currentDate = DateTime.now();
 
-class ChartsSection extends ConsumerWidget {
+final List<String> items = [
+  "Category-wise Expense",
+  "Category-wise Income",
+  "Mode-wise Expense",
+  "Mode-wise Income"
+];
+
+class ChartsSection extends ConsumerStatefulWidget {
   const ChartsSection({
     super.key,
   });
 
   @override
-  build(BuildContext context, ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _ChartsSectionState();
+  }
+}
+
+class _ChartsSectionState extends ConsumerState<ChartsSection> {
+  String selectedItem = items[0];
+
+  void toggleSelected(String? currentSelection) {
+    setState(
+      () {
+        if (currentSelection == null || currentSelection == items[0]) {
+          selectedItem = items[0];
+        } else if (currentSelection == items[1]) {
+          selectedItem = items[1];
+        } else if (currentSelection == items[2]) {
+          selectedItem = items[2];
+        } else if (currentSelection == items[3]) {
+          selectedItem = items[3];
+        }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedCategoriesState = ref.watch(selectedCategoriesStateNotifier);
     final selectedDateState = ref.watch(selectedDateStateNotifier);
     final DateTime startDate =
@@ -55,21 +87,51 @@ class ChartsSection extends ConsumerWidget {
       monthlyBalanceProvider(transactionsFiltersInWithoutDates),
     );
 
-    var categoryDonutChart = catExpenseSumData.when(
+    Map<String, AsyncValue<List<Map<String, dynamic>>>> summarizedDataForDonut =
+        {};
+
+    summarizedDataForDonut[items[0]] = catExpenseSumData;
+
+    /* ========== ASSIGN summarizedDataForDonut for categoryDonutChart ========== */
+    if (selectedItem == items[0]) {
+      summarizedDataForDonut[selectedItem] = catExpenseSumData;
+    } else if (selectedItem == items[1]) {
+      summarizedDataForDonut[selectedItem] = catIncomeSumData;
+    } else if (selectedItem == items[2]) {
+      summarizedDataForDonut[selectedItem] = modeExpenseSumData;
+    } else if (selectedItem == items[3]) {
+      summarizedDataForDonut[selectedItem] = modeIncomeSumData;
+    } else {
+      selectedItem = items[0];
+    }
+    /* ===================== Based on DropDownMenuSelection ===================== */
+
+    var categoryDonutChart = summarizedDataForDonut[selectedItem]!.when(
       data: (data) {
-        data.sort((a, b) => b["sum"].compareTo(a["sum"]));
+        /* ===== catExpenseSumData is [{category: category1, sum: sum1}...] ==== */
+        /* ===== modeExpenseSumData is [{transaction_mode: mode1, sum: sum1}...] ==== */
+        /* =========== UPDATING THE DATA LIST TO MAKE BOTH HAVE SAME KEYS =========== */
+
+        final keys = data[0].keys.toList();
+        List<Map<String, dynamic>> dataWithUpdatedKeys = [];
+        for (var element in data) {
+          dataWithUpdatedKeys
+              .add({'category': element[keys[0]], 'sum': element['sum']});
+        }
+
+        dataWithUpdatedKeys.sort((a, b) => b["sum"].compareTo(a["sum"]));
         List<String> categories = [];
         List<double> amounts = [];
-        for (var expense in data) {
+        for (var expense in dataWithUpdatedKeys) {
           categories.add(expense['category'] as String);
         }
-        for (var expense in data) {
+        for (var expense in dataWithUpdatedKeys) {
           amounts.add(expense['sum'].toDouble());
         }
 
         return SummarizedDonutChart(
-          sliceData: data,
-          title: "Expense by category",
+          sliceData: dataWithUpdatedKeys,
+          title: selectedItem,
           baseRadius: (Responsive.isSmallScreen(context) ? 30.0 : 40.0),
           selectedRadius: (Responsive.isSmallScreen(context) ? 50.0 : 70.0),
           selectedLabelFontSize:
@@ -121,7 +183,47 @@ class ChartsSection extends ConsumerWidget {
               height: 100,
             ),
           Expanded(
-            child: categoryDonutChart,
+            child: Stack(
+              children: [
+                categoryDonutChart,
+                SizedBox(
+                  width: 250,
+                  child: DropdownButtonFormField(
+                    hint: Text(selectedItem),
+                    borderRadius: BorderRadius.circular(10),
+                    focusColor: Colors.transparent,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    value: null,
+                    onChanged: (i) {
+                      toggleSelected(i);
+                    },
+                    items: items
+                        .map(
+                          (item) => DropdownMenuItem(
+                            value: item,
+                            child: SizedBox(
+                              height: kMinInteractiveDimension,
+                              child: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return SizedBox(
+                                    height: kMinInteractiveDimension,
+                                    child: Text(item),
+                                  );
+                                },
+                                // child:
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
