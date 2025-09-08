@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/summarized_donut_chart.dart';
 
 import 'package:intl/intl.dart';
 
@@ -59,7 +60,6 @@ class KpiMetricCard extends StatelessWidget {
       height: 160,
       // padding: const EdgeInsets.all(8.0),
       child: Card(
-        // color: Theme.of(context).colorScheme.onSurface,
         surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
         shadowColor: Theme.of(context).colorScheme.shadow,
         elevation: 10,
@@ -78,8 +78,8 @@ class KpiMetricCard extends StatelessWidget {
                 ),
                 child: Text(
                   title,
-                  // style: Theme.of(context).textTheme.copyWith().bodySmall,
                   style: TextStyle(
+                    decoration: TextDecoration.underline,
                     fontSize: 10,
                     // fontFamily: 'Courier Prime',
                   ),
@@ -99,7 +99,7 @@ class KpiMetricCard extends StatelessWidget {
               child: Tooltip(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).dialogTheme.shadowColor,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
                 richMessage: WidgetSpan(
                   child: SelectionArea(
@@ -108,7 +108,6 @@ class KpiMetricCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -130,7 +129,7 @@ class KpiMetricCard extends StatelessWidget {
                   Tooltip(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).dialogTheme.shadowColor,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                     ),
                     richMessage: WidgetSpan(
                       child: Column(
@@ -139,9 +138,8 @@ class KpiMetricCard extends StatelessWidget {
                             child: Text(
                               indianRupeesFormat.format(uptoLastYearValue),
                               style: TextStyle(
-                                // fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
+                                  // fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         ],
@@ -171,7 +169,7 @@ class KpiMetricCard extends StatelessWidget {
                   Tooltip(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).dialogBackgroundColor,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                     ),
                     richMessage: WidgetSpan(
                       child: Column(
@@ -180,9 +178,8 @@ class KpiMetricCard extends StatelessWidget {
                             child: Text(
                               indianRupeesFormat.format(uptoLastMonthValue),
                               style: TextStyle(
-                                // fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
+                                  // fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         ],

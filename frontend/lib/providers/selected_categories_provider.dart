@@ -32,7 +32,7 @@ class SelectedCategoriesState with ChangeNotifier {
     return _deSelectedIncomeCategories;
   }
 
-  savePreferencesToFile() async {
+  Future<void> savePreferencesToFile() async {
     // final sharedPrefs = await SharedPreferences.getInstance();
     final sharedPrefs = await SharedPreferencesWithCache.create(
         cacheOptions: const SharedPreferencesWithCacheOptions());
@@ -42,7 +42,7 @@ class SelectedCategoriesState with ChangeNotifier {
     notifyListeners();
   }
 
-  clearPreferencesFromFile() async {
+  Future<void> clearPreferencesFromFile() async {
     // final sharedPrefs = await SharedPreferences.getInstance();
     final sharedPrefs = await SharedPreferencesWithCache.create(
         cacheOptions: const SharedPreferencesWithCacheOptions());

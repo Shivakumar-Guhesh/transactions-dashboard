@@ -363,7 +363,7 @@ class TransactionApiService {
     }
   }
 
-  getMonthlyBalance(
+  Future<List<Map>> getMonthlyBalance(
     List<String> deselectedExpenses,
     List<String> deselectedIncomes,
     DateTime startDate,

@@ -86,41 +86,33 @@ class _SummarizedDonutChartState extends ConsumerState<SummarizedDonutChart> {
                   fontSize: Responsive.isSmallScreen(context) ? 5 : 10,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.indigo,
+              PieChart(
+                PieChartData(
+                  startDegreeOffset: 270,
+                  pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      setState(
+                        () {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            touchedCategoryIndex = -1;
+                            return;
+                          }
+                          touchedCategoryIndex = pieTouchResponse
+                              .touchedSection!.touchedSectionIndex;
+                        },
+                      );
+                    },
                   ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: PieChart(
-                  PieChartData(
-                    startDegreeOffset: 270,
-                    pieTouchData: PieTouchData(
-                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                        setState(
-                          () {
-                            if (!event.isInterestedForInteractions ||
-                                pieTouchResponse == null ||
-                                pieTouchResponse.touchedSection == null) {
-                              touchedCategoryIndex = -1;
-                              return;
-                            }
-                            touchedCategoryIndex = pieTouchResponse
-                                .touchedSection!.touchedSectionIndex;
-                          },
-                        );
-                      },
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 0,
-                    // centerSpaceRadius: 40,
-                    centerSpaceRadius:
-                        Responsive.isSmallScreen(context) ? 50 : 120,
-                    sections: slices(sliceData),
+                  borderData: FlBorderData(
+                    show: false,
                   ),
+                  sectionsSpace: 0,
+                  // centerSpaceRadius: 40,
+                  centerSpaceRadius:
+                      Responsive.isSmallScreen(context) ? 50 : 100,
+                  sections: slices(sliceData),
                 ),
               ),
             ],

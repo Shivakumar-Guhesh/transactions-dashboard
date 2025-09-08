@@ -27,7 +27,7 @@ class _TopBarState extends ConsumerState<TopBar> {
   bool showFilters = false;
   var shouldSavePreference = false;
 
-  _toggleFilter() {
+  void _toggleFilter() {
     setState(() {
       showFilters = !showFilters;
     });
