@@ -71,14 +71,15 @@ class KpiMetricCard extends StatelessWidget {
               Tooltip(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).dialogBackgroundColor,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
                 richMessage: WidgetSpan(
                   child: hoverChild!,
                 ),
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  // style: Theme.of(context).textTheme.copyWith().bodySmall,
+                  style: TextStyle(
                     fontSize: 10,
                     // fontFamily: 'Courier Prime',
                   ),
@@ -98,7 +99,7 @@ class KpiMetricCard extends StatelessWidget {
               child: Tooltip(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).dialogBackgroundColor,
+                  color: Theme.of(context).dialogTheme.shadowColor,
                 ),
                 richMessage: WidgetSpan(
                   child: SelectionArea(
@@ -129,7 +130,7 @@ class KpiMetricCard extends StatelessWidget {
                   Tooltip(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).dialogBackgroundColor,
+                      color: Theme.of(context).dialogTheme.shadowColor,
                     ),
                     richMessage: WidgetSpan(
                       child: Column(

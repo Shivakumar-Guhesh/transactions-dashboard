@@ -317,7 +317,12 @@ class KpiMetricsSection extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(entry.key.toString()),
+                    Text(
+                      entry.key.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    ),
                     const Text(" : "),
                     Text(indianRupeesFormat.format(entry.value)),
                   ],

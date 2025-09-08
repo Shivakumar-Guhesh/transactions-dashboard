@@ -186,10 +186,12 @@ class _ChartsSectionState extends ConsumerState<ChartsSection> {
             child: Stack(
               children: [
                 categoryDonutChart,
-                SizedBox(
-                  width: 250,
+                IntrinsicWidth(
+                  // width: 250,
                   child: DropdownButtonFormField(
-                    hint: Text(selectedItem),
+                    hint: Text(
+                      selectedItem,
+                    ),
                     borderRadius: BorderRadius.circular(10),
                     focusColor: Colors.transparent,
                     decoration: InputDecoration(
@@ -207,15 +209,7 @@ class _ChartsSectionState extends ConsumerState<ChartsSection> {
                             value: item,
                             child: SizedBox(
                               height: kMinInteractiveDimension,
-                              child: StatefulBuilder(
-                                builder: (context, setState) {
-                                  return SizedBox(
-                                    height: kMinInteractiveDimension,
-                                    child: Text(item),
-                                  );
-                                },
-                                // child:
-                              ),
+                              child: Text(item),
                             ),
                           ),
                         )
