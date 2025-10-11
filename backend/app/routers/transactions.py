@@ -138,7 +138,6 @@ def get_total_expense(
     try:
         total_expense = total_amount(
             db=db,
-            aggregate_column=models.TransactionFact.amount,
             exclude_expenses=exclude_expenses,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
@@ -171,7 +170,6 @@ def get_total_income(
     try:
         total_income = total_amount(
             db=db,
-            aggregate_column=models.TransactionFact.amount,
             exclude_expenses=exclude_expenses,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,

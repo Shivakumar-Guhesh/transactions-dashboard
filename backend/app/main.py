@@ -1,10 +1,9 @@
 import socket
 
 import uvicorn
+from app.schemas import *
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.schemas import *
 
 from .routers import auth, transactions, user
 

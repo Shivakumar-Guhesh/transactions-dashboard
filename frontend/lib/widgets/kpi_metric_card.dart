@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/summarized_donut_chart.dart';
 
 import 'package:intl/intl.dart';
 
