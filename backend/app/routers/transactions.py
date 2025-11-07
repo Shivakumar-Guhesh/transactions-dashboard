@@ -237,6 +237,10 @@ def get_liquid_asset_worth(
             else:
                 results_dict[asset[0]] = asset[1]
 
+        for key, value in list(results_dict.items()):
+            if value == 0:
+                del results_dict[key]
+
         return results_dict
     except NoResultFound:
         pass
@@ -295,7 +299,6 @@ def get_total_asset_worth(
                 results_dict[asset[0]] = results_dict[asset[0]] - asset[1]
             else:
                 results_dict[asset[0]] = asset[1]
-
         return results_dict
     except NoResultFound:
         pass
@@ -328,11 +331,39 @@ def get_cat_expense_sum(
             start_date=start_date,
             end_date=end_date,
         )
+        cat_income_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        results_dict = {}
+        for asset in cat_expense_sum:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+        for asset in cat_income_sum:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = max(results_dict[asset[0]] - asset[1], 0)
+            # else:
+            #     results_dict[asset[0]] = asset[1]
+
+        for key, value in list(results_dict.items()):
+            if value == 0:
+                del results_dict[key]
+
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-    return cat_expense_sum
+    return results_dict
 
 
 @router.post("/cat_income_sum")
@@ -361,11 +392,39 @@ def get_cat_income_sum(
             start_date=start_date,
             end_date=end_date,
         )
+        cat_expense_sum = summarized_transactions(
+            db=db,
+            groupby_column=models.TransactionFact.category,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        results_dict = {}
+        for asset in cat_income_sum:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
+            else:
+                results_dict[asset[0]] = asset[1]
+        for asset in cat_expense_sum:
+            if asset[0] in results_dict:
+                results_dict[asset[0]] = max(results_dict[asset[0]] - asset[1], 0)
+            # else:
+            #     results_dict[asset[0]] = asset[1]
+
+        for key, value in list(results_dict.items()):
+            if value == 0:
+                del results_dict[key]
+
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-    return cat_income_sum
+    return results_dict
 
 
 @router.post("/month_expense_sum")
@@ -468,7 +527,7 @@ def get_mode_expense_sum(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-    return mode_expense_sum
+    return dict(mode_expense_sum)
 
 
 @router.post("/mode_income_sum")
@@ -501,7 +560,7 @@ def get_mode_income_sum(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
         )
-    return mode_income_sum
+    return dict(mode_income_sum)
 
 
 @router.post("/monthly_balance")

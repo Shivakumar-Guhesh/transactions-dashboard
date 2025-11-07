@@ -116,7 +116,6 @@ class TransactionApiService {
         response.statusCode == 201 ||
         response.statusCode == 202) {
       final body = response.body;
-
       final Map<String, dynamic> result = json.decode(body);
       return result;
     } else if (response.statusCode == 400) {
@@ -211,7 +210,7 @@ class TransactionApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getCatExpenseSum(
+  Future<Map<String, dynamic>> getCatExpenseSum(
     List<String> deselectedExpenses,
     List<String> deselectedIncomes,
     DateTime startDate,
@@ -233,8 +232,8 @@ class TransactionApiService {
         response.statusCode == 201 ||
         response.statusCode == 202) {
       final body = response.body;
-      final List<Map<String, dynamic>> result =
-          (json.decode(body) as List).cast();
+      final Map<String, dynamic> result = json.decode(body);
+      // final Map<String, dynamic> result = json.decode(body);
       return result;
     } else if (response.statusCode == 400) {
       throw BadRequestException();
@@ -249,7 +248,7 @@ class TransactionApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getCatIncomeSum(
+  Future<Map<String, dynamic>> getCatIncomeSum(
     List<String> deselectedExpenses,
     List<String> deselectedIncomes,
     DateTime startDate,
@@ -271,8 +270,7 @@ class TransactionApiService {
         response.statusCode == 201 ||
         response.statusCode == 202) {
       final body = response.body;
-      final List<Map<String, dynamic>> result =
-          (json.decode(body) as List).cast();
+      final Map<String, dynamic> result = json.decode(body);
       return result;
     } else if (response.statusCode == 400) {
       throw BadRequestException();
@@ -287,7 +285,7 @@ class TransactionApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getModeExpenseSum(
+  Future<Map<String, dynamic>> getModeExpenseSum(
     List<String> deselectedExpenses,
     List<String> deselectedIncomes,
     DateTime startDate,
@@ -309,8 +307,7 @@ class TransactionApiService {
         response.statusCode == 201 ||
         response.statusCode == 202) {
       final body = response.body;
-      final List<Map<String, dynamic>> result =
-          (json.decode(body) as List).cast();
+      final Map<String, dynamic> result = json.decode(body);
       return result;
     } else if (response.statusCode == 400) {
       throw BadRequestException();
@@ -325,7 +322,7 @@ class TransactionApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getModeIncomeSum(
+  Future<Map<String, dynamic>> getModeIncomeSum(
     List<String> deselectedExpenses,
     List<String> deselectedIncomes,
     DateTime startDate,
@@ -347,8 +344,7 @@ class TransactionApiService {
         response.statusCode == 201 ||
         response.statusCode == 202) {
       final body = response.body;
-      final List<Map<String, dynamic>> result =
-          (json.decode(body) as List).cast();
+      final Map<String, dynamic> result = json.decode(body);
       return result;
     } else if (response.statusCode == 400) {
       throw BadRequestException();

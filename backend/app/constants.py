@@ -5,6 +5,7 @@ debt_asset_categories = [
 gold_asset_categories = [
     # "Jewellery",
     "SGB",
+    "Gold"
 ]
 equity_assets = [
     "Stocks",
@@ -18,5 +19,6 @@ assets_categories = [
 liquid_assets_categories = [
     "Fixed Deposit",
     "Stocks",
+    "Gold"
 ]
 INPUT_FILE = "D:\\MEGA\\Mega_Data\\Mega_Documents\\Finance\\Transactions.xlsx"

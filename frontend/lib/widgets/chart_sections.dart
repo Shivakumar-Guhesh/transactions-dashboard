@@ -87,8 +87,7 @@ class _ChartsSectionState extends ConsumerState<ChartsSection> {
       monthlyBalanceProvider(transactionsFiltersInWithoutDates),
     );
 
-    Map<String, AsyncValue<List<Map<String, dynamic>>>> summarizedDataForDonut =
-        {};
+    Map<String, AsyncValue<Map<String, dynamic>>> summarizedDataForDonut = {};
 
     summarizedDataForDonut[items[0]] = catExpenseSumData;
 
@@ -112,12 +111,20 @@ class _ChartsSectionState extends ConsumerState<ChartsSection> {
         /* ===== modeExpenseSumData is [{transaction_mode: mode1, sum: sum1}...] ==== */
         /* =========== UPDATING THE DATA LIST TO MAKE BOTH HAVE SAME KEYS =========== */
 
-        final keys = data[0].keys.toList();
+        // final keys = data[0].keys.toList();
         List<Map<String, dynamic>> dataWithUpdatedKeys = [];
-        for (var element in data) {
-          dataWithUpdatedKeys
-              .add({'category': element[keys[0]], 'sum': element['sum']});
-        }
+
+        // dataWithUpdatedKeys = data.entries.map((entry) {
+        //   return {entry.key: entry.value};
+        // }).toList();
+        data.forEach((key, value) {
+          dataWithUpdatedKeys.add({'category': key, 'sum': value});
+        });
+
+        // for (var element in data) {
+        //   dataWithUpdatedKeys
+        //       .add({'category': element[keys[0]], 'sum': element['sum']});
+        // }
 
         dataWithUpdatedKeys.sort((a, b) => b["sum"].compareTo(a["sum"]));
         List<String> categories = [];

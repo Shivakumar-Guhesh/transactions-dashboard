@@ -25,7 +25,6 @@ INPUT_FILE = settings.input_file
 TABLE_NAME = "TRANSACTION_FACT"
 CURRENT_DIR = os.path.dirname(__file__)
 CURRENT_DATE = datetime.datetime.now().strftime(DATE_FORMATTER)
-YESTER_DATE = (datetime.datetime.now() - datetime.timedelta(1)).strftime(DATE_FORMATTER)
 DATE_CONTROL_FILE_PATH = os.path.join(CURRENT_DIR, "dt_ctrl.txt")
 LOG_FILE_DIR = os.path.join(CURRENT_DIR, "logs")
 SQLALCHEMY_DATABASE_URL: str = (
@@ -100,6 +99,9 @@ tran_fact_df = input_df[
     (input_df["Date"] > LAST_PROCESSED_DATE) & (input_df["Date"] < CURRENT_DATE)
 ]
 
+CURR_PRCS_DATE = tran_fact_df["Date"].max().strftime(DATE_FORMATTER)
+
+
 # ============== Adding USER_ID_COLUMN with value 1 for all rows ============= #
 tran_fact_df.insert(
     0, "USER_ACCOUNT_ID", value=[1 for i in range(tran_fact_df.shape[0])]
@@ -129,7 +131,7 @@ tran_fact_df.to_sql(TABLE_NAME, con=engine, if_exists="append", index=False)
 logger.info(f"Inserted {tran_fact_df.shape[0]} records into {TABLE_NAME}")
 
 f = open(DATE_CONTROL_FILE_PATH, "w")
-f.write(f"{YESTER_DATE}")
+f.write(f"{CURR_PRCS_DATE}")
 f.close()
 
-logger.info(f"Completed processing for {CURRENT_DATE}")
+logger.info(f"Completed processing records till {CURR_PRCS_DATE}")
