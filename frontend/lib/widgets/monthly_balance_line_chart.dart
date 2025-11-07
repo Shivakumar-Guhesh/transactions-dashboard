@@ -111,6 +111,11 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
         ),
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
+          axisNameWidget: Text(
+            "Monthly Available Balance",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontFamily: "Merriweather"),
+          ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -118,11 +123,24 @@ class _MonthlyBalanceLineChartState extends State<MonthlyBalanceLineChart> {
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),
-        leftTitles: const AxisTitles(
+        leftTitles: AxisTitles(
+          // sideTitles: SideTitles(
+          //   showTitles: true,
+          //   interval: 50000,
+          //   reservedSize: 60,
+          // ),
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 50000,
             reservedSize: 60,
+            getTitlesWidget: (value, meta) {
+              return Text(
+                NumberFormat.compactCurrency(
+                  name: "INR",
+                  locale: 'en_IN',
+                  symbol: '₹ ',
+                ).format(value),
+              );
+            },
           ),
         ),
       ),

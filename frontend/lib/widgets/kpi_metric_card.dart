@@ -79,8 +79,9 @@ class KpiMetricCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    fontSize: 10,
+                    fontSize: 14,
                     // fontFamily: 'Courier Prime',
+                    fontWeight: FontWeight.bold, fontFamily: "Merriweather",
                   ),
                 ),
               )
@@ -88,8 +89,9 @@ class KpiMetricCard extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 10,
+                  fontSize: 14,
                   // fontFamily: 'Courier Prime',
+                  fontWeight: FontWeight.bold, fontFamily: "Merriweather",
                 ),
               ),
             FittedBox(
