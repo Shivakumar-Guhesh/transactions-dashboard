@@ -1,5 +1,0 @@
-tags:
-  golden:
-    description: "Visual regression tests using golden_toolkit"
-    required: false
-
