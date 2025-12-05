@@ -20,7 +20,8 @@ def convert_to_datetime(data: pd.DataFrame, col: str) -> pd.Series:
     Returns:
         Column converted to datetime
     """
-    pd.to_datetime(data[col])
+    converted = pd.to_datetime(data[col], errors="coerce")
+    data[col] = converted
     return data[col]
 
 
@@ -183,9 +184,9 @@ def group_wise_aggregation(
         cat_sum: Dataframe with groupwise aggregation
     """
 
-    if filter_col != None:
+    if filter_col is not None:
         data = data[data[filter_col] == filter_val]
-    if month != None:
+    if month is not None:
         data = data[data["Month"] == month]
     cat_sum = (
         data.groupby(by=groupby_col)[aggregate_col].agg(aggregate_func).reset_index()

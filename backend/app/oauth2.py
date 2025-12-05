@@ -3,18 +3,28 @@ from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from . import database, models, schemas
+from . import database, models
 from .config import Settings
+from .schemas.auth_schemas import TokenData
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # SECRET_KEY
 # Algorithm
 # Expiration time
 
-settings = Settings.model_validate({})
+
+try:
+    settings = Settings.model_validate({})
+except Exception as e:
+    raise RuntimeError(
+        f"Failed to load configuration from environment: {e}. "
+        "Ensure .env file exists with required variables."
+    )
+
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
@@ -33,18 +43,21 @@ def create_access_token(data: dict):
 
 
 def verify_access_token(token: str, credentials_exception):
-
     try:
-
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        id: str = payload.get("user_id")
-        if id is None:
-            raise credentials_exception
-        token_data = schemas.TokenData(id=id)
     except JWTError:
         raise credentials_exception
 
-    return token_data
+    user_id = payload.get("user_id")
+    if user_id is None:
+        raise credentials_exception
+
+    try:
+        user_id = int(user_id)
+    except (TypeError, ValueError):
+        raise credentials_exception
+
+    return TokenData(user_id=user_id)
 
 
 def get_current_user(
@@ -56,8 +69,12 @@ def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    token = verify_access_token(token, credentials_exception)
+    token_data = verify_access_token(token, credentials_exception)
 
-    user = db.query(models.User).filter(models.User.id == token.id).first()
-
+    try:
+        user = db.execute(
+            select(models.User).where(models.User.user_id == token_data.user_id)
+        ).scalar_one()
+    except:
+        raise credentials_exception
     return user

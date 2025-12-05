@@ -1,55 +1,39 @@
-import os
-
-from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
-from .. import models, schemas, utils
-from ..database import get_db
+from ..dependencies import get_user_service
+from ..schemas import user_schemas
+from ..services.user_service import UserService
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-env_filename = ".env"
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=user_schemas.UserCreateResponse,
+)
+def create_user(
+    user: user_schemas.UserCreateRequest,
+    service: UserService = Depends(get_user_service),
+):
+
+    return service.create_user(
+        user=user,
+    )
 
 
-load_dotenv(env_filename)
-database_type = os.getenv("database_type")
-
-
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-
-    # hash the password - user.password
-    hashed_password = utils.hash(user.password)
-    user.password = hashed_password
-
-    # new_user = models.User(**user.dict())
-    new_user = models.User(user.email, hashed_password, None, "fast_api")
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return new_user
-
-
-@router.get("/id", response_model=schemas.UserOut)
+@router.get("/{user_id}", response_model=user_schemas.UserCreateResponse)
 def get_user(
-    user_account_id: int,
-    db: Session = Depends(get_db),
+    user_id: int,
+    service: UserService = Depends(get_user_service),
 ):
     try:
-        user = (
-            db.execute(select(models.User).filter_by(user_account_id=user_account_id))
-            .scalars()
-            .one()
-        )
+        user = service.get_user_by_id(user_id)
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with id: {id} does not exist",
+            detail=f"User with id: {user_id} does not exist",
         )
 
     return user

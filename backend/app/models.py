@@ -1,5 +1,3 @@
-import datetime
-
 from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -8,15 +6,9 @@ from .database import Base
 
 
 class User(Base):
-    def __init__(self, email: str, hashed_password: str, role: None, insrt_user: str):
-        self.email = email
-        self.hashed_password = hashed_password
-        if role != None:
-            self.role = role
-        self.insrt_user = insrt_user
 
     __tablename__ = "user_account"
-    user_account_id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False, unique=True)
     hashed_password = Column(String, nullable=False)
     role = Column(String, server_default="NORMAL")
@@ -26,6 +18,14 @@ class User(Base):
         server_default=text("CURRENT_TIMESTAMP"),
     )
     insrt_user = Column(String, nullable=False)
+
+    def __init__(self, email: str, hashed_password: str, role: None, insrt_user: str):
+        super().__init__()
+        self.email = email
+        self.hashed_password = hashed_password
+        if role is not None:
+            self.role = role
+        self.insrt_user = insrt_user
 
 
 class TransactionFact(Base):
@@ -51,8 +51,10 @@ class TransactionFact(Base):
 
     __tablename__ = "transaction_fact"
     transaction_fact_id = Column(Integer, primary_key=True, nullable=False)
-    user_account_id = Column(
-        Integer, ForeignKey("users.id", ondelete="ForeignKey"), nullable=False
+    user_id = Column(
+        Integer,
+        ForeignKey("user_account.user_id", ondelete="CASCADE"),
+        nullable=False,
     )
     transaction_date = Column(Date, nullable=False)
     transaction = Column(String, nullable=False)

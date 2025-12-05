@@ -1,660 +1,232 @@
-import datetime
-from typing import Dict
+# TODO: Remove all SQL related code.
 
-# import pandas as pd
-from app import utils
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import and_, func, select, text
-from sqlalchemy.engine.row import Row
-from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
-from .. import models, schemas
-from ..constants import *
-from ..database import get_db
-from ..db_utils import distinct_values, summarized_transactions, total_amount
+from ..dependencies import get_transaction_service
+from ..schemas.transaction_schemas import (
+    TransactionsDataResponse,
+    TransactionsDistinctValuesListResponse,
+    TransactionsFiltersRequest,
+    TransactionsGroupAmountResponse,
+    TransactionsTotalAmountResponse,
+)
+from ..services.transaction_service import TransactionService
 
-router = APIRouter(tags=["Transaction Data"])
-
-filters: Dict[str, list[str]] = dict()
-
-filters["categories_to_skip_all_transactions"] = []
-filters["categories_to_skip_expense"] = []
-filters["categories_to_skip_income"] = []
+router = APIRouter(prefix="/transactions", tags=["Transaction Data"])
 
 
-@router.post("/data")
+@router.post("/data", response_model=list[TransactionsDataResponse])
 def get_data(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
     limit: int = 100,
     page=1,
 ):
     """POST endpoint for getting all transactions
 
     Returns:
-        result: Transactions
+        result: Rows of transactions
+        Response Body Schema: TransactionsDataResponse
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    filters = [
-        models.TransactionFact.category.notin_(exclude_expenses),
-        models.TransactionFact.category.notin_(exclude_incomes),
-    ]
-
-    if start_date is not None:
-        filters.append(models.TransactionFact.transaction_date >= start_date)
-    if end_date is not None:
-        filters.append(models.TransactionFact.transaction_date <= end_date)
-
-    data = (
-        db.execute(
-            select(models.TransactionFact)
-            .where(
-                and_(
-                    *filters,
-                )
-            )
-            .limit(limit),
-        )
-        .scalars()
-        .all()
-    )
-
-    return data
+    return service.get_data(body, limit, page)
 
 
-@router.get("/expense_categories")
+@router.get(
+    "/expense_categories", response_model=TransactionsDistinctValuesListResponse
+)
 def get_expense_categories(
-    db: Session = Depends(get_db),
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """Get endpoint for getting all expense categories
 
     Returns:
-        result: expense categories
+        result: Expense categories
+        Response Body Schema : TransactionsDistinctValuesListResponse
     """
-    # expense_categories = (
-    #     db.execute(
-    #         select(func.distinct(models.TransactionFact.category)).where(
-    #             models.TransactionFact.transaction_type == "Expense"
-    #         )
-    #     )
-    #     .scalars()
-    #     .all()
-    # )
-    expense_categories = distinct_values(
-        db=db,
-        column=models.TransactionFact.category,
-        filter_column=models.TransactionFact.transaction_type,
-        filter_value="Expense",
-    )
-    return expense_categories
+    return service.get_expense_categories()
 
 
-@router.get("/income_categories")
+@router.get("/income_categories", response_model=TransactionsDistinctValuesListResponse)
 def get_income_categories(
-    db: Session = Depends(get_db),
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """Get endpoint for getting all income categories
 
     Returns:
-        result: income categories
+        result: Income categories
+        Response Body Schema : TransactionsDistinctValuesListResponse
     """
-    # expense_categories = (
-    #     db.execute(
-    #         select(func.distinct(models.TransactionFact.category)).where(
-    #             models.TransactionFact.transaction_type == "Expense"
-    #         )
-    #     )
-    #     .scalars()
-    #     .all()
-    # )
-    expense_categories = distinct_values(
-        db=db,
-        column=models.TransactionFact.category,
-        filter_column=models.TransactionFact.transaction_type,
-        filter_value="Income",
-    )
-    return expense_categories
+    return service.get_income_categories()
 
 
-@router.post("/total_expense")
+@router.post("/total_expense", response_model=TransactionsTotalAmountResponse)
 def get_total_expense(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting total expense
 
     Returns:
         result: sum of all expenses
+        Response Body Schema : TransactionsTotalAmount
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        total_expense = total_amount(
-            db=db,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return total_expense
+
+    return service.get_total_expense(body)
 
 
-@router.post("/total_income")
+@router.post("/total_income", response_model=TransactionsTotalAmountResponse)
 def get_total_income(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting total income
 
     Returns:
         result: sum of all incomes
+        Response Body Schema : TransactionsTotalAmount
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
 
-    try:
-        total_income = total_amount(
-            db=db,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return total_income
+    return service.get_total_income(body)
 
 
-@router.post("/liquid_asset_worth")
+@router.post("/liquid_asset_worth", response_model=TransactionsGroupAmountResponse)
 def get_liquid_asset_worth(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting Total asset worth
 
     Returns:
         result: Total asset by category
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
 
-    try:
-        bought_assets = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            include_categories=liquid_assets_categories,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        sold_assets = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            include_categories=liquid_assets_categories,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-
-        results_dict = {}
-        for asset in bought_assets:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-        for asset in sold_assets:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] - asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-
-        for key, value in list(results_dict.items()):
-            if value == 0:
-                del results_dict[key]
-
-        return results_dict
-    except NoResultFound:
-        pass
-    pass
+    return service.get_liquid_asset_worth(body)
 
 
-@router.post("/total_asset_worth")
+@router.post("/total_asset_worth", response_model=TransactionsGroupAmountResponse)
 def get_total_asset_worth(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting Total asset worth
 
     Returns:
         result: Total asset by category
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-
-    try:
-        bought_assets = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            include_categories=assets_categories,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        sold_assets = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            include_categories=assets_categories,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-
-        results_dict = {}
-        for asset in bought_assets:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-        for asset in sold_assets:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] - asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-        return results_dict
-    except NoResultFound:
-        pass
-    pass
+    return service.get_total_asset_worth(body)
 
 
-@router.post("/cat_expense_sum")
+@router.post("/cat_expense_sum", response_model=TransactionsGroupAmountResponse)
 def get_cat_expense_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint category-wise summarized expenses
 
     Returns:
         result: category-wise summarized expenses
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        cat_expense_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        cat_income_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-
-        results_dict = {}
-        for asset in cat_expense_sum:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-        for asset in cat_income_sum:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = max(results_dict[asset[0]] - asset[1], 0)
-            # else:
-            #     results_dict[asset[0]] = asset[1]
-
-        for key, value in list(results_dict.items()):
-            if value == 0:
-                del results_dict[key]
-
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return results_dict
+    return service.get_cat_expense_sum(body)
 
 
-@router.post("/cat_income_sum")
+@router.post("/cat_income_sum", response_model=TransactionsGroupAmountResponse)
 def get_cat_income_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting category-wise summarized incomes
 
     Returns:
         result: category-wise summarized incomes
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        cat_income_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        cat_expense_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.category,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-
-        results_dict = {}
-        for asset in cat_income_sum:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = results_dict[asset[0]] + asset[1]
-            else:
-                results_dict[asset[0]] = asset[1]
-        for asset in cat_expense_sum:
-            if asset[0] in results_dict:
-                results_dict[asset[0]] = max(results_dict[asset[0]] - asset[1], 0)
-            # else:
-            #     results_dict[asset[0]] = asset[1]
-
-        for key, value in list(results_dict.items()):
-            if value == 0:
-                del results_dict[key]
-
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return results_dict
+    return service.get_cat_income_sum(body)
 
 
-@router.post("/month_expense_sum")
+@router.post("/month_expense_sum", response_model=TransactionsGroupAmountResponse)
 def get_month_expense_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting month-wise summarized expenses
 
     Returns:
         result: month-wise summarized expenses
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        month_expense_sum = summarized_transactions(
-            db=db,
-            groupby_column=func.strftime(
-                "%Y-%m", models.TransactionFact.transaction_date
-            ).label("Month"),
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return month_expense_sum
+
+    return service.get_month_expense_sum(body)
 
 
-@router.post("/month_income_sum")
+@router.post("/month_income_sum", response_model=TransactionsGroupAmountResponse)
 def get_month_income_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting month-wise summarized incomes
 
     Returns:
         result: month-wise summarized incomes
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        month_income_sum = summarized_transactions(
-            db=db,
-            groupby_column=func.strftime(
-                "%Y-%m", models.TransactionFact.transaction_date
-            ).label("Month"),
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return month_income_sum
+    return service.get_month_income_sum(body)
 
 
-@router.post("/mode_expense_sum")
+@router.post("/mode_expense_sum", response_model=TransactionsGroupAmountResponse)
 def get_mode_expense_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint mode-wise summarized expenses
 
     Returns:
         result: mode-wise summarized expenses
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        mode_expense_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.transaction_mode,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return dict(mode_expense_sum)
+    return service.get_mode_expense_sum(body)
 
 
-@router.post("/mode_income_sum")
+@router.post("/mode_income_sum", response_model=TransactionsGroupAmountResponse)
 def get_mode_income_sum(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting mode-wise summarized incomes
 
     Returns:
         result: mode-wise summarized incomes
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        mode_income_sum = summarized_transactions(
-            db=db,
-            groupby_column=models.TransactionFact.transaction_mode,
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
-    return dict(mode_income_sum)
+    return service.get_mode_income_sum(body)
 
 
-@router.post("/monthly_balance")
+@router.post("/monthly_balance", response_model=TransactionsGroupAmountResponse)
 def get_monthly_balance(
-    body: schemas.TransactionsFiltersIn,
-    db: Session = Depends(get_db),
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
 ):
     """POST endpoint for getting balance at the end of each month
 
     Returns:
         result: Balance at the end of each month
     """
-    exclude_expenses = body.exclude_expenses
-    exclude_incomes = body.exclude_incomes
-    start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
-    end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
-    try:
-        month_income_sum = summarized_transactions(
-            db=db,
-            groupby_column=func.strftime(
-                "%Y-%m", models.TransactionFact.transaction_date
-            ).label("Month"),
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Income",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        month_expense_sum = summarized_transactions(
-            db=db,
-            groupby_column=func.strftime(
-                "%Y-%m", models.TransactionFact.transaction_date
-            ).label("Month"),
-            aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
-            exclude_incomes=exclude_incomes,
-            filter_column=models.TransactionFact.transaction_type,
-            filter_value="Expense",
-            start_date=start_date,
-            end_date=end_date,
-        )
-        len1 = len(month_expense_sum)
-        len2 = len(month_income_sum)
-        month_expenses = [elem[1] for elem in month_expense_sum]
-        month_incomes = [elem[1] for elem in month_income_sum]
-        max_len: int
-        months: list[str]
-        balances: list[int]
-        if len1 > len2:
-            max_len = len1
-            months = [elem[0] for elem in month_expense_sum]
-        else:
-            max_len = len2
-            months = [elem[0] for elem in month_income_sum]
-        balances = [0] * len(months)
-        if len1 < max_len:
-            month_expenses += [0] * (max_len - len1)
-        elif len2 < max_len:
-            month_incomes += [0] * (max_len - len2)
-        balances[0] = month_incomes[0] - month_expenses[0]
-        for i in range(1, len(months)):
-            balances[i] = balances[i - 1] + month_incomes[i] - month_expenses[i]
-        result = [
-            {"Month": month, "Balance": balance}
-            for month, balance in zip(months, balances)
-        ]
-        # result = [{month: balance} for month, balance in zip(months, balances)]
-        return result
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No records found"
-        )
+    return service.get_monthly_balance(body)
 
 
-@router.post("/filters", status_code=status.HTTP_201_CREATED)
-def post_create_filters(payload: schemas.FilterPayload):
-    """POST endpoint for adding filters
-    Sample request:
-        {
-            "filter": "categories_to_skip_all_transactions",
-            "categories": [
-                "Lending"
-            ]
-        }
-    Parameters:
-        payload: payload of type FilterPayload
+# @router.post("/filters", status_code=status.HTTP_201_CREATED)
+# def post_create_filters(payload: schemas.FilterPayload):
+#     """POST endpoint for adding filters
+#     Sample request:
+#         {
+#             "filter": "categories_to_skip_all_transactions",
+#             "categories": [
+#                 "Lending"
+#             ]
+#         }
+#     Parameters:
+#         payload: payload of type FilterPayload
 
-    Returns:
-        <variable>: Description of the return value
+#     Returns:
+#         <variable>: Description of the return value
 
-    """
-    filters[payload.filter] = payload.categories
-    print(filters)
-    utils.dump_json("./filters.json", filters)
-    return f"Added {payload.categories} to filter {payload.filter}"
+#     """
+#     filters[payload.filter] = payload.categories
+#     print(filters)
+#     utils.dump_json("./filters.json", filters)
+#     return f"Added {payload.categories} to filter {payload.filter}"

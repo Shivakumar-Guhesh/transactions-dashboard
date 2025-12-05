@@ -1,45 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
-from .. import database, models, oauth2, schemas, utils
+from .. import oauth2, utils
+from ..dependencies import get_auth_service, get_user_service
+from ..schemas import auth_schemas
+from ..services.auth_service import AuthService
 
-router = APIRouter(tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-@router.post("/login", response_model=schemas.Token)
+@router.post(
+    "/login", status_code=status.HTTP_200_OK, response_model=auth_schemas.TokenResponse
+)
 def login(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(database.get_db),
+    service: AuthService = Depends(get_auth_service),
 ):
 
-    # user = (
-    #     db.query(models.User)
-    #     .filter(models.User.email == user_credentials.username)
-    #     .first()
-    # )
-
-    # user = db.execute(select(models.User).filter_by(email=user_credentials.username))
     try:
-        user = (
-            db.execute(select(models.User).filter_by(email=user_credentials.username))
-            .scalars()
-            .one()
+        return service.authenticate_user(
+            user_credentials.username, user_credentials.password
         )
     except NoResultFound:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid Credentials"
         )
-    if not utils.verify(user_credentials.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"
-        )
-
-    # create a token
-    # return token
-
-    access_token = oauth2.create_access_token(data={"user_id": user.user_account_id})
-
-    return {"access_token": access_token, "token_type": "bearer"}
