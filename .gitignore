@@ -5,3 +5,4 @@
 dt_ctrl.txt
 *.vscode
 transactions_dashboard_venv/
+*report*.md
