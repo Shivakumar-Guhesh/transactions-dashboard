@@ -21,7 +21,7 @@ def get_data(
     body: TransactionsFiltersRequest,
     service: TransactionService = Depends(get_transaction_service),
     limit: int = 100,
-    page=1,
+    page: int = 1,
 ):
     """POST endpoint for getting all transactions
 
