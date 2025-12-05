@@ -4,14 +4,6 @@ DOTENV = "./.env"
 
 
 class Settings(BaseSettings):
-    # database_hostname: str = Field(default="")
-    # database_name: str = Field(default="")
-    # database_password: str = Field(default="")
-    # database_port: str = Field(default="")
-    # database_type: str = Field(default="")
-    # database_username: str = Field(default="")
-    # input_file: str = Field(default="")
-    # sqlite_database_path: str = Field(default="")
 
     database_hostname: str
     database_name: str
@@ -21,5 +13,8 @@ class Settings(BaseSettings):
     database_username: str
     input_file: str
     sqlite_database_path: str
+
+    default_user_id: int = 1
+    legacy_date_for_first_run: str = "19000101"
 
     model_config = SettingsConfigDict(env_file=DOTENV)
