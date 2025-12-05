@@ -2,7 +2,7 @@
 *.env
 *__pycache__/
 *.log
-dt_ctrl.txt
+*dt_ctrl.txt
 *.vscode
 transactions_dashboard_venv/
 *report*.md

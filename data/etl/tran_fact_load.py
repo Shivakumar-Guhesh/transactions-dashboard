@@ -24,7 +24,7 @@ INPUT_FILE = settings.input_file
 TABLE_NAME = "TRANSACTION_FACT"
 CURRENT_DIR = os.path.dirname(__file__)
 CURRENT_DATE_STR = datetime.datetime.now().strftime(DATE_FORMATTER)
-DATE_CONTROL_FILE_PATH = os.path.join(CURRENT_DIR, "dt_ctrl.txt")
+DATE_CONTROL_FILE_PATH = os.path.join(CURRENT_DIR, "tran_fact_load_dt_ctrl.txt")
 LOG_FILE_DIR = os.path.join(CURRENT_DIR, "logs")
 
 if settings.database_type.lower() == "sqlite":
