@@ -3,16 +3,15 @@
 This script reads all records  between (LAST_PROCESSED_DATE and CURRENT_DATE) and loads into TRANSACTION_FACT table
 """
 import datetime
-import logging
 import os
 import sys
-from pathlib import Path
 
 import pandas as pd
 from sqlalchemy import MetaData, Table, create_engine, insert
 
 from .config import Settings
-from .constants import DATE_FORMATTER, TIMESTAMP_FORMATTER
+from .constants import DATE_FORMATTER
+from .utils import logger, setup_logging
 
 settings = Settings.model_validate({})
 
@@ -44,45 +43,6 @@ REQUIRED_EXCEL_COLUMNS_MAP = {
     "Mode": "TRANSACTION_MODE",
 }
 REQUIRED_EXCEL_COLUMNS = set(REQUIRED_EXCEL_COLUMNS_MAP.keys())
-
-# ============================================================================ #
-#                                    LOGGING                                   #
-# ============================================================================ #
-logger = logging.getLogger(__name__)
-
-
-def setup_logging() -> None:
-    """Initializes the logger and sets up the file handler."""
-    Path(LOG_FILE_DIR).mkdir(parents=True, exist_ok=True)
-
-    log_file_name = os.path.basename(__file__).replace(".py", "")
-    LOG_FILE_PATH = f"{LOG_FILE_DIR}/{log_file_name}_logs_{datetime.datetime.now().strftime(TIMESTAMP_FORMATTER)}.log"
-
-    file_handler = logging.FileHandler(LOG_FILE_PATH)
-    log_format = logging.Formatter(
-        "[%(asctime)s] [%(levelname)8s] [%(filename)18s:%(lineno)-4d] --- %(message)s",
-        "%Y-%m-%d %H:%M:%S",
-    )
-
-    file_handler.setFormatter(log_format)
-    logger.addHandler(file_handler)
-    logger.setLevel(logging.INFO)
-    logger.info(f"Initialized logging for run on {CURRENT_DATE_STR}")
-
-
-def handle_unhandled_exception(exc_type, exc_value, exc_traceback) -> None:
-    """Logs unhandled exceptions before calling the default excepthook."""
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    logger.critical(
-        "Unhandled exception caught. Shutting down.",
-        exc_info=(exc_type, exc_value, exc_traceback),
-    )
-
-
-sys.excepthook = handle_unhandled_exception
 
 # ============================================================================ #
 #                                    EXTRACT                                   #
@@ -164,7 +124,6 @@ def transform_data(tran_fact_df: pd.DataFrame) -> pd.DataFrame:
     # ========= Adding INSRT_USER column with value ETL_MGR for all rows ========= #
     tran_fact_df["INSRT_USER"] = "ETL_MGR"
 
-    # Rename columns
     tran_fact_df = tran_fact_df.rename(columns=REQUIRED_EXCEL_COLUMNS_MAP)
 
     transform_duration = (
@@ -196,13 +155,13 @@ def load_data(tran_fact_df: pd.DataFrame, curr_prcs_date: str) -> None:
 
         insert_statement = insert(tran_fact_table)
 
-        with engine.begin() as conn:
-            if not engine.dialect.has_table(conn, TABLE_NAME):
+        with engine.begin() as connection:
+            if not engine.dialect.has_table(connection, TABLE_NAME):
                 logger.warning(f"No table named {TABLE_NAME}. Exiting.")
                 sys.exit(0)
-
+            logger.info(f"Connected to database and found table {TABLE_NAME}.")
             data_to_insert = tran_fact_df.to_dict(orient="records")
-            conn.execute(insert_statement, data_to_insert)
+            connection.execute(insert_statement, data_to_insert)
 
     except Exception as e:
         logger.critical(
@@ -221,29 +180,27 @@ def load_data(tran_fact_df: pd.DataFrame, curr_prcs_date: str) -> None:
     logger.info(f"Completed processing records till {curr_prcs_date}")
 
 
+# ============================================================================ #
+#                                  ENTRY POINT                                 #
+# ============================================================================ #
+
+
 def main():
 
-    setup_logging()
+    setup_logging(CURRENT_DIR)
     logger.info(f"Started processing for {CURRENT_DATE_STR}")
 
     process_start_time = datetime.datetime.now()
 
-    # 1. Extract
     raw_df, curr_prcs_date = extract_data()
 
-    # 2. Transform
     transformed_df = transform_data(raw_df)
 
-    # 3. Load
     load_data(transformed_df, curr_prcs_date)
 
     total_duration = (datetime.datetime.now() - process_start_time).total_seconds()
     logger.info(f"Process completed successfully in {total_duration:.2f} seconds.")
 
-
-# ============================================================================ #
-#                                  ENTRY POINT                                 #
-# ============================================================================ #
 
 if __name__ == "__main__":
     main()

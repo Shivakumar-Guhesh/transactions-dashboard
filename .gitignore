@@ -6,3 +6,4 @@
 *.vscode
 transactions_dashboard_venv/
 *report*.md
+data/db/
