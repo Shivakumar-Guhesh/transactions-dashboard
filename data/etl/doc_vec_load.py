@@ -113,7 +113,9 @@ def format_row(row) -> Dict[str, Any]:
         Dict[str, Any]: Dict of 'document' (string) and 'metadata' (dict).
     """
     metadata = {
-        "transaction_date": str(row["TRANSACTION_DATE"]),
+        "transaction_date": datetime.datetime.combine(
+            row["TRANSACTION_DATE"], datetime.time.min
+        ).timestamp(),
         "category": row["CATEGORY"],
         "amount": float(row["AMOUNT"]),
         "transaction_type": row["TRANSACTION_TYPE"],
