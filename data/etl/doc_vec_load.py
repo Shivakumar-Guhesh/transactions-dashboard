@@ -1,6 +1,5 @@
 import datetime
 import os
-import random
 import sys
 from typing import Any, Dict, List, cast
 
@@ -28,13 +27,8 @@ LOG_FILE_DIR = os.path.join(CURRENT_DIR, "logs")
 EMBED_MODEL = "nomic-embed-text"
 VECTOR_STORE_PATH = "./db"
 
-TEMPLATES = [
-    "A {transaction_type} of {amount:.2f} {currency} happened on {transaction_date} for {transaction_desc} under the {category} category.",
-    "For {category}, a {amount:.2f} {currency} {transaction_type} was made at {transaction_desc} on {transaction_date}.",
-    "A transaction titled {transaction_desc} under {category} for {amount:.2f} {currency} was recorded on {transaction_date}.",
-    "This {amount:.2f} {currency} payment is a {transaction_type} related to {transaction_desc}, filed under the {category} category on {transaction_date}.",
-    "On {transaction_date}, a {transaction_type} transaction occurred for {amount:.2f} {currency} related to {transaction_desc}, categorized as {category}.",
-]
+SENTENCE_TEMPLATE_STRING = "{transaction_type} transaction under category: {category} with description: {transaction_desc}."
+
 
 if settings.database_type.lower() == "sqlite":
     SQLALCHEMY_DATABASE_URL = f"sqlite:///{settings.sqlite_database_path}"
@@ -112,18 +106,22 @@ def format_row(row) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: Dict of 'document' (string) and 'metadata' (dict).
     """
+    transaction_dt = datetime.datetime.combine(
+        row["TRANSACTION_DATE"], datetime.time.min
+    )
     metadata = {
-        "transaction_date": datetime.datetime.combine(
-            row["TRANSACTION_DATE"], datetime.time.min
-        ).timestamp(),
-        "category": row["CATEGORY"],
+        "transaction_timestamp": transaction_dt.timestamp(),
+        "category": row["CATEGORY"].strip().lower(),
         "amount": float(row["AMOUNT"]),
-        "transaction_type": row["TRANSACTION_TYPE"],
-        "currency": row["CURRENCY"],
-        "transaction_desc": row["TRANSACTION"],  # Retain original description
+        "transaction_type": row["TRANSACTION_TYPE"].strip().lower(),
+        "currency": row["CURRENCY"].strip().lower(),
+        "transaction_desc": row["TRANSACTION"].strip().lower(),
+        "year": transaction_dt.year,
+        "month": transaction_dt.month,
+        "day": transaction_dt.day,
     }
     return {
-        "document": random.choice(TEMPLATES).format(**metadata),
+        "document": SENTENCE_TEMPLATE_STRING.format(**metadata),
         "metadata": metadata,
     }
 
@@ -142,6 +140,9 @@ def convert_df_to_documents(tran_fact_df: pd.DataFrame) -> List[Dict[str, Any]]:
     logger.info(
         f"Starting dataframe to document conversion for {tran_fact_df.shape[0]} records."
     )
+    if tran_fact_df.empty:
+        logger.warning("DataFrame is empty, skipping conversion.")
+        return []
     documents: List[Dict[str, Any]] = tran_fact_df.apply(format_row, axis=1).tolist()
     conversion_duration = (
         datetime.datetime.now() - conversion_start_time
@@ -194,9 +195,6 @@ def main():
 
     process_start_time = datetime.datetime.now()
     tran_fact_df, CURR_PRCS_DATE = read_sql_table()
-
-    total_duration = (datetime.datetime.now() - process_start_time).total_seconds()
-    logger.info(f"Process completed successfully in {total_duration:.2f} seconds.")
 
     documents = convert_df_to_documents(tran_fact_df)
 
