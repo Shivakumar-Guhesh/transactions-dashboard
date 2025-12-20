@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .routers import auth, transactions, user
+from .routers import auth, llm, transactions, user
 
 # Base.metadata.create_all(bind=engine)
 
@@ -29,6 +29,7 @@ def root():
 app.include_router(transactions.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(llm.router)
 
 
 if __name__ == "__main__":

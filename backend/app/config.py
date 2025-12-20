@@ -14,5 +14,6 @@ class Settings(BaseSettings):
     database_username: str
     secret_key: str
     sqlite_database_path: str
+    chroma_db_path: str
 
     model_config = SettingsConfigDict(env_file=DOTENV)

@@ -1,10 +1,13 @@
 import datetime
 from operator import or_
 
-from sqlalchemy import String, and_, func, select
+from sqlalchemy import MetaData, String, Table, and_, func, select
+from sqlalchemy.engine import Result
 from sqlalchemy.engine.row import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.schema import CreateTable
+from sqlalchemy.sql import text
 from sqlalchemy.types import DECIMAL
 
 from .. import models
@@ -69,18 +72,25 @@ class TransactionRepository:
     def distinct_values(
         self,
         column: InstrumentedAttribute,
-        filter_value: str,
-        filter_column: InstrumentedAttribute,
+        filter_value: str | None,
+        filter_column: InstrumentedAttribute | None,
     ) -> list[String]:
-        return (
-            self.db.execute(
-                select(func.distinct(column))
-                .where(filter_column == filter_value)
-                .order_by(column)
+        if filter_column is not None:
+            return (
+                self.db.execute(
+                    select(func.distinct(column))
+                    .where(filter_column == filter_value)
+                    .order_by(column)
+                )
+                .scalars()
+                .all()
             )
-            .scalars()
-            .all()
-        )
+        else:
+            return (
+                self.db.execute(select(func.distinct(column)).order_by(column))
+                .scalars()
+                .all()
+            )
 
     def summarized_transactions(
         self,
@@ -223,3 +233,24 @@ class TransactionRepository:
         return self.db.execute(
             select(func.sum(category_wise_sum.c.net_total))
         ).scalar_one()
+
+    def execute_raw_select(self, sql_query: str) -> Result:
+        """
+        Executes a raw SQL SELECT query and returns the results as a list of dictionaries.
+
+        """
+
+        statement = text(sql_query)
+        result = self.db.execute(statement)
+        return result
+
+    def get_table_schema(self, table_name: str) -> str:
+        """Function to get schema of provided table as a string"""
+        engine = self.db.get_bind()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_info: str = ""
+        with engine.connect() as connection:
+            table = Table(table_name, metadata, autoload_with=engine)
+            table_info = table_info + "\n\n" + str(CreateTable(table).compile(engine))
+        return table_info
