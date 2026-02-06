@@ -8,3 +8,4 @@ transactions_dashboard_venv/
 *report*.md
 data/db/
 data/etl/test_query.py
+*.md
