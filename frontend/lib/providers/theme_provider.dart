@@ -8,10 +8,18 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   }
 
   void toggleTheme() {
-    if (state == ThemeMode.dark) {
-      state = ThemeMode.light;
+    final currentMode = state;
+
+    if (currentMode == ThemeMode.system) {
+      final brightness =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      state = (brightness == Brightness.dark)
+          ? ThemeMode.light
+          : ThemeMode.dark;
     } else {
-      state = ThemeMode.dark;
+      state = (currentMode == ThemeMode.dark)
+          ? ThemeMode.light
+          : ThemeMode.dark;
     }
   }
 }

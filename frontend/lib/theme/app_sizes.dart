@@ -1,37 +1,54 @@
+// app_sizes.dart
+
 class AppSizes {
-  // --- Spacing / Padding ---
-  static const double space4 = 4.0;
-  static const double space8 = 8.0;
-  static const double space12 = 12.0;
-  static const double space16 = 16.0;
-  static const double space24 = 24.0;
-  static const double space32 = 32.0;
-  static const double space48 = 48.0;
-  static const double pagePadding = 32.0; // Wider for SaaS look
+  // --- Spacing & Padding ---
+  static const double spaceXXSmall = 4.0;
+  static const double spaceXSmall = 8.0;
+  static const double spaceSmall = 12.0;
+  static const double spaceMedium = 16.0;
+  static const double spaceLarge = 24.0;
+  static const double spaceXLarge = 32.0;
+  static const double spaceXXLarge = 48.0;
 
-  // --- Radius (SaaS uses slightly sharper, consistent radii) ---
-  static const double radius8 = 6.0; // Sharper corners for modern look
-  static const double radius12 = 10.0;
-  static const double radius16 = 12.0;
-  static final double radiusFull = 999.0;
+  static const double pagePadding = spaceXLarge; // Alias for consistency
 
-  // --- Component Heights ---
+  // --- Radius (SaaS Sharp Modern Look) ---
+  static const double radiusXSmall = 4.0;
+  static const double radiusSmall = 6.0;
+  static const double radiusMedium = 10.0;
+  static const double radiusLarge = 12.0;
+  static const double radiusMax = 999.0;
+
+  // --- Component Dimensions ---
   static const double appBarHeight = 64.0;
-  static const double buttonHeight = 44.0; // Narrower, like web buttons
+  static const double buttonHeight = 44.0;
   static const double inputHeight = 44.0;
   static const double cardElevation = 0.0;
+  static const double fabSizeLarge = 96.0;
+
+  // --- Borders & Strokes ---
+  static const double borderSmall = 1.0;
+  static const double borderMedium = 1.5;
+  static const double borderLarge = 2.0;
 
   // --- Iconography ---
-  static const double iconXs = 14.0;
-  static const double iconSm = 18.0;
-  static const double iconMd = 20.0; // Slightly smaller for web density
-  static const double iconLg = 28.0;
+  static const double iconXSmall = 14.0;
+  static const double iconSmall = 18.0;
+  static const double iconMedium = 20.0;
+  static const double iconLarge = 28.0;
+
+  // --- Elevation ---
+  static const double elevationMin = 0.0;
+  static const double elevationSmall = 2.0;
+  static const double elevationMedium = 4.0;
+  static const double elevationLarge = 6.0;
 
   // --- Typography Scale ---
-  static const double fontCaption = 12.0;
-  static const double fontBody = 14.0; // Web standard
-  static const double fontLabel = 15.0;
-  static const double fontTitle = 20.0;
-  static const double fontHeading = 28.0;
-  static const double fontDisplay = 40.0;
+  static const double fontXSmall = 12.0; // Caption
+  static const double fontSmall = 14.0; // Body
+  static const double fontMedium = 16.0; // Label
+  static const double fontLarge = 20.0; // Title
+  static const double fontXLarge = 24.0; // Display Small
+  static const double fontXXLarge = 36.0; // Display Large
+  static const double fontMax = 60.0; // Display Large
 }
