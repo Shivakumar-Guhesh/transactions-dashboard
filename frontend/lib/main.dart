@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/providers/theme_provider.dart';
 
+import 'providers/theme_provider.dart';
+import 'shared/widgets/keyboard_shortcut_wrapper.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends ConsumerWidget {
       themeMode: ref.watch(themeProvider),
       darkTheme: AppTheme.build(Brightness.dark),
       theme: AppTheme.build(Brightness.light),
+      scrollBehavior: KeyboardScrollBehavior(),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
