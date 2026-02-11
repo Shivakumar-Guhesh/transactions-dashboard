@@ -35,10 +35,12 @@ class MyHomePage extends ConsumerWidget {
     final brightness = Theme.of(context).brightness;
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [const Text('MainApp')],
+      body: SelectionArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [const Text('MainApp')],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
