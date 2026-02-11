@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'providers/theme_provider.dart';
+import 'screens/dashboard_screen.dart';
 import 'shared/widgets/keyboard_shortcut_wrapper.dart';
 import 'theme/app_theme.dart';
 
@@ -20,36 +21,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.build(Brightness.dark),
       theme: AppTheme.build(Brightness.light),
       scrollBehavior: KeyboardScrollBehavior(),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends ConsumerWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final brightness = Theme.of(context).brightness;
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: SelectionArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [const Text('MainApp')],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
-        tooltip: 'Toggle',
-        child: brightness == Brightness.dark
-            ? const Icon(Icons.light_mode_outlined)
-            : const Icon(Icons.dark_mode_outlined),
-      ),
+      home: DashboardScreen(),
     );
   }
 }
