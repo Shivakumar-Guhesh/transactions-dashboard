@@ -1,6 +1,10 @@
 // app_sizes.dart
 
 class AppSizes {
+  // --- Screen Breakpoints ---
+  static const double mobileBreakpoint = 600.0;
+  static const double tabletBreakpoint = 1024.0;
+
   // --- Spacing & Padding ---
   static const double spaceXXSmall = 4.0;
   static const double spaceXSmall = 8.0;
