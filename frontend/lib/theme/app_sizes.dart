@@ -6,6 +6,7 @@ class AppSizes {
   static const double tabletBreakpoint = 1024.0;
 
   // --- Spacing & Padding ---
+  static const double spaceXXXSmall = 1.0;
   static const double spaceXXSmall = 4.0;
   static const double spaceXSmall = 8.0;
   static const double spaceSmall = 12.0;
@@ -29,6 +30,11 @@ class AppSizes {
   static const double inputHeight = 44.0;
   static const double cardElevation = 0.0;
   static const double fabSizeLarge = 96.0;
+
+  static const double maxSideBarWidth = 350.0;
+  static const double minSideBarWidth = 200.0;
+  static const double collapsedSideBarWidth = 85.0;
+  static const double sideBarWidthFactor = 0.15;
 
   // --- Borders & Strokes ---
   static const double borderSmall = 1.0;

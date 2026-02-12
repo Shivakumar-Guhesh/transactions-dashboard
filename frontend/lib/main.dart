@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'providers/theme_provider.dart';
-import 'screens/dashboard_screen.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 import 'shared/widgets/keyboard_shortcut_wrapper.dart';
 import 'theme/app_theme.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Transaction Dashboard',
       themeMode: ref.watch(themeProvider),
       darkTheme: AppTheme.build(Brightness.dark),
       theme: AppTheme.build(Brightness.light),
