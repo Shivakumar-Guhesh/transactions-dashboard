@@ -17,7 +17,6 @@ class AppSizes {
 
   static const double pagePadding = spaceXLarge; // Alias for consistency
 
-  // --- Radius (SaaS Sharp Modern Look) ---
   static const double radiusXSmall = 4.0;
   static const double radiusSmall = 6.0;
   static const double radiusMedium = 10.0;
@@ -35,6 +34,10 @@ class AppSizes {
   static const double minSideBarWidth = 200.0;
   static const double collapsedSideBarWidth = 85.0;
   static const double sideBarWidthFactor = 0.15;
+
+  static const double maxProfileMenuWidth = 250.0;
+  static const double minProfileMenuWidth = 200.0;
+  static const double profileMenuWidthFactor = 0.25;
 
   // --- Borders & Strokes ---
   static const double borderSmall = 1.0;
