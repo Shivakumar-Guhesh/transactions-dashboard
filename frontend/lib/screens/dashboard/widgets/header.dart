@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/screens/dashboard/widgets/profile_badge.dart';
+import '../../../providers/filter_panel_provider.dart';
+import '../widgets/profile_badge.dart';
 import '../../../providers/sidebar_provider.dart';
 import '../../../providers/theme_provider.dart';
 import '../../../theme/app_sizes.dart';
@@ -46,6 +47,13 @@ class Header extends ConsumerWidget {
           ),
           const Spacer(),
           _HeaderIconButton(
+            icon: Icons.filter_list_rounded,
+            onPressed: () => ref
+                .read(isFilterPanelExpandedProvider.notifier)
+                .toggleFilterPanel(),
+          ),
+          const SizedBox(width: AppSizes.spaceXSmall),
+          _HeaderIconButton(
             icon: isDark ? Icons.light_mode : Icons.dark_mode_outlined,
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
           ),
@@ -65,20 +73,18 @@ class _HeaderIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: const EdgeInsets.all(AppSizes.spaceXSmall),
-        decoration: BoxDecoration(
-          // color: _isHovered
-          //     ? Theme.of(context).colorScheme.primary
-          //     : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: Theme.of(context).colorScheme.onSurface,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          padding: const EdgeInsets.all(AppSizes.spaceXSmall),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+          child: Icon(
+            icon,
+            size: 20,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ),
     );
