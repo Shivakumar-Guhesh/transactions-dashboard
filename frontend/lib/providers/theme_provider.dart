@@ -27,3 +27,15 @@ class ThemeNotifier extends Notifier<ThemeMode> {
 final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
   ThemeNotifier.new,
 );
+
+final isDarkModeProvider = Provider<bool>((ref) {
+  final themeMode = ref.watch(themeProvider);
+
+  if (themeMode == ThemeMode.system) {
+    final brightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    return brightness == Brightness.dark;
+  }
+
+  return themeMode == ThemeMode.dark;
+});

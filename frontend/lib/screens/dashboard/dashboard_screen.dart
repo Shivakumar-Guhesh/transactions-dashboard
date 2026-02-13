@@ -6,20 +6,24 @@ import '../../theme/app_sizes.dart';
 import '../dashboard/desktop_layout.dart';
 import '../dashboard/mobile_layout.dart';
 import '../../shared/responsive.dart';
-import '../../providers/theme_provider.dart';
 import '../../shared/widgets/responsive_wrapper.dart';
 import 'widgets/side_bar.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedRoute = ref.watch(selectedRouteProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: context.isMobile
           ? AppBar(
-              title: Text(selectedRoute.label),
+              toolbarHeight: 0,
+              title: Consumer(
+                builder: (context, ref, child) {
+                  final selectedRoute = ref.watch(selectedRouteProvider);
+                  return Text(selectedRoute.label);
+                },
+              ),
               elevation: AppSizes.elevationMin,
             )
           : null,
@@ -38,14 +42,6 @@ class DashboardScreen extends ConsumerWidget {
         child: ResponsiveWrapper(
           mobile: const MobileLayout(),
           desktop: const DesktopLayout(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
-        child: Icon(
-          Theme.of(context).brightness == Brightness.dark
-              ? Icons.light_mode_outlined
-              : Icons.dark_mode_outlined,
         ),
       ),
     );
