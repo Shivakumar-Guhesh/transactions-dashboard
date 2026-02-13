@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/providers/selected_route_provider.dart';
 import '../constants/app_routes.dart';
 
 class SidebarExpandedNotifier extends Notifier<bool> {
@@ -16,13 +17,6 @@ final isSidebarExpandedProvider =
     NotifierProvider<SidebarExpandedNotifier, bool>(
       SidebarExpandedNotifier.new,
     );
-
-class SelectedRouteNotifier extends Notifier<AppRoute> {
-  @override
-  AppRoute build() => AppRoute.dashboard;
-
-  void setRoute(AppRoute route) => state = route;
-}
 
 final selectedRouteProvider = NotifierProvider<SelectedRouteNotifier, AppRoute>(
   SelectedRouteNotifier.new,
