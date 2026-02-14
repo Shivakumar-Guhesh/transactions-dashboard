@@ -36,6 +36,20 @@ class TransactionRepository {
     }
   }
 
+  Future<List<String>> _fetchDistinctValues({required String endpoint}) async {
+    try {
+      final response = await _http.post(
+        endpoint,
+        data: TransactionsFiltersRequest().toJson(),
+      );
+      return TransactionsDistinctValuesListResponse.fromJson(
+        response.data,
+      ).values;
+    } on DioException catch (e) {
+      throw handleDioError(e);
+    }
+  }
+
   /* ========================== HELPER FUNCTIONS END ========================== */
   Future<List<TransactionsDataResponse>> getTransactionsData({
     required TransactionsFiltersRequest filters,
@@ -131,5 +145,44 @@ class TransactionRepository {
     );
   }
 
+  Future<Map<String, double>> getMonthExpenseSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.monthExpenseSum,
+      filters: filters,
+    );
+  }
+
+  Future<Map<String, double>> getMonthIncomeSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.monthIncomeSum,
+      filters: filters,
+    );
+  }
+
+  Future<Map<String, double>> getMonthlyBalance({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.monthlyBalance,
+      filters: filters,
+    );
+  }
+
   /* ============================= GROUP SUM ENDS ============================= */
+
+  /* ======================== DISTINCT VALUE LIST START ======================= */
+
+  Future<List<String>> getExpenseCategories() async {
+    return _fetchDistinctValues(endpoint: ApiConstants.expenseCategories);
+  }
+
+  Future<List<String>> getIncomeCategories() async {
+    return _fetchDistinctValues(endpoint: ApiConstants.incomeCategories);
+  }
+
+  /* ======================== DISTINCT VALUE LIST ENDS ======================== */
 }
