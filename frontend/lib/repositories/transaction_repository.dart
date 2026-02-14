@@ -8,6 +8,7 @@ import '../constants/api_constants.dart';
 class TransactionRepository {
   final Dio _http = AppHttp().client;
 
+  /* ========================= HELPER FUNCTIONS START ========================= */
   Future<double> _fetchTotalAmount({
     required String endpoint,
     required TransactionsFiltersRequest filters,
@@ -20,6 +21,22 @@ class TransactionRepository {
     }
   }
 
+  Future<Map<String, double>> _fetchGroupedAmount({
+    required String endpoint,
+    required TransactionsFiltersRequest filters,
+  }) async {
+    try {
+      final response = await _http.post(endpoint, data: filters.toJson());
+
+      return TransactionsGroupAmountResponse.fromJson(
+        response.data,
+      ).groupAmount;
+    } on DioException catch (e) {
+      throw handleDioError(e);
+    }
+  }
+
+  /* ========================== HELPER FUNCTIONS END ========================== */
   Future<List<TransactionsDataResponse>> getTransactionsData({
     required TransactionsFiltersRequest filters,
   }) async {
@@ -75,4 +92,44 @@ class TransactionRepository {
   }
 
   /* ============================ TOTAL AMOUNT ENDS =========================== */
+
+  /* ============================ GROUP SUM STARTS ============================ */
+
+  Future<Map<String, double>> getCategoryExpenseSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.catExpenseSum,
+      filters: filters,
+    );
+  }
+
+  Future<Map<String, double>> getCategoryIncomeSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.catIncomeSum,
+      filters: filters,
+    );
+  }
+
+  Future<Map<String, double>> getModeExpenseSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.modeExpenseSum,
+      filters: filters,
+    );
+  }
+
+  Future<Map<String, double>> getModeIncomeSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.modeIncomeSum,
+      filters: filters,
+    );
+  }
+
+  /* ============================= GROUP SUM ENDS ============================= */
 }
