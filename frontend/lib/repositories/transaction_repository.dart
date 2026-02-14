@@ -38,7 +38,7 @@ class TransactionRepository {
 
   Future<List<String>> _fetchDistinctValues({required String endpoint}) async {
     try {
-      final response = await _http.post(
+      final response = await _http.get(
         endpoint,
         data: TransactionsFiltersRequest().toJson(),
       );
@@ -87,27 +87,27 @@ class TransactionRepository {
     );
   }
 
-  Future<double> getLiquidAssetWorth({
+  /* ============================ TOTAL AMOUNT ENDS =========================== */
+
+  /* ============================ GROUP SUM STARTS ============================ */
+
+  Future<Map<String, double>> getLiquidAssetWorth({
     required TransactionsFiltersRequest filters,
   }) async {
-    return _fetchTotalAmount(
+    return _fetchGroupedAmount(
       endpoint: ApiConstants.liquidAssetWorth,
       filters: filters,
     );
   }
 
-  Future<double> getTotalAssetWorth({
+  Future<Map<String, double>> getTotalAssetWorth({
     required TransactionsFiltersRequest filters,
   }) async {
-    return _fetchTotalAmount(
+    return _fetchGroupedAmount(
       endpoint: ApiConstants.totalAssetWorth,
       filters: filters,
     );
   }
-
-  /* ============================ TOTAL AMOUNT ENDS =========================== */
-
-  /* ============================ GROUP SUM STARTS ============================ */
 
   Future<Map<String, double>> getCategoryExpenseSum({
     required TransactionsFiltersRequest filters,
