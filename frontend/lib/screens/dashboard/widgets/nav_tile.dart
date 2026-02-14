@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/app_routes.dart';
-import '../../../providers/sidebar_provider.dart';
+
 import '../../../theme/app_animations.dart';
 import '../../../theme/app_sizes.dart';
+import '../../../providers/selected_route_provider.dart';
 
 class NavTile extends ConsumerWidget {
   final AppRoute route;
@@ -23,7 +24,8 @@ class NavTile extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           ref.read(selectedRouteProvider.notifier).setRoute(route);
-          if (Scaffold.of(context).isDrawerOpen) {
+          final scaffoldState = Scaffold.maybeOf(context);
+          if (scaffoldState != null && scaffoldState.isDrawerOpen) {
             Navigator.of(context).pop();
           }
         },

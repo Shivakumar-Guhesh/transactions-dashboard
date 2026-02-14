@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 
 import '../constants/api_constants.dart';
 
-class AppHttp {
+class AppHttpClient {
   late final Dio _dio;
 
-  static final AppHttp _instance = AppHttp._internal();
-  factory AppHttp() {
+  static final AppHttpClient _instance = AppHttpClient._internal();
+  factory AppHttpClient() {
     return _instance;
   }
 
-  AppHttp._internal() {
+  AppHttpClient._internal() {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,

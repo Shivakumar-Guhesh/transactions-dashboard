@@ -11,3 +11,7 @@ class SelectedRouteNotifier extends Notifier<AppRoute> {
     state = route;
   }
 }
+
+final selectedRouteProvider = NotifierProvider<SelectedRouteNotifier, AppRoute>(
+  SelectedRouteNotifier.new,
+);

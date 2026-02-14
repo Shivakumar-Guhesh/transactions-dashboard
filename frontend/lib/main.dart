@@ -21,7 +21,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.build(Brightness.dark),
       theme: AppTheme.build(Brightness.light),
       scrollBehavior: KeyboardScrollBehavior(),
-      home: DashboardScreen(),
+      home: const DashboardScreen(),
     );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/sidebar_provider.dart';
+import '../../providers/selected_route_provider.dart';
+
 import '../../theme/app_sizes.dart';
 import '../dashboard/desktop_layout.dart';
 import '../dashboard/mobile_layout.dart';
