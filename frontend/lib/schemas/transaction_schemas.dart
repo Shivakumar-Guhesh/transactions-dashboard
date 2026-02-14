@@ -112,7 +112,7 @@ class TransactionsTotalAmountResponse {
 
   factory TransactionsTotalAmountResponse.fromJson(Map<String, dynamic> json) {
     return TransactionsTotalAmountResponse(
-      total: (json['total'] as num).toDouble(),
+      total: (json['total'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
