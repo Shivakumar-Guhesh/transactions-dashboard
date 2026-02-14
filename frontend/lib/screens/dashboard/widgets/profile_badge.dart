@@ -20,7 +20,10 @@ class _ProfileBadgeState extends State<ProfileBadge> {
 
   @override
   void dispose() {
-    _closeMenu();
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
     super.dispose();
   }
 
@@ -36,12 +39,14 @@ class _ProfileBadgeState extends State<ProfileBadge> {
     });
   }
 
-  void _closeMenu() {
+  void _closeMenu({bool notify = true}) {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
       _overlayEntry = null;
-      if (mounted) {
-        setState(() => _isMenuOpen = false);
+      _isMenuOpen = false;
+
+      if (notify && mounted) {
+        setState(() {});
       }
     }
   }

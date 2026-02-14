@@ -6,7 +6,7 @@ import '../shared/http_client.dart';
 import '../constants/api_constants.dart';
 
 class TransactionRepository {
-  final Dio _http = AppHttp().client;
+  final Dio _http = AppHttpClient().client;
 
   /* ========================= HELPER FUNCTIONS START ========================= */
   Future<double> _fetchTotalAmount({
@@ -38,10 +38,7 @@ class TransactionRepository {
 
   Future<List<String>> _fetchDistinctValues({required String endpoint}) async {
     try {
-      final response = await _http.get(
-        endpoint,
-        data: TransactionsFiltersRequest().toJson(),
-      );
+      final response = await _http.get(endpoint);
       return TransactionsDistinctValuesListResponse.fromJson(
         response.data,
       ).values;

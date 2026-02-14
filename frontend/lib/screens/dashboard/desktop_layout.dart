@@ -28,7 +28,7 @@ class DesktopLayout extends ConsumerWidget {
           width: isExpanded ? expandedWidth : collapsedWidth,
           child: const SideBar(),
         ),
-        const Expanded(child: MainContentArea()),
+        const Expanded(child: const MainContentArea()),
       ],
     );
   }
