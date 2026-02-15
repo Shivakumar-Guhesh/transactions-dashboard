@@ -11,6 +11,34 @@ class TransactionsFiltersRequest {
     this.endDate,
   });
 
+  TransactionsFiltersRequest copyWith({
+    List<String>? excludeExpenses,
+    List<String>? excludeIncomes,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    return TransactionsFiltersRequest(
+      excludeExpenses: excludeExpenses ?? this.excludeExpenses,
+      excludeIncomes: excludeIncomes ?? this.excludeIncomes,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
+
+  TransactionsFiltersRequest _shiftEndDate({int months = 0, int years = 0}) {
+    final currentEnd = endDate ?? DateTime.now();
+
+    final shiftedDate = DateTime(
+      currentEnd.year - years,
+      currentEnd.month - months,
+      currentEnd.day,
+      currentEnd.hour,
+      currentEnd.minute,
+    );
+
+    return copyWith(endDate: shiftedDate);
+  }
+
   String _formatDate(DateTime date) {
     final year = date.year.toString().padLeft(4, '0');
     final month = date.month.toString().padLeft(2, '0');
@@ -27,6 +55,12 @@ class TransactionsFiltersRequest {
       'end_date': _formatDate(endDate ?? DateTime.now()),
     };
   }
+}
+
+extension TransactionFilterComparison on TransactionsFiltersRequest {
+  TransactionsFiltersRequest lastMonth() => _shiftEndDate(months: 1);
+
+  TransactionsFiltersRequest lastYear() => _shiftEndDate(years: 1);
 }
 
 class TransactionsDataResponse {
