@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class TransactionsFiltersRequest {
   final List<String> excludeExpenses;
   final List<String> excludeIncomes;
@@ -55,6 +57,16 @@ class TransactionsFiltersRequest {
       'end_date': _formatDate(endDate ?? DateTime.now()),
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransactionsFiltersRequest &&
+          runtimeType == other.runtimeType &&
+          jsonEncode(toJson()) == jsonEncode(other.toJson());
+
+  @override
+  int get hashCode => jsonEncode(toJson()).hashCode;
 }
 
 extension TransactionFilterComparison on TransactionsFiltersRequest {
