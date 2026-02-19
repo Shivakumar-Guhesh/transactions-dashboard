@@ -117,6 +117,19 @@ def get_total_asset_worth(
     return service.get_total_asset_worth(body)
 
 
+@router.post("/daily_expense_sum", response_model=TransactionsGroupAmountResponse)
+def get_daily_expense_sum(
+    body: TransactionsFiltersRequest,
+    service: TransactionService = Depends(get_transaction_service),
+):
+    """POST endpoint daily summarized expenses
+
+    Returns:
+        result: daily summarized expenses
+    """
+    return service.get_daily_expense_sum(body)
+
+
 @router.post("/cat_expense_sum", response_model=TransactionsGroupAmountResponse)
 def get_cat_expense_sum(
     body: TransactionsFiltersRequest,

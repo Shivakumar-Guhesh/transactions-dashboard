@@ -233,6 +233,35 @@ class TransactionService:
             {"group_amount": results_dict}
         )
 
+    def get_daily_expense_sum(
+        self, body: TransactionsFiltersRequest
+    ) -> TransactionsGroupAmountResponse:
+        (
+            exclude_expenses,
+            exclude_incomes,
+            start_date,
+            end_date,
+        ) = self._parse_request_body(body)
+        daily_expense_sum = self.repository.summarized_transactions(
+            groupby_column=models.TransactionFact.transaction_date,
+            aggregate_column=models.TransactionFact.amount,
+            exclude_expenses=exclude_expenses,
+            exclude_incomes=exclude_incomes,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        results_dict = self._get_net_group_wise_total(daily_expense_sum)
+        formatted_results = {
+            (k.isoformat() if hasattr(k, "isoformat") else str(k)): v
+            for k, v in results_dict.items()
+        }
+        return TransactionsGroupAmountResponse.model_validate(
+            {"group_amount": formatted_results}
+        )
+
     def get_cat_expense_sum(
         self,
         body: TransactionsFiltersRequest,
