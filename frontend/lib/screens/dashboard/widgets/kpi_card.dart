@@ -5,6 +5,7 @@ import '../../../constants/intl_constants.dart';
 import '../../../models/kpi_metrics.dart';
 import '../../../providers/kpi_providers.dart';
 import '../../../schemas/transaction_schemas.dart';
+import '../../../shared/widgets/shimmer_skeleton.dart';
 import '../../../shared/widgets/small_copy_button.dart';
 import '../../../theme/app_animations.dart';
 import '../../../theme/app_sizes.dart';
@@ -40,7 +41,7 @@ class KpiCard extends ConsumerWidget {
       constraints: const BoxConstraints(minHeight: AppSizes.minKpiCardHeight),
       child: kpiAsync.when(
         data: (metrics) => _KpiCardContent(title: title, metrics: metrics),
-        loading: () => const _KpiLoadingState(),
+        loading: () => ShimmerSkeleton(),
         error: (err, _) => _KpiErrorState(error: err.toString()),
       ),
     );
@@ -318,25 +319,6 @@ class _GhostIconButton extends StatelessWidget {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
     );
   }
-}
-
-class _KpiLoadingState extends StatelessWidget {
-  const _KpiLoadingState();
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Theme.of(context).dividerColor),
-    ),
-    child: const Center(
-      child: SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-    ),
-  );
 }
 
 class _KpiErrorState extends StatelessWidget {

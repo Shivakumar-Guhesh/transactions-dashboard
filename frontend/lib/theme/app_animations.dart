@@ -5,6 +5,7 @@ class AppAnimations {
   static const Duration durationFast = Duration(milliseconds: 120);
   static const Duration durationMedium = Duration(milliseconds: 250);
   static const Duration durationSlow = Duration(milliseconds: 400);
+  static const Duration durationShimmer = Duration(milliseconds: 1500);
 
   static const Curve curveMain = Curves.easeOutExpo;
 
