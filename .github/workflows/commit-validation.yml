@@ -25,7 +25,14 @@ jobs:
 
             for (const commit of commits) {
               const message = commit.commit.message;
-              // Regex to find # followed by digits
+
+              // 1. Skip system-generated merge commits
+              if (message.startsWith('Merge branch') || message.startsWith('Merge pull request')) {
+                console.log(`Skipping merge commit: ${message}`);
+                continue;
+              }
+
+              // 2. Regex to find # followed by digits
               const match = message.match(/#(\d+)/);
 
               if (!match) {
@@ -42,10 +49,11 @@ jobs:
                   issue_number: issueNumber,
                 });
 
-                if (issue.state !== 'open') {
-                  core.setFailed(`Issue #${issueNumber} referenced in commit "${message}" is CLOSED. Only open issues are allowed.`);
-                }
+                // Removed the 'issue.state !== open' check to avoid errors 
+                // when an issue was closed by a previous partial commit.
+                console.log(`Successfully validated reference to Issue #${issueNumber}`);
+
               } catch (error) {
-                core.setFailed(`Issue #${issueNumber} referenced in commit "${message}" does not exist.`);
+                core.setFailed(`Issue #${issueNumber} referenced in commit "${message}" does not exist in this repo.`);
               }
             }
