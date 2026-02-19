@@ -1,34 +1,58 @@
-name: Verify Commit Messages
+name: Verify Commit Project Link
 
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
-  check-messages:
+  check-project-link:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
+          fetch-depth: 0
 
-      - name: Check for Issue Reference
+      - name: Verify Issues Exist in Project
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_VERIFIER_TOKEN }}
+          # CHANGE THESE TWO:
+          PROJECT_NUMBER: 1 
+          USER_LOGIN: "your-username"
         run: |
-          # Get all commit messages in the PR
-          commits=$(git log origin/${{ github.base_ref }}..origin/${{ github.head_ref }} --pretty=format:"%s")
+          git fetch origin ${{ github.base_ref }}
+          commits=$(git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%s")
           
-          echo "Checking the following commits:"
-          echo "$commits"
-          
-          # Regex for #123
-          regex="(#[0-9]+)"
+          # Extract issue numbers (finds #123)
+          issue_numbers=$(echo "$commits" | grep -oE "#[0-9]+" | sed 's/#//' | sort -u)
 
-          while IFS= read -l line; do
-            if [[ ! "$line" =~ $regex ]]; then
-              echo "Error: Commit message '$line' is missing an issue reference (#123)"
+          if [ -z "$issue_numbers" ]; then
+            echo "❌ Error: No issue reference (#123) found in commits."
+            exit 1
+          fi
+
+          for issue in $issue_numbers; do
+            echo "🔍 Checking Issue #$issue..."
+            
+            # Query the Project board for the issue
+            item_check=$(gh api graphql -f query='
+              query($user: String!, $number: Int!) {
+                user(login: $user) {
+                  projectV2(number: $number) {
+                    items(first: 100) {
+                      nodes {
+                        content {
+                          ... on Issue { number }
+                        }
+                      }
+                    }
+                  }
+                }
+              }' -f user="$USER_LOGIN" -F number=$PROJECT_NUMBER | jq ".data.user.projectV2.items.nodes[].content.number" | grep -w "$issue" || true)
+
+            if [ -z "$item_check" ]; then
+              echo "❌ ERROR: Issue #$issue is NOT on Project Board #$PROJECT_NUMBER"
               exit 1
             fi
-          done <<< "$commits"
-          
-          echo "All commits contain a valid issue reference!"
+            echo "✅ Confirmed: Issue #$issue is on the board."
+          done
