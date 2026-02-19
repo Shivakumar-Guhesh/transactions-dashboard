@@ -8,6 +8,6 @@ class AppAnimations {
 
   static const Curve curveMain = Curves.easeOutExpo;
 
-  static const Curve fastOutSlowIn = Curves.fastOutSlowIn;
+  static const Curve curveFastOutSlowIn = Curves.fastOutSlowIn;
   static const Curve curveSpring = Cubic(0.175, 0.885, 0.32, 1.1);
 }

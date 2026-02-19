@@ -24,11 +24,11 @@ class DesktopLayout extends ConsumerWidget {
       children: [
         AnimatedContainer(
           duration: AppAnimations.durationMedium,
-          curve: AppAnimations.fastOutSlowIn,
+          curve: AppAnimations.curveFastOutSlowIn,
           width: isExpanded ? expandedWidth : collapsedWidth,
           child: const SideBar(),
         ),
-        const Expanded(child: const MainContentArea()),
+        const Expanded(child: MainContentArea()),
       ],
     );
   }

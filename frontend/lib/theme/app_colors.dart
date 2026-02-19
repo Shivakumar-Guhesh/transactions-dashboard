@@ -16,9 +16,6 @@ class AppColors {
   static const Color darkPrimaryContainer = Color(0xFFFEFEFE);
   static const Color lightPrimaryContainer = Color(0xFF3F3F46);
 
-  static const Color darkErrorContainer = Color(0xFF450a0a);
-  static const Color lightErrorContainer = Color(0xFFfee2e2);
-
   static const Color onLightErrorContainer = Color(0xFF991b1b);
   static const Color onDarkErrorContainer = Color(0xFF991b1b);
 
@@ -27,28 +24,19 @@ class AppColors {
   static const Color lightBorder = Color(0xFFE4E4E7);
 
   // --- Semantic: Error ---
-  static const Color errorLight = Color(0xFFEF4444);
+  static const Color lightError = Color(0xFFDC2626);
+  static const Color lightErrorContainer = Color(0xFFFEF2F2);
+  static const Color darkError = Color(0xFFF87171);
+  static const Color darkErrorContainer = Color(0xFF180808);
   static const Color onErrorLight = Colors.white;
-  static const Color errorDark = Color(0xFFF87171);
   static const Color onErrorDark = Color(0xFF450A0A);
 
   // --- Semantic: Success ---
-  static const Color successLight = Color(0xFF10B981);
-  static const Color onSuccessLight = Colors.white;
-  static const Color successDark = Color(0xFF34D399);
-  static const Color onSuccessDark = Color(0xFF064E3B);
+  static const Color lightSuccess = Color(0xFF038a1d);
+  static const Color lightSuccessContainer = Color(0xFFECFDF5);
 
-  // --- Semantic: Warning ---
-  static const Color warningLight = Color(0xFFF59E0B);
-  static const Color onWarningLight = Colors.white;
-  static const Color warningDark = Color(0xFFFBBF24);
-  static const Color onWarningDark = Color(0xFF451A03);
-
-  // --- Semantic: Info ---
-  static const Color infoLight = Color(0xFF3B82F6);
-  static const Color onInfoLight = Colors.white;
-  static const Color infoDark = Color(0xFF60A5FA);
-  static const Color onInfoDark = Color(0xFF172554);
+  static const Color darkSuccess = Color(0xFF4ADE80);
+  static const Color darkSuccessContainer = Color(0xFF06150D);
 
   // --- UI Elements ---
   static const Color splashLight = Color(0x0D000000);
