@@ -11,5 +11,6 @@ final currencyFormat = NumberFormat.currency(
 
 final compactSimpleCurrencyFormat = NumberFormat.compactCurrency(
   locale: currencyLocale,
+  symbol: currencySymbol,
   decimalDigits: 2,
 )..minimumFractionDigits = 2;
