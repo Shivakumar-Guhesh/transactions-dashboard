@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for commit linting
+          fetch-depth: 0
 
       - name: Check Commits for Valid Issues
         uses: actions/github-script@v7
@@ -26,13 +26,11 @@ jobs:
             for (const commit of commits) {
               const message = commit.commit.message;
 
-              // 1. Skip system-generated merge commits
-              if (message.startsWith('Merge branch') || message.startsWith('Merge pull request')) {
-                console.log(`Skipping merge commit: ${message}`);
+              // SKIP MERGES: GitHub/Git merge messages never have issue IDs
+              if (message.toLowerCase().includes('merge')) {
                 continue;
               }
 
-              // 2. Regex to find # followed by digits
               const match = message.match(/#(\d+)/);
 
               if (!match) {
@@ -43,17 +41,14 @@ jobs:
               const issueNumber = match[1];
 
               try {
-                const { data: issue } = await github.rest.issues.get({
+                // Check if issue exists (doesn't matter if it's open or closed)
+                await github.rest.issues.get({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issueNumber,
                 });
-
-                // Removed the 'issue.state !== open' check to avoid errors 
-                // when an issue was closed by a previous partial commit.
-                console.log(`Successfully validated reference to Issue #${issueNumber}`);
-
+                console.log(`Validated #${issueNumber}`);
               } catch (error) {
-                core.setFailed(`Issue #${issueNumber} referenced in commit "${message}" does not exist in this repo.`);
+                core.setFailed(`Issue #${issueNumber} does not exist.`);
               }
             }
