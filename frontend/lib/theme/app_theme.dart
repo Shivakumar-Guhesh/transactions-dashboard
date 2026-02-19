@@ -35,6 +35,7 @@ class AppTheme {
     final Color successContainer = isDark
         ? AppColors.darkSuccessContainer
         : AppColors.lightSuccessContainer;
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -42,6 +43,7 @@ class AppTheme {
       scaffoldBackgroundColor: scaffoldColor,
 
       extensions: [
+        ShimmerTheme(base: borderColor, highlight: surfaceColor),
         SemanticColors(
           success: successColor,
           successContainer: successContainer,
@@ -554,6 +556,28 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     return SemanticColors(
       success: Color.lerp(success, other.success, t),
       successContainer: Color.lerp(successContainer, other.successContainer, t),
+    );
+  }
+}
+
+class ShimmerTheme extends ThemeExtension<ShimmerTheme> {
+  final Color base;
+  final Color highlight;
+
+  ShimmerTheme({required this.base, required this.highlight});
+
+  @override
+  ShimmerTheme copyWith({Color? base, Color? highlight}) => ShimmerTheme(
+    base: base ?? this.base,
+    highlight: highlight ?? this.highlight,
+  );
+
+  @override
+  ShimmerTheme lerp(ThemeExtension<ShimmerTheme>? other, double t) {
+    if (other is! ShimmerTheme) return this;
+    return ShimmerTheme(
+      base: Color.lerp(base, other.base, t)!,
+      highlight: Color.lerp(highlight, other.highlight, t)!,
     );
   }
 }
