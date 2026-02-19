@@ -15,8 +15,6 @@ class AppSizes {
   static const double spaceXLarge = 32.0;
   static const double spaceXXLarge = 48.0;
 
-  static const double pagePadding = spaceXLarge; // Alias for consistency
-
   static const double radiusXSmall = 4.0;
   static const double radiusSmall = 6.0;
   static const double radiusMedium = 10.0;
@@ -27,7 +25,7 @@ class AppSizes {
   static const double appBarHeight = 64.0;
   static const double buttonHeight = 44.0;
   static const double inputHeight = 44.0;
-  static const double cardElevation = 0.0;
+
   static const double fabSizeLarge = 96.0;
 
   static const double maxSideBarWidth = 350.0;
@@ -38,6 +36,11 @@ class AppSizes {
   static const double maxProfileMenuWidth = 250.0;
   static const double minProfileMenuWidth = 200.0;
   static const double profileMenuWidthFactor = 0.25;
+
+  static const double minKpiCardHeight = 150.0;
+  static const double maxKpiCardWidth = 600.0;
+  static const double minKpiCardWidth = 300.0;
+  static const double kpiCardWidthFactor = 0.2;
 
   // --- Borders & Strokes ---
   static const double borderSmall = 1.0;
@@ -63,5 +66,6 @@ class AppSizes {
   static const double fontLarge = 20.0; // Title
   static const double fontXLarge = 24.0; // Display Small
   static const double fontXXLarge = 36.0; // Display Large
+  static const double fontXXXLarge = 42.0; // Display Large
   static const double fontMax = 60.0; // Display Large
 }

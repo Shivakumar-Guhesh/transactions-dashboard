@@ -24,11 +24,17 @@ class AppTheme {
     final Color scaffoldColor = isDark ? AppColors.darkBg : AppColors.lightBg;
 
     final Color errorColor = isDark
-        ? AppColors.errorDark
-        : AppColors.errorLight;
+        ? AppColors.darkError
+        : AppColors.lightError;
     final Color onErrorColor = isDark
         ? AppColors.onErrorDark
         : AppColors.onErrorLight;
+    final Color successColor = isDark
+        ? AppColors.darkSuccess
+        : AppColors.lightSuccess;
+    final Color successContainer = isDark
+        ? AppColors.darkSuccessContainer
+        : AppColors.lightSuccessContainer;
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -36,6 +42,10 @@ class AppTheme {
       scaffoldBackgroundColor: scaffoldColor,
 
       extensions: [
+        SemanticColors(
+          success: successColor,
+          successContainer: successContainer,
+        ),
         AppTypography(
           codeStyle: TextStyle(
             fontFamily: codeFont,
@@ -50,12 +60,12 @@ class AppTheme {
           ),
           numberStyle: TextStyle(
             fontFamily: numberFont,
-            fontSize: AppSizes.fontSmall,
+            fontSize: AppSizes.fontMedium,
             color: textColor,
           ),
           numberStyleLarge: TextStyle(
             fontFamily: numberFont,
-            fontSize: AppSizes.fontXXLarge,
+            fontSize: AppSizes.fontXXXLarge,
             fontWeight: FontWeight.bold,
             color: textColor,
           ),
@@ -72,6 +82,7 @@ class AppTheme {
         surface: surfaceColor,
         onSurface: textColor,
         outline: borderColor,
+        onSurfaceVariant: AppColors.textSecondary,
 
         primaryContainer: isDark
             ? AppColors.darkPrimaryContainer
@@ -475,7 +486,7 @@ class AppTheme {
         titleMedium: TextStyle(
           color: textColor,
           fontSize: AppSizes.fontMedium,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           letterSpacing: 0.15,
         ),
         titleSmall: TextStyle(
@@ -505,13 +516,13 @@ class AppTheme {
         labelLarge: TextStyle(
           color: textColor,
           fontSize: AppSizes.fontMedium,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.1,
         ),
         labelMedium: TextStyle(
           color: AppColors.textSecondary,
           fontSize: AppSizes.fontSmall,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
         ),
         labelSmall: TextStyle(
@@ -521,6 +532,28 @@ class AppTheme {
           letterSpacing: 0.5,
         ),
       ),
+    );
+  }
+}
+
+class SemanticColors extends ThemeExtension<SemanticColors> {
+  final Color? success;
+  final Color? successContainer;
+
+  SemanticColors({this.success, this.successContainer});
+
+  @override
+  SemanticColors copyWith({Color? success, Color? onSuccess}) => SemanticColors(
+    success: success ?? this.success,
+    successContainer: onSuccess ?? this.successContainer,
+  );
+
+  @override
+  SemanticColors lerp(ThemeExtension<SemanticColors>? other, double t) {
+    if (other is! SemanticColors) return this;
+    return SemanticColors(
+      success: Color.lerp(success, other.success, t),
+      successContainer: Color.lerp(successContainer, other.successContainer, t),
     );
   }
 }

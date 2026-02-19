@@ -14,7 +14,7 @@ class FilterPanel extends ConsumerWidget {
 
     return AnimatedSize(
       duration: AppAnimations.durationMedium,
-      curve: AppAnimations.fastOutSlowIn,
+      curve: AppAnimations.curveFastOutSlowIn,
       child: Container(
         height: isVisible ? null : 0,
         width: double.infinity,
