@@ -18,8 +18,8 @@ final kpiProvider = FutureProvider.autoDispose
 
       final results = await Future.wait([
         fetcher(filters: currentFilters),
-        fetcher(filters: currentFilters.lastMonth()),
-        fetcher(filters: currentFilters.lastYear()),
+        fetcher(filters: currentFilters.tillLastMonthCurrentDate()),
+        fetcher(filters: currentFilters.tillLastYearCurrentDate()),
       ]);
 
       return KpiMetrics.calculate(

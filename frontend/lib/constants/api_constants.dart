@@ -11,6 +11,7 @@ class ApiConstants {
   static const String liquidAssetWorth = '/transactions/liquid_asset_worth';
   static const String totalAssetWorth = '/transactions/total_asset_worth';
   static const String catExpenseSum = '/transactions/cat_expense_sum';
+  static const String dailyExpenseSum = '/transactions/daily_expense_sum';
   static const String catIncomeSum = '/transactions/cat_income_sum';
   static const String monthExpenseSum = '/transactions/month_expense_sum';
   static const String monthIncomeSum = '/transactions/month_income_sum';

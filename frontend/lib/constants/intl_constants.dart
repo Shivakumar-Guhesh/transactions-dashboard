@@ -14,3 +14,9 @@ final compactSimpleCurrencyFormat = NumberFormat.compactCurrency(
   symbol: currencySymbol,
   decimalDigits: 2,
 )..minimumFractionDigits = 2;
+
+final compactSimpleCurrencyFormatWithoutDecimal = NumberFormat.compactCurrency(
+  locale: currencyLocale,
+  symbol: currencySymbol,
+  decimalDigits: 0,
+);

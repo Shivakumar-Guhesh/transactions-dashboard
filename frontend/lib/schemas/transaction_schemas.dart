@@ -41,6 +41,22 @@ class TransactionsFiltersRequest {
     return copyWith(endDate: shiftedDate);
   }
 
+  TransactionsFiltersRequest _getLastMonthEnd() {
+    final currentEnd = endDate ?? DateTime.now();
+
+    final DateTime firstDayOfCurrentMonth = DateTime(
+      currentEnd.year,
+      currentEnd.month,
+      1,
+    );
+
+    final DateTime lastDayOfLastMonth = firstDayOfCurrentMonth.subtract(
+      const Duration(days: 1),
+    );
+
+    return copyWith(endDate: lastDayOfLastMonth);
+  }
+
   String _formatDate(DateTime date) {
     final year = date.year.toString().padLeft(4, '0');
     final month = date.month.toString().padLeft(2, '0');
@@ -70,9 +86,13 @@ class TransactionsFiltersRequest {
 }
 
 extension TransactionFilterComparison on TransactionsFiltersRequest {
-  TransactionsFiltersRequest lastMonth() => _shiftEndDate(months: 1);
+  TransactionsFiltersRequest tillLastMonthCurrentDate() =>
+      _shiftEndDate(months: 1);
 
-  TransactionsFiltersRequest lastYear() => _shiftEndDate(years: 1);
+  TransactionsFiltersRequest tillLastYearCurrentDate() =>
+      _shiftEndDate(years: 1);
+
+  TransactionsFiltersRequest tillLastMonthEnd() => _getLastMonthEnd();
 }
 
 class TransactionsDataResponse {

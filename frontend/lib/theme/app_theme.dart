@@ -547,7 +547,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   @override
   SemanticColors copyWith({Color? success, Color? onSuccess}) => SemanticColors(
     success: success ?? this.success,
-    successContainer: onSuccess ?? this.successContainer,
+    successContainer: onSuccess ?? successContainer,
   );
 
   @override
