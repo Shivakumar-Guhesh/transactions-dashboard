@@ -106,6 +106,16 @@ class TransactionRepository {
     );
   }
 
+  Future<Map<String, double>> getDailyExpenseSum({
+    required TransactionsFiltersRequest filters,
+  }) async {
+    return _fetchGroupedAmount(
+      endpoint: ApiConstants.dailyExpenseSum,
+      filters: filters,
+    );
+  }
+
+
   Future<Map<String, double>> getCategoryExpenseSum({
     required TransactionsFiltersRequest filters,
   }) async {

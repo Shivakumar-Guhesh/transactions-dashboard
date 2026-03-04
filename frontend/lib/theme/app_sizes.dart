@@ -42,10 +42,18 @@ class AppSizes {
   static const double minKpiCardWidth = 300.0;
   static const double kpiCardWidthFactor = 0.2;
 
+  static const double minLineChartHeight = 300.0;
+  static const double maxLineChartHeight = 1200.0;
+  static const double minLineChartWidth = 300.0;
+  static const double maxLineChartWidth = 1200.0;
+  static const double lineChartWidthFactor = 0.4;
+  static const double lineChartHeightFactor = 0.3;
+
   // --- Borders & Strokes ---
   static const double borderSmall = 1.0;
   static const double borderMedium = 1.5;
   static const double borderLarge = 2.0;
+  static const double borderXLarge = 4.0;
 
   // --- Iconography ---
   static const double iconXSmall = 14.0;

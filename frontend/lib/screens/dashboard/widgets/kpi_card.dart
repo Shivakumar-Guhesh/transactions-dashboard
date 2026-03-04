@@ -249,12 +249,6 @@ class _ModernBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isPositive
-            ? semantic?.successContainer
-            : Theme.of(context).colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(6),
-      ),
       child: Text(
         "${isPositive ? '+' : ''}${value.toStringAsFixed(1)}% $label",
         style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
