@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import '../../constants/chart_constants.dart';
+
 class ChartUtils {
   static double calculateInterval(double max) {
     if (max <= 0) return 10;
 
-    double target = max / 5;
+    double target = max / lineChartBuckets;
     double exponent = (log(target) / log(10)).floorToDouble();
     double fraction = target / pow(10, exponent);
 

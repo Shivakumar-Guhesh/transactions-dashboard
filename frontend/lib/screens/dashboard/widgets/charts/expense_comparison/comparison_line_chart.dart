@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../constants/chart_constants.dart';
 import '../../../../../constants/intl_constants.dart';
 import '../../../../../shared/utils/chart_utils.dart';
 import '../../../../../theme/app_sizes.dart';
@@ -76,7 +77,7 @@ class ComparisonLineChart extends StatelessWidget {
             shadow: Shadow(
               color: Theme.of(
                 context,
-              ).colorScheme.onPrimary.withValues(alpha: 0.3),
+              ).colorScheme.onPrimary.withValues(alpha: 0.1),
               blurRadius: AppSizes.radiusSmall,
               offset: const Offset(0, 2),
             ),
@@ -108,7 +109,7 @@ class ComparisonLineChart extends StatelessWidget {
       bottomTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 5,
+          interval: lineChartBottomInterval,
           getTitlesWidget: (value, meta) => Padding(
             padding: const EdgeInsets.only(top: AppSizes.spaceXSmall),
             child: Text("${value.toInt()}", style: textStyle),
