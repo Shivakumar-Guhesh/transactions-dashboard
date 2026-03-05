@@ -20,12 +20,14 @@ class ExpenseComparisonController extends ConsumerWidget
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final responsiveWidth = (screenWidth * AppSizes.lineChartWidthFactor).clamp(
-      AppSizes.minLineChartWidth,
-      AppSizes.maxLineChartWidth,
+    final responsiveWidth = (screenWidth * AppSizes.chartWidthFactor).clamp(
+      AppSizes.minChartWidth,
+      AppSizes.maxChartWidth,
     );
-    final responsiveHeight = (screenHeight * AppSizes.lineChartHeightFactor)
-        .clamp(AppSizes.minLineChartHeight, AppSizes.maxLineChartHeight);
+    final responsiveHeight = (screenHeight * AppSizes.chartHeightFactor).clamp(
+      AppSizes.minChartHeight,
+      AppSizes.maxChartHeight,
+    );
 
     final comparisonData = ref.watch(expenseComparisonProvider(filters));
 

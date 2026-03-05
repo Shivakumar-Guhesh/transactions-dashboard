@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/screens/dashboard/widgets/charts/group_distribution/group_distribution_controller.dart';
 
 import '../../../providers/repository_provider.dart';
 import '../../../schemas/transaction_schemas.dart';
@@ -60,8 +61,13 @@ class MainContentArea extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSizes.spaceMedium),
-                  ExpenseComparisonController(filters: currentFilters),
+                  const SizedBox(height: AppSizes.spaceXXSmall),
+                  Row(
+                    children: [
+                      ExpenseComparisonController(filters: currentFilters),
+                      GroupDistributionController(filters: currentFilters),
+                    ],
+                  ),
                 ],
               ),
             ),

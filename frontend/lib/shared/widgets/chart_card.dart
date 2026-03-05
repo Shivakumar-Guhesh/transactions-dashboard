@@ -38,7 +38,7 @@ class ChartCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: AppSizes.spaceLarge),
+            const SizedBox(height: AppSizes.spaceXXXSmall),
             Expanded(child: chart),
             if (legend != null) ...[
               const SizedBox(height: AppSizes.spaceSmall),
