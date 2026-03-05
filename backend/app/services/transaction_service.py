@@ -69,7 +69,7 @@ class TransactionService:
         ) = self._parse_request_body(body)
 
         data = self.repository.fetch_all_transactions(
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             start_date=start_date,
             end_date=end_date,
@@ -117,7 +117,7 @@ class TransactionService:
         ) = self._parse_request_body(body)
 
         total_expense = self.repository.total_amount(
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -245,7 +245,7 @@ class TransactionService:
         daily_expense_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.transaction_date,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -277,7 +277,7 @@ class TransactionService:
         cat_expense_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.category,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -287,7 +287,7 @@ class TransactionService:
         cat_income_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.category,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
@@ -316,7 +316,7 @@ class TransactionService:
         cat_income_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.category,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
@@ -326,7 +326,7 @@ class TransactionService:
         cat_expense_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.category,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -357,7 +357,7 @@ class TransactionService:
                 "%Y-%m", models.TransactionFact.transaction_date
             ).label("Month"),
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -387,7 +387,7 @@ class TransactionService:
                 "%Y-%m", models.TransactionFact.transaction_date
             ).label("Month"),
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
@@ -415,7 +415,7 @@ class TransactionService:
         mode_expense_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.transaction_mode,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",
@@ -442,7 +442,7 @@ class TransactionService:
         mode_income_sum = self.repository.summarized_transactions(
             groupby_column=models.TransactionFact.transaction_mode,
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
@@ -471,7 +471,7 @@ class TransactionService:
                 "%Y-%m", models.TransactionFact.transaction_date
             ).label("Month"),
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Income",
@@ -483,7 +483,7 @@ class TransactionService:
                 "%Y-%m", models.TransactionFact.transaction_date
             ).label("Month"),
             aggregate_column=models.TransactionFact.amount,
-            exclude_expenses=exclude_expenses,
+            exclude_expenses=exclude_expenses + asset_categories_list,
             exclude_incomes=exclude_incomes,
             filter_column=models.TransactionFact.transaction_type,
             filter_value="Expense",

@@ -175,14 +175,8 @@ class TransactionRepository:
                 and_(
                     *filters,
                     filter_column == filter_value,
-                    models.TransactionFact.transaction_fact_id.notin_(
-                        and_(
-                            models.TransactionFact.transaction_type == filter_value,
-                            models.TransactionFact.category.in_(
-                                driving_source_exclude_list
-                            ),
-                        ),
-                    ),
+                    # Direct logic: Must NOT be in the exclude list
+                    ~models.TransactionFact.category.in_(driving_source_exclude_list),
                 )
             )
             .group_by(models.TransactionFact.category)
@@ -197,14 +191,8 @@ class TransactionRepository:
                 and_(
                     *filters,
                     filter_column != filter_value,
-                    models.TransactionFact.transaction_fact_id.notin_(
-                        and_(
-                            models.TransactionFact.transaction_type != filter_value,
-                            models.TransactionFact.category.in_(
-                                opposite_source_exclude_list
-                            ),
-                        ),
-                    ),
+                    # Direct logic: Must NOT be in the exclude list
+                    ~models.TransactionFact.category.in_(opposite_source_exclude_list),
                 )
             )
             .group_by(models.TransactionFact.category)
