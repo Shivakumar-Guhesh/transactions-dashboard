@@ -175,7 +175,6 @@ class TransactionRepository:
                 and_(
                     *filters,
                     filter_column == filter_value,
-                    # Direct logic: Must NOT be in the exclude list
                     ~models.TransactionFact.category.in_(driving_source_exclude_list),
                 )
             )
@@ -191,7 +190,6 @@ class TransactionRepository:
                 and_(
                     *filters,
                     filter_column != filter_value,
-                    # Direct logic: Must NOT be in the exclude list
                     ~models.TransactionFact.category.in_(opposite_source_exclude_list),
                 )
             )
@@ -242,3 +240,36 @@ class TransactionRepository:
             table = Table(table_name, metadata, autoload_with=engine)
             table_info = table_info + "\n\n" + str(CreateTable(table).compile(engine))
         return table_info
+
+    def get_monthly_average(
+        self,
+        group_column_name: InstrumentedAttribute,
+        group_value: str,
+        aggregate_column: InstrumentedAttribute,
+        filter_value: str | None = None,
+        filter_column: InstrumentedAttribute | None = None,
+        start_date: datetime.datetime | None = None,
+        end_date: datetime.datetime | None = None,
+    ) -> DECIMAL:
+        month_str = func.strftime("%Y-%m", models.TransactionFact.transaction_date)
+        filters = self.__add_date_filter(start_date, end_date)
+
+        if filter_value is not None:
+            filters.append(filter_column == filter_value)
+
+        if group_value is not None:
+            filters.append(group_column_name == group_value)
+
+        inner_query = (
+            select(
+                month_str.label("month"),
+                func.sum(aggregate_column).label("month_total"),
+            )
+            .where(and_(*filters))
+            .group_by(month_str)
+            .subquery()
+        )
+
+        query = select(func.avg(inner_query.c.month_total))
+
+        return self.db.execute(query).scalar_one()

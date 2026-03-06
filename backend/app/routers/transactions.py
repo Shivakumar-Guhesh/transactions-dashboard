@@ -5,10 +5,12 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from ..dependencies import get_transaction_service
 from ..schemas.transaction_schemas import (
+    AverageAmountRequest,
     TransactionsDataResponse,
     TransactionsDistinctValuesListResponse,
     TransactionsFiltersRequest,
     TransactionsGroupAmountResponse,
+    TransactionsGroupAverageAmountResponse,
     TransactionsTotalAmountResponse,
 )
 from ..services.transaction_service import TransactionService
@@ -209,6 +211,38 @@ def get_mode_income_sum(
     return service.get_mode_income_sum(body)
 
 
+@router.post("/cat_expense_avg", response_model=TransactionsGroupAverageAmountResponse)
+def get_cat_expense_avg(
+    body: AverageAmountRequest,
+    service: TransactionService = Depends(get_transaction_service),
+):
+    return service.get_cat_expense_avg(body)
+
+
+@router.post("/cat_income_avg", response_model=TransactionsGroupAverageAmountResponse)
+def get_cat_income_avg(
+    body: AverageAmountRequest,
+    service: TransactionService = Depends(get_transaction_service),
+):
+    return service.get_cat_income_avg(body)
+
+
+@router.post("/mode_expense_avg", response_model=TransactionsGroupAverageAmountResponse)
+def get_mode_expense_avg(
+    body: AverageAmountRequest,
+    service: TransactionService = Depends(get_transaction_service),
+):
+    return service.get_mode_expense_avg(body)
+
+
+@router.post("/mode_income_avg", response_model=TransactionsGroupAverageAmountResponse)
+def get_mode_income_avg(
+    body: AverageAmountRequest,
+    service: TransactionService = Depends(get_transaction_service),
+):
+    return service.get_mode_income_avg(body)
+
+
 @router.post("/monthly_balance", response_model=TransactionsGroupAmountResponse)
 def get_monthly_balance(
     body: TransactionsFiltersRequest,
@@ -220,26 +254,3 @@ def get_monthly_balance(
         result: Balance at the end of each month
     """
     return service.get_monthly_balance(body)
-
-
-# @router.post("/filters", status_code=status.HTTP_201_CREATED)
-# def post_create_filters(payload: schemas.FilterPayload):
-#     """POST endpoint for adding filters
-#     Sample request:
-#         {
-#             "filter": "categories_to_skip_all_transactions",
-#             "categories": [
-#                 "Lending"
-#             ]
-#         }
-#     Parameters:
-#         payload: payload of type FilterPayload
-
-#     Returns:
-#         <variable>: Description of the return value
-
-#     """
-#     filters[payload.filter] = payload.categories
-#     print(filters)
-#     utils.dump_json("./filters.json", filters)
-#     return f"Added {payload.categories} to filter {payload.filter}"
