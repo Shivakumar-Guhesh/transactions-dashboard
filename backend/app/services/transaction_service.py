@@ -6,10 +6,12 @@ from .. import models
 from ..constants import asset_categories_list, liquid_assets_categories
 from ..repositories.transaction_repository import TransactionRepository
 from ..schemas.transaction_schemas import (
+    AverageAmountRequest,
     TransactionsDataResponse,
     TransactionsDistinctValuesListResponse,
     TransactionsFiltersRequest,
     TransactionsGroupAmountResponse,
+    TransactionsGroupAverageAmountResponse,
     TransactionsTotalAmountResponse,
 )
 
@@ -53,6 +55,9 @@ class TransactionService:
         start_date = datetime.datetime.strptime(body.start_date, "%Y%m%d")
         end_date = datetime.datetime.strptime(body.end_date, "%Y%m%d")
         return exclude_expenses, exclude_incomes, start_date, end_date
+
+    def _parse_historical_fields(self, body: AverageAmountRequest):
+        return body.group
 
     def get_data(
         self,
@@ -453,6 +458,106 @@ class TransactionService:
         results_dict = self._get_net_group_wise_total(mode_income_sum)
         return TransactionsGroupAmountResponse.model_validate(
             {"group_amount": results_dict}
+        )
+
+    def get_cat_expense_avg(
+        self, body: AverageAmountRequest
+    ) -> TransactionsGroupAverageAmountResponse:
+        (
+            exclude_expenses,
+            exclude_incomes,
+            start_date,
+            end_date,
+        ) = self._parse_request_body(body)
+
+        group_value = self._parse_historical_fields(body)
+
+        average_amount = self.repository.get_monthly_average(
+            group_column_name=models.TransactionFact.category,
+            group_value=group_value,
+            aggregate_column=models.TransactionFact.amount,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return TransactionsGroupAverageAmountResponse.model_validate(
+            {"average_amount": average_amount}
+        )
+
+    def get_cat_income_avg(
+        self, body: AverageAmountRequest
+    ) -> TransactionsGroupAverageAmountResponse:
+        (
+            exclude_expenses,
+            exclude_incomes,
+            start_date,
+            end_date,
+        ) = self._parse_request_body(body)
+
+        group_value = self._parse_historical_fields(body)
+
+        average_amount = self.repository.get_monthly_average(
+            group_column_name=models.TransactionFact.category,
+            group_value=group_value,
+            aggregate_column=models.TransactionFact.amount,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return TransactionsGroupAverageAmountResponse.model_validate(
+            {"average_amount": average_amount}
+        )
+
+    def get_mode_expense_avg(
+        self, body: AverageAmountRequest
+    ) -> TransactionsGroupAverageAmountResponse:
+        (
+            exclude_expenses,
+            exclude_incomes,
+            start_date,
+            end_date,
+        ) = self._parse_request_body(body)
+
+        group_value = self._parse_historical_fields(body)
+
+        average_amount = self.repository.get_monthly_average(
+            group_column_name=models.TransactionFact.transaction_mode,
+            group_value=group_value,
+            aggregate_column=models.TransactionFact.amount,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Expense",
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return TransactionsGroupAverageAmountResponse.model_validate(
+            {"average_amount": average_amount}
+        )
+
+    def get_mode_income_avg(
+        self, body: AverageAmountRequest
+    ) -> TransactionsGroupAverageAmountResponse:
+        (
+            exclude_expenses,
+            exclude_incomes,
+            start_date,
+            end_date,
+        ) = self._parse_request_body(body)
+
+        group_value = self._parse_historical_fields(body)
+
+        average_amount = self.repository.get_monthly_average(
+            group_column_name=models.TransactionFact.transaction_mode,
+            group_value=group_value,
+            aggregate_column=models.TransactionFact.amount,
+            filter_column=models.TransactionFact.transaction_type,
+            filter_value="Income",
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return TransactionsGroupAverageAmountResponse.model_validate(
+            {"average_amount": average_amount}
         )
 
     def get_monthly_balance(

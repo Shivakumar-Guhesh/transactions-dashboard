@@ -10,6 +10,10 @@ class TransactionsFiltersRequest(BaseModel):
     end_date: str = date.today().strftime("%Y%m%d")
 
 
+class AverageAmountRequest(TransactionsFiltersRequest):
+    group: str
+
+
 class TransactionsDataResponse(BaseModel):
     transaction_fact_id: int
     user_id: int
@@ -40,5 +44,11 @@ class TransactionsTotalAmountResponse(BaseModel):
 
 class TransactionsGroupAmountResponse(BaseModel):
     group_amount: dict[str, float]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TransactionsGroupAverageAmountResponse(BaseModel):
+    average_amount: float
 
     model_config = ConfigDict(from_attributes=True)
