@@ -41,6 +41,11 @@ class TransactionsFiltersRequest {
     return copyWith(endDate: shiftedDate);
   }
 
+  TransactionsFiltersRequest _onlyCurrentMonth() {
+    final now = endDate ?? DateTime.now();
+    return copyWith(startDate: DateTime(now.year, now.month, 1), endDate: now);
+  }
+
   TransactionsFiltersRequest _getLastMonthEnd() {
     final currentEnd = endDate ?? DateTime.now();
 
@@ -93,6 +98,8 @@ extension TransactionFilterComparison on TransactionsFiltersRequest {
       _shiftEndDate(years: 1);
 
   TransactionsFiltersRequest tillLastMonthEnd() => _getLastMonthEnd();
+
+  TransactionsFiltersRequest fromCurrentMonthStart() => _onlyCurrentMonth();
 }
 
 class TransactionsDataResponse {
@@ -200,4 +207,39 @@ class TransactionsGroupAmountResponse {
   }
 
   Map<String, dynamic> toJson() => {'group_amount': groupAmount};
+}
+
+class AverageAmountRequest extends TransactionsFiltersRequest {
+  final String group;
+
+  AverageAmountRequest({
+    required this.group,
+    super.excludeExpenses,
+    super.excludeIncomes,
+    super.startDate,
+    super.endDate,
+  });
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['group'] = group;
+    return json;
+  }
+}
+
+class TransactionsGroupAverageAmountResponse {
+  final double averageAmount;
+
+  TransactionsGroupAverageAmountResponse({required this.averageAmount});
+
+  factory TransactionsGroupAverageAmountResponse.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return TransactionsGroupAverageAmountResponse(
+      averageAmount: (json['average_amount'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'average_amount': averageAmount};
 }

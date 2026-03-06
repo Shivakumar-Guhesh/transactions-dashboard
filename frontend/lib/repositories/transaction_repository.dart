@@ -21,6 +21,20 @@ class TransactionRepository {
     }
   }
 
+  Future<double> _fetchAverageAmount({
+    required String endpoint,
+    required AverageAmountRequest filters,
+  }) async {
+    try {
+      final response = await _http.post(endpoint, data: filters.toJson());
+      return TransactionsGroupAverageAmountResponse.fromJson(
+        response.data,
+      ).averageAmount;
+    } on DioException catch (e) {
+      throw handleDioError(e);
+    }
+  }
+
   Future<Map<String, double>> _fetchGroupedAmount({
     required String endpoint,
     required TransactionsFiltersRequest filters,
@@ -115,7 +129,6 @@ class TransactionRepository {
     );
   }
 
-
   Future<Map<String, double>> getCategoryExpenseSum({
     required TransactionsFiltersRequest filters,
   }) async {
@@ -192,4 +205,13 @@ class TransactionRepository {
   }
 
   /* ======================== DISTINCT VALUE LIST ENDS ======================== */
+
+  Future<double> getCategoryExpenseAvg({
+    required AverageAmountRequest filters,
+  }) async {
+    return _fetchAverageAmount(
+      endpoint: ApiConstants.catExpenseAvg,
+      filters: filters,
+    );
+  }
 }

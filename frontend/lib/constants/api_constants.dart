@@ -17,6 +17,10 @@ class ApiConstants {
   static const String monthIncomeSum = '/transactions/month_income_sum';
   static const String modeExpenseSum = '/transactions/mode_expense_sum';
   static const String modeIncomeSum = '/transactions/mode_income_sum';
+  static const String catExpenseAvg = '/transactions/cat_expense_avg';
+  static const String catIncomeAvg = '/transactions/cat_income_avg';
+  static const String modeExpenseAvg = '/transactions/mode_expense_avg';
+  static const String modeIncomeAvg = '/transactions/mode_income_avg';
   static const String monthlyBalance = '/transactions/monthly_balance';
 
   /* ================================ timeouts ================================ */

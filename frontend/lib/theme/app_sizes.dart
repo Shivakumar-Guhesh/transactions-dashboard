@@ -31,13 +31,13 @@ class AppSizes {
   static const double maxSideBarWidth = 350.0;
   static const double minSideBarWidth = 200.0;
   static const double collapsedSideBarWidth = 85.0;
-  static const double sideBarWidthFactor = 0.15;
+  static const double sideBarWidthFactor = 0.10;
 
   static const double maxProfileMenuWidth = 250.0;
   static const double minProfileMenuWidth = 200.0;
   static const double profileMenuWidthFactor = 0.25;
 
-  static const double minKpiCardHeight = 150.0;
+  static const double minKpiCardHeight = 100.0;
   static const double maxKpiCardWidth = 600.0;
   static const double minKpiCardWidth = 300.0;
   static const double kpiCardWidthFactor = 0.2;
@@ -77,6 +77,5 @@ class AppSizes {
   static const double fontLarge = 20.0; // Title
   static const double fontXLarge = 24.0; // Display Small
   static const double fontXXLarge = 36.0; // Display Large
-  static const double fontXXXLarge = 42.0; // Display Large
   static const double fontMax = 60.0; // Display Large
 }

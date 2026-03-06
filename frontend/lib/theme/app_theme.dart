@@ -67,7 +67,7 @@ class AppTheme {
           ),
           numberStyleLarge: TextStyle(
             fontFamily: numberFont,
-            fontSize: AppSizes.fontXXXLarge,
+            fontSize: AppSizes.fontXXLarge,
             fontWeight: FontWeight.bold,
             color: textColor,
           ),
