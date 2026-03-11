@@ -42,15 +42,23 @@ class AppSizes {
   static const double minKpiCardWidth = 300.0;
   static const double kpiCardWidthFactor = 0.2;
 
-  static const double minChartHeight = 300.0;
-  static const double maxChartHeight = 1200.0;
-  static const double minChartWidth = 300.0;
-  static const double maxChartWidth = 1200.0;
-  static const double chartWidthFactor = 0.4;
-  static const double chartHeightFactor = 0.3;
+  static const double minLineChartHeight = 300.0;
+  static const double maxLineChartHeight = 1200.0;
+  static const double minLineChartWidth = 300.0;
+  static const double maxLineChartWidth = 2400.0;
+  static const double lineChartWidthFactor = 0.9;
+  static const double lineChartHeightFactor = 0.3;
+
+  static const double minGroupChartHeight = 450.0;
+  static const double maxGroupChartHeight = 1200.0;
+  static const double minGroupChartWidth = 300.0;
+  static const double maxGroupChartWidth = 1200.0;
+  static const double groupChartWidthFactor = 0.4;
+  static const double groupChartHeightFactor = 0.4;
 
   static const double pieChartRadius = 40.0;
   static const double pieChartRadiusTouched = 70.0;
+  static const double pieChartCenterRadiusFactor = 0.3;
 
   // --- Borders & Strokes ---
   static const double borderSmall = 1.0;

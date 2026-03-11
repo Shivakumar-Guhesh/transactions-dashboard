@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../providers/group_distribution_provider.dart';
+import '../../../../../providers/group_average_comparison_provider.dart';
 import '../../../../../schemas/transaction_schemas.dart';
 import '../../../../../shared/widgets/chart_card.dart';
 import '../../../../../shared/widgets/expanded_chart_view.dart';
 import '../../../../../shared/widgets/shimmer_skeleton.dart';
 import '../../../../../theme/app_sizes.dart';
-import 'group_donut_chart.dart';
+import 'group_dual_bar_chart.dart';
 
-class GroupDistributionController extends ConsumerWidget
+class GroupAverageComparisonController extends ConsumerWidget
     with FullScreenChartMixin {
   final TransactionsFiltersRequest filters;
 
-  const GroupDistributionController({super.key, required this.filters});
+  const GroupAverageComparisonController({super.key, required this.filters});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,16 +24,16 @@ class GroupDistributionController extends ConsumerWidget
     final responsiveHeight = (screenHeight * AppSizes.groupChartHeightFactor)
         .clamp(AppSizes.minGroupChartHeight, AppSizes.maxGroupChartHeight);
 
-    final distributionData = ref.watch(groupDistributionProvider(filters));
+    final comparisonData = ref.watch(groupAvgComparisonProvider(filters));
 
-    return distributionData.when(
+    return comparisonData.when(
       data: (data) {
-        final chartWidget = GroupDonutChart(data: data);
+        final chartWidget = GroupDualBarChart(data: data);
         return SizedBox(
           width: responsiveWidth,
           height: responsiveHeight,
           child: ChartCard(
-            title: "Category Distribution",
+            title: "Spending vs Average",
             chart: chartWidget,
             onExpand: () => toggleFullScreen(context, chartWidget),
           ),

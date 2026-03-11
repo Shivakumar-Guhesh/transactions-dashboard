@@ -213,12 +213,12 @@ class _KpiCardContentState extends State<_KpiCardContent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _ModernBadge(
+                    _PercentBadge(
                       value: widget.metrics.momPercentage,
                       label: "MoM",
                       semantic: semantic,
                     ),
-                    _ModernBadge(
+                    _PercentBadge(
                       value: widget.metrics.yoyPercentage,
                       label: "YoY",
                       semantic: semantic,
@@ -234,11 +234,15 @@ class _KpiCardContentState extends State<_KpiCardContent> {
   }
 }
 
-class _ModernBadge extends StatelessWidget {
+class _PercentBadge extends StatelessWidget {
   final double value;
   final String label;
   final SemanticColors? semantic;
-  const _ModernBadge({required this.value, required this.label, this.semantic});
+  const _PercentBadge({
+    required this.value,
+    required this.label,
+    this.semantic,
+  });
 
   @override
   Widget build(BuildContext context) {

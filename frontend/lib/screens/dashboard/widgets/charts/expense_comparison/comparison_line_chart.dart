@@ -60,7 +60,7 @@ class ComparisonLineChart extends StatelessWidget {
           LineChartBarData(
             spots: previousSpots,
             isCurved: false,
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             barWidth: AppSizes.borderSmall,
             isStrokeCapRound: true,
             dotData: const FlDotData(show: false),
@@ -71,7 +71,7 @@ class ComparisonLineChart extends StatelessWidget {
             spots: currentSpots,
             isCurved: false,
             color: Theme.of(context).colorScheme.primary,
-            barWidth: AppSizes.borderLarge,
+            barWidth: AppSizes.borderXLarge,
             isStrokeCapRound: true,
             dotData: const FlDotData(show: false),
             shadow: Shadow(
@@ -137,7 +137,7 @@ class ComparisonLineChart extends StatelessWidget {
               TextStyle(
                 color: isCurrent
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.secondary,
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               children: [
                 TextSpan(
