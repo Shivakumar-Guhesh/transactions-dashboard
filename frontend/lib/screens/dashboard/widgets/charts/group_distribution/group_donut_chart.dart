@@ -69,7 +69,9 @@ class _GroupDonutChartState extends State<GroupDonutChart> {
                   startDegreeOffset: 270,
                   borderData: FlBorderData(show: false),
                   sectionsSpace: 0.5,
-                  centerSpaceRadius: constraints.maxHeight * 0.35,
+                  centerSpaceRadius:
+                      constraints.maxHeight *
+                      AppSizes.pieChartCenterRadiusFactor,
                   sections: _buildSections(palette),
                 ),
                 duration: AppAnimations.durationMedium,

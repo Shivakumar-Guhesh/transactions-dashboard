@@ -19,7 +19,7 @@ class ChartCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppSizes.spaceMedium),
+        padding: const EdgeInsets.all(AppSizes.spaceXSmall),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

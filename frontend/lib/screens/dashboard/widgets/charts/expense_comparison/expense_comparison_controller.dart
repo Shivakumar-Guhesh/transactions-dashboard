@@ -20,14 +20,12 @@ class ExpenseComparisonController extends ConsumerWidget
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final responsiveWidth = (screenWidth * AppSizes.chartWidthFactor).clamp(
-      AppSizes.minChartWidth,
-      AppSizes.maxChartWidth,
+    final responsiveWidth = (screenWidth * AppSizes.lineChartWidthFactor).clamp(
+      AppSizes.minLineChartWidth,
+      AppSizes.maxLineChartWidth,
     );
-    final responsiveHeight = (screenHeight * AppSizes.chartHeightFactor).clamp(
-      AppSizes.minChartHeight,
-      AppSizes.maxChartHeight,
-    );
+    final responsiveHeight = (screenHeight * AppSizes.lineChartHeightFactor)
+        .clamp(AppSizes.minLineChartHeight, AppSizes.maxLineChartHeight);
 
     final comparisonData = ref.watch(expenseComparisonProvider(filters));
 
@@ -67,7 +65,7 @@ class ExpenseComparisonController extends ConsumerWidget
         ),
         const SizedBox(width: AppSizes.spaceMedium),
         _LegendItem(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           label: data['prevMonthName'],
           isDashed: true,
         ),
